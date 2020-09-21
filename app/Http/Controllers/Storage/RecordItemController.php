@@ -132,4 +132,14 @@ class RecordItemController extends Controller
     public function item_keluar () {
         return view('pages.persediaan.item-keluar')->with('items', self::items_record_query()->where('item_records.type', 'out')->get());
     }
+
+    public function transfer_item (Request $request) {
+        $from = Stock::where(['item_id' => $request->item_id, 'dept' => $request->from])->first();
+        $to = Stock::where(['item_id' => $request->item_id, 'dept' => $request->to])->first();
+
+        $from->update(['amount' => $from->amount - $request->amount]);
+        $to->update(['amount' => $to->amount + $request->amount]);
+        
+        return back();
+    }
 }

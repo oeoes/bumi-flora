@@ -151,6 +151,10 @@
                                                     <a class="dropdown-item edit" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-right" data-toggle-class-target=".animate">
                                                         Buat Laporan Item Keluar
                                                     </a>
+                                                    <div class="divider"></div>
+                                                    <a class="dropdown-item edit" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-right" data-toggle-class-target=".animate">
+                                                        Transfer Item
+                                                    </a>
                                                 </div>
                                             </div>
                                         </td>
@@ -249,6 +253,41 @@
                                                         <div class="form-group">
                                                             <label>Deskripsi</label>
                                                             <textarea class="form-control" name="description" cols="3" rows="3"></textarea>
+                                                        </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Publish</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                    </div>
+
+                                    <!-- modal transfer item -->
+                                    <div id="transfer{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog animate" data-class="fade-right">
+                                            <div class="modal-content ">
+                                                <div class="modal-header ">
+                                                    <div class="modal-title text-md">Transfer Item "{{ $item->name }}"</div>
+                                                    <button class="close" data-dismiss="modal">×</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('records.transfer') }}" method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                                        <div class="form-group">
+                                                            <label>Dari</label>
+                                                            <input name="from" type="text" class="form-control" value="gudang" readonly>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Ke</label>
+                                                            <input name="to" type="text" class="form-control" value="utama" readonly>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Jumlah Transfer</label>
+                                                            <input type="number" min="0" class="form-control" name="amount" required>
+                                                            <small class="text-muted"><span class="text-danger">Maksimum jumlah yang akan ditransfer tidak bolah melebihi stock tersedia.</span> <br> Stock: <span class="text-info">{{ $item->stock }}</span></small>
                                                         </div>
                                                 </div>
                                                 <div class="modal-footer">

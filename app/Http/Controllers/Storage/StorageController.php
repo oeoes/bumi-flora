@@ -25,16 +25,17 @@ class StorageController extends Controller
 
     public function update(Request $request, Balance $storage)
     {
-        $storage->update([
-            'amount' => $request->amount
-        ]);
-
-        // update juga stock nya
+        // update stock
         $stock = Stock::where(['item_id' => $storage->item_id, 'dept' => $storage->dept])->first();
         $amount = $stock->amount - $storage->amount;
-        $amount =+ $request->amount;
+        $final_amount = $amount + $request->amount;
         $stock->update([
-            'amount' => $amount
+            'amount' => $final_amount
+        ]);
+        
+        // update storage
+        $storage->update([
+            'amount' => $request->amount
         ]);
 
         return back();

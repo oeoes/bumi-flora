@@ -24,6 +24,7 @@ class ItemController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
+                ->join('balances', 'balances.item_id', '=', 'items.id')
                 ->select('items.*', 'units.unit', 'categories.category', 'brands.brand');
     }
 
@@ -106,7 +107,7 @@ class ItemController extends Controller
 
     public static function add_query_on_filter ($query, $request) {
         if ($request->dept != 'all') {
-            $query = $query->where('dept', $request->dept);
+            $query = $query->where('balances.dept', $request->dept);
         }
 
         return $query;

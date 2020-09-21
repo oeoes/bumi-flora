@@ -18,3 +18,7 @@ Route::get('/storages/item/opname', 'Storage\StorageController@stock_opname')->n
 Route::resource('/records', 'Storage\RecordItemController');
 Route::get('/records/item/masuk', 'Storage\RecordItemController@item_masuk')->name('records.masuk');
 Route::get('/records/item/keluar', 'Storage\RecordItemController@item_keluar')->name('records.keluar');
+Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_item')->name('records.transfer');
+
+// activity
+Route::resource('/orders', 'Activity\OrderController');
