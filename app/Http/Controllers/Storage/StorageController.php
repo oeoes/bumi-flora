@@ -62,7 +62,7 @@ class StorageController extends Controller
                 // ->join('categories', 'categories.id', '=', 'items.category_id')
                 // ->join('stocks', 'stocks.item_id', '=', 'items.id')
                 // ->join('item_records', 'items.id', '=', 'item_records.item_id')->groupBy('item_records.type')->select('items.name', 'count(item_records.amount)', 'item_records.type', 'item_records.dept')->get();
-        // return view('pages.persediaan.opname');
+        return view('pages.persediaan.opname');
     }
 
     public static function items_query ($dept) {

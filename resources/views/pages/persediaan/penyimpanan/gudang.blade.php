@@ -131,34 +131,30 @@
                                         </td>
                                         <td style="">
                                             <div class="item-action dropdown">
-                                                <a href="#" data-toggle="dropdown" class="text-muted">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-more-vertical">
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="12" cy="5" r="1"></circle>
-                                                        <circle cx="12" cy="19" r="1"></circle>
-                                                    </svg>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                                    <a class="dropdown-item" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down" data-toggle-class-target=".animate">
-                                                        Saldo Awal
-                                                    </a>
-                                                    <a class="dropdown-item edit" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-up" data-toggle-class-target=".animate">
-                                                        Buat Laporan Item Masuk
-                                                    </a>
-                                                    <a class="dropdown-item edit" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-right" data-toggle-class-target=".animate">
-                                                        Buat Laporan Item Keluar
-                                                    </a>
-                                                    <div class="divider"></div>
-                                                    <a class="dropdown-item edit" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-right" data-toggle-class-target=".animate">
-                                                        Transfer Item
-                                                    </a>
-                                                </div>
+                                                <span style="cursor: pointer" class="nav-icon" data-toggle="modal" data-target="#options{{$key}}" data-toggle-class="modal-open-aside" data-toggle-class-target=".animate"><i data-feather='more-vertical'></i></span>
                                             </div>
                                         </td>
                                     </tr>
+
+                                    <!-- modal options -->
+                                    <div id="options{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
+                                        <div class="modal-dialog modal-right w-xl" data-class="fade-down">
+                                            <div class="modal-content h-100 no-radius">
+                                                <div class="modal-header ">
+                                                    <div class="modal-title text-md">More options</div>
+                                                    <button class="close" data-dismiss="modal">×</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo Awal</button>
+                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
+                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button>
+                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer Item</button>
+                                                    <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                    </div>
 
                                     <!-- modal saldo awal -->
                                     <div id="saldoawal{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">

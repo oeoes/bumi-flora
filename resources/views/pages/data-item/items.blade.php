@@ -15,7 +15,8 @@
     </button>
 
     <!-- modal aside right -->
-    <div id="filter" class="modal fade modal-open-aside" data-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
+    <div id="filter" class="modal fade modal-open-aside" da
+    ta-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-right w-xl">
             <div class="modal-content h-100 no-radius">
                 <div class="modal-header ">

@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Model\MasterData\Item;
+use App\Model\Relation\StakeHolder;
+use App\Model\Activity\Order;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -14,7 +18,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = DB::table('items')
+                    ->join('orders', 'items.id', '=', 'orders.item_id')
+                    ->join('units', 'items.unit_id', '=', 'units.id')
+                    ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                    ->join('stake_holders', 'orders.stake_holder_id', '=', 'stake_holders.id')
+                    ->select('orders.*', 'items.name', 'items.price', 'units.unit', 'stake_holders.name as supplier_name', 'stake_holders.address', 'stocks.dept')
+                    ->get();
+        return view('pages.activity.index')->with('orders', $orders);
     }
 
     /**
@@ -35,7 +46,8 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Order::create($request->all());
+        return back();
     }
 
     /**
@@ -46,7 +58,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        
+        $item = Item::find($id);
+        $suppliers = StakeHolder::where('type', 'supplier')->get();
+        return view('pages.activity.pesanan-pembelian')->with(['item' => $item, 'suppliers' => $suppliers]);
     }
 
     /**

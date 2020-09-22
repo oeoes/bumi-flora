@@ -22,3 +22,6 @@ Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_ite
 
 // activity
 Route::resource('/orders', 'Activity\OrderController');
+
+// stake Holders
+Route::resource('/stake_holders', 'Relation\StakeHolderController');

@@ -38,7 +38,7 @@
                 </a>
             </li>
             <li>
-                <a href="">
+                <a href="{{ route('stake_holders.index') }}">
                     <span class="nav-icon text-danger"><i data-feather='users'></i></span>
                     <span class="nav-text">Stake Holders</span>
                 </a>
@@ -57,29 +57,16 @@
             </li>
 
             <li>
-                <a href="{{ route('storages.opname') }}">
+                <a href="{{ route('orders.index') }}">
                     <span class="nav-icon"><i data-feather='shopping-cart'></i></span>
                     <span class="nav-text">Pesanan Pembelian</span>
                 </a>
             </li>
-            <li class="">
-                <a href="#" class="" data-pjax-state="anchor-empty">
+            <li>
+                <a href="">
                     <span class="nav-icon"><i data-feather='shopping-bag'></i></span>
-                    <span class="nav-text">Pembelian</span>
-                    <span class="nav-caret"></span>
+                    <span class="nav-text">History Pembelian</span>
                 </a>
-                <ul class="nav-sub nav-mega">
-                    <li>
-                        <a href="{{ route('storages.utama') }}" class="" data-pjax-state="">
-                            <span class="nav-text">Daftar Pembelian</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('storages.gudang') }}" class="" data-pjax-state="">
-                            <span class="nav-text">History Harga Beli</span>
-                        </a>
-                    </li>
-                </ul>
             </li>
             <li class="">
                 <a href="#" class="" data-pjax-state="anchor-empty">
@@ -89,19 +76,19 @@
                 </a>
                 <ul class="nav-sub nav-mega">
                     <li>
-                        <a href="{{ route('storages.utama') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Daftar Pembayaran</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('storages.gudang') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Status Lunas BG/Cek</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="{{ route('storages.opname') }}">
+                <a href="">
                     <span class="nav-icon"><i data-feather='rotate-cw'></i></span>
                     <span class="nav-text">Retur Pembelian</span>
                 </a>
@@ -109,11 +96,12 @@
 
 
             <!-- Penjualan -->
+            <!-- 
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Penjualan</span>
             </li>
             <li>
-                <a href="{{ route('storages.opname') }}">
+                <a href="">
                     <span class="nav-icon"><i data-feather='activity'></i></span>
                     <span class="nav-text">Pesanan Penjualan</span>
                 </a>
@@ -126,17 +114,17 @@
                 </a>
                 <ul class="nav-sub nav-mega">
                     <li>
-                        <a href="{{ route('storages.utama') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Daftar Penjualan</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('storages.gudang') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Kasir</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('storages.gudang') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">History Harga Jual</span>
                         </a>
                     </li>
@@ -150,29 +138,30 @@
                 </a>
                 <ul class="nav-sub nav-mega">
                     <li>
-                        <a href="{{ route('storages.utama') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Daftar Pembayaran</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('storages.utama') }}" class="" data-pjax-state="">
+                        <a href="" class="" data-pjax-state="">
                             <span class="nav-text">Status Lunas BG/Cek</span>
                         </a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="{{ route('storages.opname') }}">
+                <a href="">
                     <span class="nav-icon"><i data-feather='rotate-cw'></i></span>
                     <span class="nav-text">Retur Penjualan</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('storages.opname') }}">
+                <a href="">
                     <span class="nav-icon"><i data-feather='plus'></i></span>
                     <span class="nav-text">Point Penjualan</span>
                 </a>
             </li>
+             -->
 
 
             <!-- persediaan -->
