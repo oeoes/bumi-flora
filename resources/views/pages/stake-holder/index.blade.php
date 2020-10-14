@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('page-title', 'Stake Holders')
-@section('page-description', 'Data stake holders berupa supplier, customer, dan sales.')
+@section('page-title', 'Entity')
+@section('page-description', 'Data entity berupa supplier, customer, dan sales.')
 
 @section('content')
 <div class="page-content page-container" id="page-content">
@@ -28,16 +28,12 @@
                         <div class="tab-pane fade active show" id="supplier3" role="tabpanel" aria-labelledby="supplier-tab">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <form method="post" action="{{ route('stake_holders.store') }}">
+                                    <form method="post" action="{{ route('entities.store') }}">
                                         @csrf
-                                        <div class="form-group">
-                                            <label class="text-muted" for="code">Code</label>
-                                            <input name="code" type="text" class="form-control" id="code" placeholder="code" required>
-                                            <input type="hidden" name="type" value="supplier">
-                                        </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="name">Name</label>
                                             <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input type="hidden" name="type" value="supplier">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="address">Address</label>
@@ -119,12 +115,12 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editbrand{{ $key }}">Edit</span>
-                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletebrand{{ $key }}">Delete</span>
+                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editsup{{ $key }}">Edit</span>
+                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletesup{{ $key }}">Delete</span>
                                                 </td>
                                             </tr>
                                             <!-- supplier modal edit -->
-                                            <div id="editbrand{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <div id="editsup{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
@@ -132,17 +128,13 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form method="post" action="{{ route('stake_holders.update', ['stake_holder' => $supplier->id]) }}">
+                                                            <form method="post" action="{{ route('entities.update', ['entity' => $supplier->id]) }}">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <div class="form-group">
-                                                                    <label class="text-muted" for="code">Code</label>
-                                                                    <input name="code" type="text" class="form-control" id="code" placeholder="code" value="{{ $supplier->code }}" required>
-                                                                    <input type="hidden" name="type" value="supplier">
-                                                                </div>
-                                                                <div class="form-group">
                                                                     <label class="text-muted" for="name">Name</label>
                                                                     <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $supplier->name }}" required>
+                                                                    <input type="hidden" name="type" value="supplier">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="address">Address</label>
@@ -196,7 +188,7 @@
                                             </div>
 
                                             <!-- brand modal delete -->
-                                            <div id="deletebrand{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <div id="deletesup{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
@@ -227,21 +219,58 @@
                         </div>
                         <div class="tab-pane fade" id="customer3" role="tabpanel" aria-labelledby="customer-tab">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <form method="post" action="{{ route('units.store') }}">
+                                <div class="col-md-4">
+                                    <form method="post" action="{{ route('entities.store') }}">
                                         @csrf
                                         <div class="form-group">
-                                            <label class="text-muted" for="exampleInputEmail1">Unit name (satuan)</label>
-                                            <input type="text" name="unit" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter unit name">
+                                            <label class="text-muted" for="name">Name</label>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input type="hidden" name="type" value="customer">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-muted" for="exampleInputPassword1">Description</label>
-                                            <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description">
+                                            <label class="text-muted" for="address">Address</label>
+                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="country">Country</label>
+                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="province">Province</label>
+                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="city">City</label>
+                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="postal_code">Postal code</label>
+                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="phone">Phone</label>
+                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="email">Email</label>
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="card_number">Card Number</label>
+                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="owner">Owner</label>
+                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="bank">Bank</label>
+                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" required>
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-primary">Add</button>
                                     </form>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <table class="table table-responsive table-theme v-middle table-hover">
                                         <thead>
                                             <tr>
@@ -250,17 +279,17 @@
                                                     <div class="fht-cell"></div>
                                                 </th>
                                                 <th>
-                                                    <div class="th-inner">Unit</div>
+                                                    <div class="th-inner">Name</div>
                                                     <div class="fht-cell"></div>
                                                 </th>
                                                 <th>
-                                                    <div class="th-inner">Description</div>
+                                                    <div class="th-inner">Address</div>
                                                     <div class="fht-cell"></div>
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($units as $key => $unit)
+                                            @foreach($customers as $key => $customer)
                                             <tr>
                                                 <td>
                                                     <div class="text-muted text-sm">
@@ -269,38 +298,75 @@
                                                 </td>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $unit->unit }}
+                                                        {{ $customer->name }}
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $unit->description }}
+                                                        {{ $customer->address }}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editunit{{ $key }}">Edit</span>
-                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deleteunit{{ $key }}">Delete</span>
+                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editcust{{ $key }}">Edit</span>
+                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletecust{{ $key }}">Delete</span>
                                                 </td>
                                             </tr>
-                                            <!-- unit modal edit -->
-                                            <div id="editunit{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <!-- customer modal edit -->
+                                            <div id="editcust{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
-                                                            <div class="modal-title text-md">Edit Unit</div>
+                                                            <div class="modal-title text-md">Edit Customer</div>
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form method="post" action="{{ route('units.update', ['unit' => $unit->id]) }}">
+                                                            <form method="post" action="{{ route('entities.update', ['entity' => $customer->id]) }}">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <div class="form-group">
-                                                                    <label class="text-muted" for="exampleInputEmail1">Unit name (satuan)</label>
-                                                                    <input type="text" name="unit" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter unit name" value="{{ $unit->unit }}">
+                                                                    <label class="text-muted" for="name">Name</label>
+                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $customer->name }}" required>
+                                                                    <input type="hidden" name="type" value="customer">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label class="text-muted" for="exampleInputPassword1">Description</label>
-                                                                    <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description" value="{{ $unit->description }}">
+                                                                    <label class="text-muted" for="address">Address</label>
+                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $customer->address }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="country">Country</label>
+                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $customer->country }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="province">Province</label>
+                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $customer->province }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="city">City</label>
+                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $customer->city }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="postal_code">Postal code</label>
+                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $customer->postal_code }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="phone">Phone</label>
+                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $customer->phone }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="email">Email</label>
+                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $customer->email }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="card_number">Card Number</label>
+                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $customer->card_number }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="owner">Owner</label>
+                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $customer->owner }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="bank">Bank</label>
+                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $customer->bank }}" required>
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -313,18 +379,18 @@
                                                 </div>
                                             </div>
 
-                                            <!-- unit modal delete -->
-                                            <div id="deleteunit{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <!-- customer modal delete -->
+                                            <div id="deletecust{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
-                                                            <div class="modal-title text-md">Confirm Dletion</div>
+                                                            <div class="modal-title text-md">Confirm Deletion</div>
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing unit. Klick "Yes" to proceed.</p>
-                                                                <p class="text-danger"><b>Note:</b> Do not delete unit that has a relation to item data.</p>
+                                                                <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -335,6 +401,7 @@
                                                     <!-- /.modal-content -->
                                                 </div>
                                             </div>
+
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -344,21 +411,59 @@
                         </div>
                         <div class="tab-pane fade" id="sales3" role="tabpanel" aria-labelledby="sales-tab">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <form method="post" action="{{ route('categories.store') }}">
+                                <div class="col-md-4">
+                                    <form method="post" action="{{ route('entities.store') }}">
                                         @csrf
                                         <div class="form-group">
-                                            <label class="text-muted" for="exampleInputEmail1">Category</label>
-                                            <input type="text" name="category" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter category">
+                                            <label class="text-muted" for="name">Name</label>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input type="hidden" name="type" value="sales">
                                         </div>
                                         <div class="form-group">
-                                            <label class="text-muted" for="exampleInputPassword1">Description</label>
-                                            <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description">
+                                            <label class="text-muted" for="address">Address</label>
+                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address" required>
+                                            
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="country">Country</label>
+                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="province">Province</label>
+                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="city">City</label>
+                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="postal_code">Postal code</label>
+                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="phone">Phone</label>
+                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="email">Email</label>
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="card_number">Card Number</label>
+                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="owner">Owner</label>
+                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="bank">Bank</label>
+                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" required>
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-primary">Add</button>
                                     </form>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <table class="table table-responsive table-theme v-middle table-hover">
                                         <thead>
                                             <tr>
@@ -367,17 +472,17 @@
                                                     <div class="fht-cell"></div>
                                                 </th>
                                                 <th>
-                                                    <div class="th-inner">Category</div>
+                                                    <div class="th-inner">Name</div>
                                                     <div class="fht-cell"></div>
                                                 </th>
                                                 <th>
-                                                    <div class="th-inner">Keterangan</div>
+                                                    <div class="th-inner">Address</div>
                                                     <div class="fht-cell"></div>
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($categories as $key => $category)
+                                            @foreach($sales as $key => $sale)
                                             <tr>
                                                 <td>
                                                     <div class="text-muted text-sm">
@@ -386,38 +491,75 @@
                                                 </td>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $category->category }}
+                                                        {{ $sale->name }}
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $category->description }}
+                                                        {{ $sale->address }}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editcategory{{ $key }}">Edit</span>
-                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletecategory{{ $key }}">Delete</span>
+                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editsales{{ $key }}">Edit</span>
+                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletesales{{ $key }}">Delete</span>
                                                 </td>
                                             </tr>
-                                            <!-- category modal edit -->
-                                            <div id="editcategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <!-- sales modal edit -->
+                                            <div id="editsales{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
-                                                            <div class="modal-title text-md">Edit Category</div>
+                                                            <div class="modal-title text-md">Edit Sales</div>
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form method="post" action="{{ route('categories.update', ['category' => $category->id]) }}">
+                                                            <form method="post" action="{{ route('entities.update', ['entity' => $sale->id]) }}">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <div class="form-group">
-                                                                    <label class="text-muted" for="exampleInputEmail1">Category</label>
-                                                                    <input type="text" name="category" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter category" value="{{ $category->category }}">
+                                                                    <label class="text-muted" for="name">Name</label>
+                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $sale->name }}" required>
+                                                                    <input type="hidden" name="type" value="sales">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label class="text-muted" for="exampleInputPassword1">Password</label>
-                                                                    <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description" value="{{ $category->description }}">
+                                                                    <label class="text-muted" for="address">Address</label>
+                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $sale->address }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="country">Country</label>
+                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $sale->country }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="province">Province</label>
+                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $sale->province }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="city">City</label>
+                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $sale->city }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="postal_code">Postal code</label>
+                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $sale->postal_code }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="phone">Phone</label>
+                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $sale->phone }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="email">Email</label>
+                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $sale->email }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="card_number">Card Number</label>
+                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $sale->card_number }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="owner">Owner</label>
+                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $sale->owner }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="bank">Bank</label>
+                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $sale->bank }}" required>
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -430,18 +572,18 @@
                                                 </div>
                                             </div>
 
-                                            <!-- category modal delete -->
-                                            <div id="deletecategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <!-- brand modal delete -->
+                                            <div id="deletesales{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
-                                                            <div class="modal-title text-md">Confirm Dletion</div>
+                                                            <div class="modal-title text-md">Confirm Deletion</div>
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing category. Klick "Yes" to proceed.</p>
-                                                                <p class="text-danger"><b>Note:</b> Do not delete category that has a relation to item data.</p>
+                                                                <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -452,9 +594,11 @@
                                                     <!-- /.modal-content -->
                                                 </div>
                                             </div>
+
                                             @endforeach
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>

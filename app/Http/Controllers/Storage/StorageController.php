@@ -54,15 +54,17 @@ class StorageController extends Controller
     }
 
     public function stock_opname () {
-        $query = DB::table('item_records')
-                ->join('items', 'items.id', '=', 'item_records.item_id')
-                ->select('item_records.type', 'items.name', 'item_records.amount')->get();
-            // return $query->select(DB::raw('sum(item_records.amount) as amount'))->groupBy('type');
-                // ->join('units', 'units.id', '=', 'items.unit_id')
-                // ->join('categories', 'categories.id', '=', 'items.category_id')
-                // ->join('stocks', 'stocks.item_id', '=', 'items.id')
-                // ->join('item_records', 'items.id', '=', 'item_records.item_id')->groupBy('item_records.type')->select('items.name', 'count(item_records.amount)', 'item_records.type', 'item_records.dept')->get();
-        return view('pages.persediaan.opname');
+        return $query = DB::table('items')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('categories', 'categories.id', '=', 'items.category_id')
+                ->join('balances', 'items.id', '=', 'balances.item_id')
+                ->join('item_ins', 'items.id', '=', 'item_ins.item_id')
+                ->join('item_outs', 'items.id', '=', 'item_outs.item_id')
+                ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                ->select('items.*', 'units.unit', 'item_ins.*', 'categories.category', 'balances.amount as balance', 'balances.dept', 'stocks.amount as stock')
+                ->where(['balances.dept' => 'utama', 'stocks.dept' => 'utama'])->get();
+                
+        return view('pages.persediaan.opname')->with('opname', $query);
     }
 
     public static function items_query ($dept) {

@@ -14,6 +14,8 @@ class BrandController extends Controller
             'brand' => $request->brand,
             'description' => $request->description
         ]);
+
+        session()->flash('message', 'Yeay! Merek berhasil ditambahkan.');
         return back();
     }
 
@@ -23,6 +25,7 @@ class BrandController extends Controller
             'brand' => $request->brand,
             'description' => $request->description
         ]);
+        session()->flash('message', 'OK! Data berhasil diperbarui.');
         return back();
     }
 

@@ -18,12 +18,13 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = DB::table('items')
-                    ->join('orders', 'items.id', '=', 'orders.item_id')
+        $orders = DB::table('orders')
+                    ->join('items', 'items.id', '=', 'orders.item_id')
                     ->join('units', 'items.unit_id', '=', 'units.id')
                     ->join('stocks', 'items.id', '=', 'stocks.item_id')
                     ->join('stake_holders', 'orders.stake_holder_id', '=', 'stake_holders.id')
                     ->select('orders.*', 'items.name', 'items.price', 'units.unit', 'stake_holders.name as supplier_name', 'stake_holders.address', 'stocks.dept')
+                    ->where('stocks.dept', 'gudang')->where('orders.status', 0)
                     ->get();
         return view('pages.activity.index')->with('orders', $orders);
     }
@@ -47,6 +48,8 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         Order::create($request->all());
+
+        session()->flash('message', 'Yeay! Pesanan berhasil dibuat.');
         return back();
     }
 
@@ -95,5 +98,55 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function history_order () {
+        $orders = DB::table('orders')
+                    ->join('items', 'items.id', '=', 'orders.item_id')
+                    ->join('units', 'items.unit_id', '=', 'units.id')
+                    ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                    ->join('stake_holders', 'orders.stake_holder_id', '=', 'stake_holders.id')
+                    ->select('orders.*', 'items.name', 'items.price', 'units.unit', 'stake_holders.name as supplier_name', 'stake_holders.address', 'stocks.dept')
+                    ->where('stocks.dept', 'gudang')->where('orders.status', 1)
+                    ->get();
+        return view('pages.activity.history')->with('orders', $orders);
+    }
+
+    public function accept_item (Request $request, Order $order) {
+        if (($order->accepted + $request->amount) >= $order->amount) {
+            $order->update([
+                'accepted' => $order->accepted + $request->amount,
+                'status' => 1
+            ]);
+        }
+        else {
+            $order->update([
+                'accepted' => $order->accepted + $request->amount,
+            ]);
+        }
+
+        return back();
+    }
+
+    public function return_item (Request $request, Order $order) {
+        if ($request->amount != 0 && $request->amount <= $order->amount) {
+            $order->update([
+                'accepted' => $order->accepted - $request->amount,
+                'status' => 0
+            ]);
+            return back();
+        }
+        else {
+            return back(); // with flashed data
+        }
+    }
+
+    public function cashier_page () {
+        $items = DB::table('items')
+                ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->where('stocks.dept', 'utama')
+                ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price')->get();
+        return view('pages.activity.cashier')->with('items', $items);
     }
 }

@@ -39,192 +39,71 @@
                     </tr>
                 </thead>
                 <tbody>
+                
+                @foreach($opname as $key => $op)
                     <tr class=" " data-id="1">
                         <td style="">
                             <div class="text-muted text-sm">
-                                Samsung Note 20 Ultra
+                               {{ $op->name }}
                             </div>
                         </td>
                         <td style="">
                             <div class="text-muted text-sm">
-                                PCS
+                                {{ $op->unit }}
                             </div>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                Barang
+                                {{ $op->category }}
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                Utama
+                                {{ $op->dept }}
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                A3
+                                {{ $op->cabinet }}
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                Restock
+                                {{ $op->description }}
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                100
+                                {{ $op->balance }}
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                345
+                                
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                150
+                                
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm ">
-                                145
+                                
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                135
+                                
                             </span>
                         </td>
                         <td style="">
                             <span class="item-amount d-sm-block text-sm">
-                                100
+                                
                             </span>
                         </td>
                     </tr>
-                    <tr class=" " data-id="1">
-                        <td style="">
-                            <div class="text-muted text-sm">
-                                Samsung Note 20 Ultra
-                            </div>
-                        </td>
-                        <td style="">
-                            <div class="text-muted text-sm">
-                                PCS
-                            </div>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Barang
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Utama
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                A3
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Restock
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                100
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                345
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                150
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm ">
-                                145
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                135
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                100
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class=" " data-id="1">
-                        <td style="">
-                            <div class="text-muted text-sm">
-                                Samsung Note 20 Ultra
-                            </div>
-                        </td>
-                        <td style="">
-                            <div class="text-muted text-sm">
-                                PCS
-                            </div>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Barang
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Utama
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                A3
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                Restock
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                100
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                345
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                150
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm ">
-                                145
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                135
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-sm-block text-sm">
-                                100
-                            </span>
-                        </td>
-                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>        

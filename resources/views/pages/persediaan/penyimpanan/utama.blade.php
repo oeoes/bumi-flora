@@ -4,7 +4,17 @@
 @section('page-description', 'Daftar item pada penyimpanan utama.')
 
 
+@section('custom-js')
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#item-utama').DataTable();
+    });
+</script>
+@endsection
+
 @section('custom-css')
+    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
     <style>
         @media only screen and (max-width: 600px) {
             .my-responsive {
@@ -20,11 +30,10 @@
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="table-responsive">
-            <table id="datatable" class="table table-theme table-row v-middle" data-plugin="dataTable">
+            <table id="item-utama" class="table my-responsive table-theme v-middle table-hover">
                 <thead>
                     <tr>
                         <th><span class="text-muted">Nama</span></th>
-                        <th><span class="text-muted">Kode</span></th>
                         <th><span class="text-muted">Jenis</span></th>
                         <th><span class="text-muted">Satuan</span></th>
                         <th><span class="text-muted">Min. Stock</span></th>
@@ -42,11 +51,6 @@
                             <td style="">
                                 <div class="text-muted text-sm">
                                     {{ $item->name }}
-                                </div>
-                            </td>
-                            <td style="">
-                                <div class="text-muted text-sm">
-                                    {{ $item->code }}
                                 </div>
                             </td>
                             <td style="">
@@ -109,7 +113,6 @@
                                         <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
                                         <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button>
                                         <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer Item</button>
-                                        <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
                                     </div>
                                 </div>
                                 <!-- /.modal-content -->

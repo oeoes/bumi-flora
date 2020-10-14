@@ -4,7 +4,17 @@
 @section('page-description', 'Daftar item pada penyimpanan gudang.')
 
 
+@section('custom-js')
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#item-gudang').DataTable();
+    });
+</script>
+@endsection
+
 @section('custom-css')
+    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
     <style>
         @media only screen and (max-width: 600px) {
             .my-responsive {
@@ -27,53 +37,19 @@
                             <table></table>
                         </div>
                         <div class="fixed-table-body">
-                            <div class="fixed-table-loading" style="top: 41px;">Loading, please wait...</div>
-                            <table id="table" class="table my-responsive table-theme v-middle table-hover" data-toolbar="#toolbar"
-                                data-search="true" data-search-align="left" data-show-export="true" data-show-columns="true"
-                                data-detail-view="false" data-mobile-responsive="true" data-pagination="true"
-                                data-page-list="[10, 25, 50, 100, ALL]" style="margin-top: 0px;">
+                            <table id="item-gudang" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
-                                        <th style="" data-field="type">
-                                            <div class="th-inner">Nama</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="code">
-                                            <div class="th-inner">Kode</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="code">
-                                            <div class="th-inner">Jenis</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Satuan</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Min. Stock</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Stock</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Harga Pokok</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Harga Jual</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Saldo Awal</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="task">
-                                            <div class="th-inner "><span class="d-sm-block">Total</span></div>
-                                            <!-- <div class="fht-cell"></div> -->
-                                        </th>
+                                        <th><span class="text-muted">Nama</span></th>
+                                        <th><span class="text-muted">Jenis</span></th>
+                                        <th><span class="text-muted">Satuan</span></th>
+                                        <th><span class="text-muted">Min. Stock</span></th>
+                                        <th><span class="text-muted">Stock</span></th>
+                                        <th><span class="text-muted">Harga Pokok</span></th>
+                                        <th><span class="text-muted">Harga Jual</span></th>
+                                        <th><span class="text-muted">Saldo Awal</span></th>
+                                        <th><span class="text-muted">Total</span></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,11 +58,6 @@
                                         <td style="">
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
-                                            </div>
-                                        </td>
-                                        <td style="">
-                                            <div class="text-muted text-sm">
-                                                {{ $item->code }}
                                             </div>
                                         </td>
                                         <td style="">

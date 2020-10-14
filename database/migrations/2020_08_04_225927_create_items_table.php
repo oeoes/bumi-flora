@@ -20,14 +20,12 @@ class CreateItemsTable extends Migration
             $table->foreignId('stake_holder_id')->nullable();
             $table->foreignId('category_id');
             $table->string('name');
-            $table->string('code');
-            $table->string('image');
-            $table->enum('type', ['inv', 'noninv', 'assm', 'srv']);
+            $table->string('image')->nullable();
             $table->string('cabinet')->nullable(); # rak
             $table->tinyInteger('sale_status')->default(1);
             $table->text('description')->nullable();
             $table->string('main_cost'); # harga pokok
-            $table->string('barcode')->nullable();
+            $table->string('barcode')->unique();
             $table->integer('price'); # harga jual
             $table->integer('min_stock')->default(0);
             $table->timestamps();

@@ -25,7 +25,7 @@ class ItemController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->select('items.*', 'units.unit', 'categories.category', 'brands.brand');
+                ->select('items.*', 'units.unit', 'categories.category', 'brands.brand', 'balances.dept');
     }
 
     public function create()
@@ -41,7 +41,6 @@ class ItemController extends Controller
     {
         $item = Item::create([
             'name' => $request->name,
-            'code' => $request->code,
             'image' => $request->image,
             'unit_id' => $request->unit,
             'brand_id' => $request->brand,
@@ -59,7 +58,8 @@ class ItemController extends Controller
 
         self::create_saldo_awal($item->id, 'utama');
         self::create_saldo_awal($item->id, 'gudang');
-
+        
+        session()->flash('message', 'Yeay! Item berhasil ditambahkan.');
         return back();
     }
 
@@ -93,9 +93,13 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($item)
+    public function edit(Item $item)
     {
-        return view('pages.data-item.edit-item');
+        $units = Unit::all();
+        $categories = Category::all();
+        $brands = Brand::all();
+
+        return view('pages.data-item.edit-item')->with(['item' => $item, 'units' => $units, 'categories' => $categories, 'brands' => $brands]);
     }
 
     public function filter_item (Request $request) {
@@ -111,5 +115,26 @@ class ItemController extends Controller
         }
 
         return $query;
+    }
+
+    public function update(Request $request, Item $item) {
+        $item->update([
+            'name' => $request->name,
+            'image' => $request->image,
+            'unit_id' => $request->unit,
+            'brand_id' => $request->brand,
+            'category_id' => $request->category,
+            'stake_holder_id' => $request->stake_holder,
+            'cabinet' => $request->cabinet,
+            'sale_status' => $request->sale_status,
+            'description' => $request->description,
+            'main_cost' => $request->main_cost,
+            'barcode' => $request->barcode,
+            'price' => $request->price,
+            'min_stock' => $request->min_stock,
+        ]);
+
+        session()->flash('message', 'OK! Data berhasil diperbarui.');
+        return redirect()->route('items.index');
     }
 }

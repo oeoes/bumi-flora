@@ -10,10 +10,32 @@
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
         <!-- endbuild -->
         @yield('custom-css')
+        <style>
+            .my-alert {
+                position: fixed;
+                bottom: 5px; 
+                right: 10px;
+                z-index: 100000000;
+                box-sizing: border-box;
+            }
+        </style>
     </head>
     <body class="layout-row">
+
+        @if(session()->has('message'))
+        <div id="myalert" class="my-alert animate__animated animate__bounce">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <i data-feather='check-circle'></i>
+                <span class="mx-2">{!! session()->get('message') !!}</span>
+            </div>
+        </div>
+        @endif
         <!-- ############ Aside START-->
         <div id="aside" class="page-sidenav no-shrink bg-light nav-dropdown fade" aria-hidden="true">
             <div class="sidenav h-100 bg-light modal-dialog">
@@ -98,5 +120,17 @@
         <script src="{{ asset('assets/js/theme.js') }}"></script>
         <script src="{{ asset('assets/js/utils.js') }}"></script>
         <!-- endbuild -->
+
+        <script>
+             $('#myalert').slideDown('fast')
+                setTimeout(() => {
+                    $('#myalert').slideUp('slow')
+            }, 5000);
+
+            location.reload();
+            return false;
+        </script>
+
+        @yield('custom-js')
     </body>
 </html>

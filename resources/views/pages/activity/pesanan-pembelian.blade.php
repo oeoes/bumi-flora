@@ -5,10 +5,10 @@
 
 @section('btn-custom')
 <div>
-    <a href="{{ route('storages.index') }}" class="btn btn-sm text-muted">
+    <button onclick="window.history.back()" class="btn btn-sm text-muted">
         <i data-feather="arrow-left"></i>
         <span class="d-none d-sm-inline mx-1">Back</span>
-    </a>
+    </button>
 </div>
 @endsection
 
@@ -17,7 +17,7 @@
     <div class="padding">
         <div class="row">            
             <div class="col-md-6">
-                <div class="card p-4">
+                <div class="card p-4 sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
                     <form method="post" action="{{ route('orders.store') }}">
                         @csrf
                         <div class="form-group">
@@ -56,7 +56,7 @@
                         <img style="max-width: 100%" src="{{ $item->image }}" alt="">
                         <div class="h2"><strong>{{ $item->name }}</strong></div>
                         <div class="h5">Rp.{{ number_format($item->price, 2) }}</div>
-                        <table class="table table-theme v-middle table-hover">
+                        <table class="table table-theme v-middle table-hover table-responsive">
                             <tr>
                                 <th>Item</th>
                                 <td>{{ $item->name }}</td>

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Model\Storage\ItemRecord;
+use App\Model\Storage\ItemIn;
+use App\Model\Storage\ItemOut;
 use App\Model\Storage\Stock;
 
 class RecordItemController extends Controller
@@ -17,7 +18,7 @@ class RecordItemController extends Controller
      */
     public function index()
     {
-        return view('pages.persediaan.item-keluar-masuk')->with('records', self::items_record_query()->get());
+        // return view('pages.persediaan.item-keluar-masuk')->with('records', self::items_record_query()->get());
     }
 
     /**
@@ -39,23 +40,27 @@ class RecordItemController extends Controller
     public function store(Request $request)
     {
         $stock = Stock::where(['item_id' => $request->item_id, 'dept' => $request->dept])->first();
-
-        ItemRecord::create([
-            'item_id' => $request->item_id,
-            'dept' => $request->dept,
-            'transaction_no' => $request->transaction_no,
-            'type' => $request->type,
-            'date' => \Carbon\Carbon::now(),
-            'amount' => $request->amount,
-            'description' => $request->description,
-        ]);
         
         // update stock
         if ($request->type == 'in') {
+            ItemIn::create([
+                'item_id' => $request->item_id,
+                'dept' => $request->dept,
+                'transaction_no' => $request->transaction_no,
+                'amount' => $request->amount,
+                'description' => $request->description,
+            ]);
             $stock->update([
                 'amount' => $stock->amount + $request->amount
             ]);
         } else {
+            ItemOut::create([
+                'item_id' => $request->item_id,
+                'dept' => $request->dept,
+                'transaction_no' => $request->transaction_no,
+                'amount' => $request->amount,
+                'description' => $request->description,
+            ]);
             $stock->update([
                 'amount' => $stock->amount - $request->amount
             ]);
@@ -80,7 +85,7 @@ class RecordItemController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+    */
     public function edit($id)
     {
         //
@@ -118,19 +123,21 @@ class RecordItemController extends Controller
                 ->select('balances.amount', 'balances.id as balance_id', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'brands.brand');
     }
 
-    public static function items_record_query () {
-        return DB::table('item_records')
-                ->join('items', 'items.id', '=', 'item_records.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->select('item_records.*', 'items.name', 'items.code', 'items.price', 'units.unit');
-    }
-
     public function item_masuk () {
-        return view('pages.persediaan.item-masuk')->with('items', self::items_record_query()->where('item_records.type', 'in')->get());
+        $items = DB::table('items')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('item_ins', 'items.id', '=', 'item_ins.item_id')
+                ->select('item_ins.*', 'items.name', 'items.price', 'units.unit')->get();
+        return view('pages.persediaan.item-masuk')->with('items', $items);
     }
 
     public function item_keluar () {
-        return view('pages.persediaan.item-keluar')->with('items', self::items_record_query()->where('item_records.type', 'out')->get());
+        $items = DB::table('items')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('item_outs', 'items.id', '=', 'item_outs.item_id')
+                ->select('item_outs.*', 'items.name', 'items.price', 'units.unit')->get();
+
+        return view('pages.persediaan.item-keluar')->with('items', $items);
     }
 
     public function transfer_item (Request $request) {

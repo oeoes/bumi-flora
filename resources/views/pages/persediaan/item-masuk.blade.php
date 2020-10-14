@@ -43,7 +43,17 @@
 </div>
 @endsection
 
+@section('custom-js')
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#item-masuk').DataTable();
+    });
+</script>
+@endsection
+
 @section('custom-css')
+    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
     <style>
         @media only screen and (max-width: 600px) {
             .my-responsive {
@@ -66,53 +76,18 @@
                             <table></table>
                         </div>
                         <div class="fixed-table-body">
-                            <div class="fixed-table-loading" style="top: 41px;">Loading, please wait...</div>
-                            <table id="table" class="table my-responsive table-theme v-middle table-hover" data-toolbar="#toolbar"
-                                data-search="true" data-search-align="left" data-show-export="true" data-show-columns="true"
-                                data-detail-view="false" data-mobile-responsive="true" data-pagination="true"
-                                data-page-list="[10, 25, 50, 100, ALL]" style="margin-top: 0px;">
+                            <table id="item-masuk" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
-                                        <th style="" data-field="type">
-                                            <div class="th-inner">Nama</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="type">
-                                            <div class="th-inner">Kode</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="type">
-                                            <div class="th-inner">Satuan</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="type">
-                                            <div class="th-inner">No. Transaksi</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="code">
-                                            <div class="th-inner">Tanggal</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Deskripsi</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Dept</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Harga</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner "><span class="d-sm-block">Jumlah</span></div>
-                                            <!-- <div class="fht-cell"></div> -->
-                                        </th>
-                                        <th style="" data-field="task">
-                                            <div class="th-inner "><span class="d-sm-block">Total</span></div>
-                                            <!-- <div class="fht-cell"></div> -->
-                                        </th>
+                                        <th><span class="text-muted">Nama</span></th>
+                                        <th><span class="text-muted">Satuan</span></th>
+                                        <th><span class="text-muted">No. Transaksi</span></th>
+                                        <th><span class="text-muted">Tanggal</span></th>
+                                        <th><span class="text-muted">Deskripsi</span></th>
+                                        <th><span class="text-muted">Dept</span></th>
+                                        <th><span class="text-muted">Harga</span></th>
+                                        <th><span class="text-muted">Jumlah</span></th>
+                                        <th><span class="text-muted">Total</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,11 +96,6 @@
                                         <td style="">
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
-                                            </div>
-                                        </td>
-                                        <td style="">
-                                            <div class="text-muted text-sm">
-                                                {{ $item->code }}
                                             </div>
                                         </td>
                                         <td style="">
@@ -140,7 +110,7 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                {{ $item->date }}
+                                                {{ $item->created_at }}
                                             </span>
                                         </td>
                                         <td style="">
@@ -150,7 +120,11 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                {{ strtoupper($item->dept) }}
+                                                @if ($item->dept == 'utama')
+                                                <span class="badge badge-primary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @else
+                                                <span class="badge badge-secondary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @endif
                                             </span>
                                         </td>
                                         <td style="">
@@ -167,25 +141,6 @@
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price * $item->amount, 2) }}
                                             </span>
-                                        </td>
-                                        <td style="">
-                                            <div class="item-action dropdown">
-                                                <a href="#" data-toggle="dropdown" class="text-muted">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-more-vertical">
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="12" cy="5" r="1"></circle>
-                                                        <circle cx="12" cy="19" r="1"></circle>
-                                                    </svg>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
-                                                    <!-- <a class="dropdown-item" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down" data-toggle-class-target=".animate">
-                                                        Saldo Awal
-                                                    </a> -->
-                                                </div>
-                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

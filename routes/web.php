@@ -22,6 +22,10 @@ Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_ite
 
 // activity
 Route::resource('/orders', 'Activity\OrderController');
+Route::get('/orders/history/list', 'Activity\OrderController@history_order')->name('orders.history_order');
+Route::post('/orders/accept/{order}', 'Activity\OrderController@accept_item')->name('orders.accept_item');
+Route::post('/orders/return/{order}', 'Activity\OrderController@return_item')->name('orders.return_item');
+Route::get('/orders/cashier/page', 'Activity\OrderController@cashier_page')->name('orders.cashier_page');
 
 // stake Holders
-Route::resource('/stake_holders', 'Relation\StakeHolderController');
+Route::resource('/entities', 'Relation\StakeHolderController');

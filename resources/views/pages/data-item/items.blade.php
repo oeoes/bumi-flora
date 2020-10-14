@@ -48,7 +48,17 @@
 </div>
 @endsection
 
+@section('custom-js')
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#data-item').DataTable();
+    });
+</script>
+@endsection
+
 @section('custom-css')
+    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
     <style>
         @media only screen and (max-width: 600px) {
             .my-responsive {
@@ -68,23 +78,12 @@
             <div class="col-sm-12 col-md-12">
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
-                        <div class="fixed-table-header" style="display: none;">
-                            <table></table>
-                        </div>
                         <div class="fixed-table-body">
-                            <div class="fixed-table-loading" style="top: 41px;">Loading, please wait...</div>
-                            <table id="table" class="table my-responsive table-theme v-middle table-hover" data-toolbar="#toolbar"
-                                data-search="true" data-search-align="left" data-show-export="true" data-show-columns="true"
-                                data-detail-view="false" data-mobile-responsive="true" data-pagination="true"
-                                data-page-list="[10, 25, 50, 100, ALL]" style="margin-top: 0px;">
+                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
                                         <th style="" data-field="type">
                                             <div class="th-inner">Nama</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="code">
-                                            <div class="th-inner">Kode</div>
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th style="" data-field="itemtype">
@@ -100,12 +99,11 @@
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th style="" data-field="itemtype">
-                                            <div class="th-inner "><span class="d-none d-sm-block">Jenis</span></div>
-                                            <!-- <div class="fht-cell"></div> -->
+                                            <div class="th-inner">Dept</div>
+                                            <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="task">
-                                            <div class="th-inner "><span class="d-none d-sm-block">Tipe</span></div>
-                                            <!-- <div class="fht-cell"></div> -->
+                                        <th style="" data-field="itemtype">
+                                            <div class="th-inner "><span class="d-none d-sm-block">Jenis</span></div>
                                         </th>
                                         <th style="" data-field="5">
                                             <div class="th-inner "></div>
@@ -119,11 +117,6 @@
                                         <td style="">
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
-                                            </div>
-                                        </td>
-                                        <td style="">
-                                            <div class="text-muted text-sm">
-                                                {{ $item->code }}
                                             </div>
                                         </td>
                                         <td style="">
@@ -143,13 +136,17 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->category }}
+                                                @if ($item->dept == 'utama')
+                                                <span class="badge badge-primary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @else
+                                                <span class="badge badge-secondary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @endif
                                             </span>
                                         </td>
-                                        <td class="flex" style="">
-                                            <div class="item-amount d-none d-sm-block text-sm">
-                                                {{ strtoupper($item->type) }}
-                                            </div>
+                                        <td style="">
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->category }}
+                                            </span>
                                         </td>
                                         <td style="">
                                             <div class="item-action dropdown">

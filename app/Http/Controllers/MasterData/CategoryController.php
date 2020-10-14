@@ -14,6 +14,7 @@ class CategoryController extends Controller
             'category' => $request->category,
             'description' => $request->description
         ]);
+        session()->flash('message', 'Yeay! Kategori berhasil ditambahkan.');
         return back();
     }
 
@@ -23,6 +24,7 @@ class CategoryController extends Controller
             'category' => $request->category,
             'description' => $request->description
         ]);
+        session()->flash('message', 'OK! Data berhasil diperbarui.');
         return back();
     }
 

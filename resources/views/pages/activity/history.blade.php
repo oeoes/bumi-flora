@@ -1,20 +1,10 @@
 @extends('layouts.master')
 
-@section('page-title', 'Daftar Pesanan Pembelian')
-@section('page-description', 'Daftar pesanan pembelian.')
+@section('page-title', 'History Pesanan Pembelian')
+@section('page-description', 'History pesanan pembelian.')
 
-
-@section('custom-js')
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#order').DataTable();
-    });
-</script>
-@endsection
 
 @section('custom-css')
-    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
     <style>
         @media only screen and (max-width: 600px) {
             .my-responsive {
@@ -30,7 +20,7 @@
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="table-responsive">
-            <table id="order" class="table table-theme table-row v-middle">
+            <table id="datatable" class="table table-theme table-row v-middle" data-plugin="dataTable">
                 <thead>
                     <tr>
                         <th><span class="text-muted">Item</span></th>
@@ -77,8 +67,7 @@
                             <td style="">
                                 <span class="item-amount d-sm-block text-sm">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-primary">{{ $order->accepted }}</button>
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-amount{{$key}}"><i data-feather='plus'></i></button>
+                                        <span class="text-success">{{ $order->accepted }}</span>
                                     </div>
                                 </span>
                             </td>
@@ -105,6 +94,25 @@
                                     <span class="badge badge-success text-uppercase">Completed</span>
                                     @endif
                                 </span>
+                            </td>
+                            <td style="">
+                                <div class="item-action dropdown">
+                                    <a href="#" data-toggle="dropdown" class="text-muted">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-more-vertical">
+                                            <circle cx="12" cy="12" r="1"></circle>
+                                            <circle cx="12" cy="5" r="1"></circle>
+                                            <circle cx="12" cy="19" r="1"></circle>
+                                        </svg>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#return{{$key}}">
+                                            Return Item
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
 
@@ -167,25 +175,23 @@
                         </div>
 
 
-                        <!-- modal tambah barang yang telah diterima -->
-                        <div class="modal fade" id="add-amount{{$key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <!-- Modal return item -->
+                        <div class="modal fade" id="return{{$key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Catat Barang Masuk</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Return Barang</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{ route('orders.accept_item', ['order' => $order->id]) }}" method="post">
+                                    <form action="{{ route('orders.return_item', ['order' => $order->id]) }}" method="post">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="amount">Jumlah Item</label>
+                                            <label for="amount">Jumlah Item <br> <span class="text-danger"><small style="font-size: 80%">Jumlah return barang tidak boleh melebihi jumlah barang.</small></span></label>
                                             <input type="text" name="amount" class="form-control" required>
-                                            <div class="mt-3 mb-1 text-sm">Jumlah pesanan : <span class="text-info">{{ $order->amount }}</span> item</div>
-                                            <div class="mt-1 mb-1 text-sm">Jumlah item masuk : <span class="text-success">{{ $order->accepted }}</span> item</div>
-                                            <div class="mt-1 mb-1 text-sm">Sisa : <span class="text-danger">{{ $order->amount - $order->accepted }}</span></div>
+                                            <div class="mt-3 mb-1 text-sm">Jumlah Barang : <span class="text-success">{{ $order->amount }}</span> item</div>
                                         </div>
                                 </div>
                                 <div class="modal-footer">

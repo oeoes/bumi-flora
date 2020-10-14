@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemRecordsTable extends Migration
+class CreateItemOutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateItemRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_records', function (Blueprint $table) {
+        Schema::create('item_outs', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
             $table->uuid('item_id');
             $table->string('transaction_no');
             $table->enum('dept', ['gudang', 'utama']);
-            $table->enum('type', ['in', 'out']);
-            $table->dateTime('date');
             $table->text('description')->nullable();
             $table->integer('amount');
             $table->timestamps();
@@ -35,6 +33,6 @@ class CreateItemRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_records');
+        Schema::dropIfExists('item_outs');
     }
 }

@@ -14,6 +14,8 @@ class UnitController extends Controller
             'unit' => $request->unit,
             'description' => $request->description
         ]);
+
+        session()->flash('message', 'Yeay! Satuan berhasil ditambahkan.');
         return back();
     }
 
@@ -23,6 +25,8 @@ class UnitController extends Controller
             'unit' => $request->unit,
             'description' => $request->description
         ]);
+
+        session()->flash('message', 'OK! Data berhasil diperbarui.');
         return back();
     }
 

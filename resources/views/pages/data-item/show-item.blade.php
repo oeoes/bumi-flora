@@ -17,8 +17,12 @@
     <div class="padding">
         <div class="row">            
             <div class="col-md-6">
-                <div class="card sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
+                <div class="card sticky p-2" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
+                    @if (!$item->image)
+                    <img style="max-width: 80%; margin: 0 auto" src="{{ asset('images/default.svg') }}" alt="">
+                    @else
                     <img style="max-width: 100%" src="{{ $item->image }}" alt="">
+                    @endif
                 </div>
             </div>
             <div class="col-md-6">
@@ -32,27 +36,23 @@
                                 <td>{{ $item->name }}</td>
                             </tr>
                             <tr>
-                                <th>Code</th>
-                                <td>{{ $item->code }}</td>
+                                <th>Barcode</th>
+                                <td>{{ $item->barcode }}</td>
                             </tr>
                             <tr>
-                                <th>Type</th>
-                                <td>{{ strtoupper($item->type) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Category</th>
+                                <th>Kategori</th>
                                 <td>{{ $item->category }}</td>
                             </tr>
                             <tr>
-                                <th>Unit type</th>
+                                <th>Satuan</th>
                                 <td>{{ $item->unit }}</td>
                             </tr>
                             <tr>
-                                <th>Cabinet</th>
+                                <th>Rak</th>
                                 <td>{{ $item->cabinet }}</td>
                             </tr>
                             <tr>
-                                <th>Sale status</th>
+                                <th>Status jual</th>
                                 @if($item->sale_status == 1)
                                 <td>Masih Dijual</td>
                                 @else
@@ -60,19 +60,19 @@
                                 @endif
                             </tr>
                             <tr>
-                                <th>Cost</th>
+                                <th>Harga pokok</th>
                                 <td>Rp.{{ number_format($item->main_cost, 2) }}</td>
                             </tr>
                             <tr>
-                                <th>Price</th>
+                                <th>Harga jual</th>
                                 <td>Rp.{{ number_format($item->price, 2) }}</td>
                             </tr>
                             <tr>
-                                <th>Minimum stock</th>
+                                <th>Stok minimum</th>
                                 <td>{{ $item->min_stock }}</td>
                             </tr>
                             <tr>
-                                <th>Description</th>
+                                <th>Deskripsi</th>
                                 <td>{{ $item->description }}</td>
                             </tr>
                         </table>
