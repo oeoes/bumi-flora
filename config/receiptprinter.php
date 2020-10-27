@@ -19,7 +19,7 @@ return [
     | Typically printer name or IP address.
     |
     */
-    'connector_descriptor' => 'epson',
+    'connector_descriptor' => 'vsc',
     /*
     |--------------------------------------------------------------------------
     | Printer port
