@@ -124,9 +124,9 @@
                     <span class="nav-text">Roles & Permission</span>
                 </a>
             </li>
-            <!-- @endif -->
+            @endif
 
-            <!-- @if(auth()->user()->hasAnyRole(['cashier'])) -->
+            @if(auth()->user()->hasAnyRole(['cashier']))
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
