@@ -19,7 +19,7 @@ return [
     | Typically printer name or IP address.
     |
     */
-    'connector_descriptor' => 'smb://192.168.43.217/zahra',
+    'connector_descriptor' => '192.168.43.217/zahra',
     /*
     |--------------------------------------------------------------------------
     | Printer port
