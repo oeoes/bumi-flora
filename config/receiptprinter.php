@@ -10,7 +10,7 @@ return [
     | Valid values are: cups, network, windows
     |
     */
-    'connector_type' => 'cups',
+    'connector_type' => 'network',
     /*
     |--------------------------------------------------------------------------
     | Printer connector descriptor
@@ -19,7 +19,7 @@ return [
     | Typically printer name or IP address.
     |
     */
-    'connector_descriptor' => 'vsc',
+    'connector_descriptor' => 'smb://192.168.43.217/zahra',
     /*
     |--------------------------------------------------------------------------
     | Printer port
