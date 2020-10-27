@@ -32,8 +32,8 @@ var MODULE_CONFIG = {
                       '../assets/js/plugins/musicapp.js'
                     ],
     fullscreen:     [
-                      '../libs/jquery-fullscreen-plugin/jquery.fullscreen-min.js',
-                      '../assets/js/plugins/fullscreen.js'
+                      '../../libs/jquery-fullscreen-plugin/jquery.fullscreen-min.js',
+                      '../../assets/js/plugins/fullscreen.js'
                     ],
     jscroll:        [
                       '../libs/jscroll/dist/jquery.jscroll.min.js'
@@ -94,8 +94,8 @@ var MODULE_CONFIG = {
                       '../libs/dropzone/dist/min/dropzone.min.css'
                     ],
     typeahead:      [
-                      '../libs/typeahead.js/dist/typeahead.bundle.min.js',
-                      '../assets/js/plugins/typeahead.js'
+                      '../../libs/typeahead.js/dist/typeahead.bundle.min.js',
+                      '../../assets/js/plugins/typeahead.js'
                     ],
     datepicker:     [
                       "../libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",

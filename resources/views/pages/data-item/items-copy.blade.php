@@ -85,49 +85,13 @@
 @endsection
 
 @section('custom-js')
-<script src="{{ asset('js/dataTables.js') }}"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('js/upload-file.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
 <script>
     $(document).ready(function () {
-        $('#data-item').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('items.ajax') }}",
-            columns: [{
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'barcode',
-                    name: 'barcode'
-                },
-                {
-                    data: 'main_cost',
-                    name: 'main_cost'
-                },
-                {
-                    data: 'price',
-                    name: 'price'
-                },
-                {
-                    data: 'base_unit',
-                    name: 'base_unit'
-                },
-                {
-                    data: 'base_unit_conversion',
-                    name: 'base_unit_conversion'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ]
-        });
+        $('#data-item').DataTable();
     });
-
 </script>
 @endsection
 
@@ -141,7 +105,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -158,38 +121,113 @@
                                 style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
-                                        <th style="">
+                                        <th style="" data-field="type">
                                             <div class="th-inner">Nama</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="">
+                                        <th style="" data-field="type">
                                             <div class="th-inner">Barcode</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="">
+                                        <th style="" data-field="itemtype">
+                                            <div class="th-inner">Satuan</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="" data-field="itemtype">
                                             <div class="th-inner">Harga Pokok</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="">
+                                        <th style="" data-field="itemtype">
                                             <div class="th-inner">Harga Jual</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="">
-                                            <div class="th-inner">Satuan Dasar </div>
-                                            <div class="fht-cell"></div>
-                                        </th>   
-                                        <th style="">
-                                            <div class="th-inner">Konversi Satuan Dasar </div>
+                                        <th style="" data-field="itemtype">
+                                            <div class="th-inner">Dept</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="">
-                                            <div class="th-inner "><span class="d-none d-sm-block"></span></div>
+                                        <th style="" data-field="itemtype">
+                                            <div class="th-inner "><span class="d-none d-sm-block">Jenis</span></div>
+                                        </th>
+                                        <th style="" data-field="5">
+                                            <div class="th-inner "></div>
                                             <div class="fht-cell"></div>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    @foreach($items as $key => $item)
+                                    <tr class=" " data-index="0" data-id="17">
+                                        <td style="">
+                                            <div class="text-muted text-sm">
+                                                {{ $item->name }}
+                                            </div>
+                                        </td>
+                                        <td style="">
+                                            <div class="text-muted text-sm">
+                                                {{ $item->barcode }}
+                                            </div>
+                                        </td>
+                                        <td style="">
+                                            <span class="item-amount d-sm-block text-sm">
+                                                {{ $item->unit }}
+                                            </span>
+                                        </td>
+                                        <td style="">
+                                            <span class="item-amount d-sm-block text-sm">
+                                                Rp.{{ number_format($item->main_cost, 2) }}
+                                            </span>
+                                        </td>
+                                        <td style="">
+                                            <span class="item-amount d-sm-block text-sm">
+                                                Rp.{{ number_format($item->price, 2) }}
+                                            </span>
+                                        </td>
+                                        <td style="">
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                @if ($item->dept == 'utama')
+                                                <span
+                                                    class="badge badge-primary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @else
+                                                <span
+                                                    class="badge badge-secondary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @endif
+                                            </span>
+                                        </td>
+                                        <td style="">
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->category }}
+                                            </span>
+                                        </td>
+                                        <td style="">
+                                            <div class="item-action dropdown">
+                                                <a href="#" data-toggle="dropdown" class="text-muted">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="feather feather-more-vertical">
+                                                        <circle cx="12" cy="12" r="1"></circle>
+                                                        <circle cx="12" cy="5" r="1"></circle>
+                                                        <circle cx="12" cy="19" r="1"></circle>
+                                                    </svg>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right bg-black" role="menu">
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('items.show', ['item' => $item->id]) }}">
+                                                        See detail
+                                                    </a>
+                                                    <a href="{{ route('items.edit', ['item' => $item->id]) }}"
+                                                        class="dropdown-item edit">
+                                                        Edit
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item trash">
+                                                        Delete item
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

@@ -7,9 +7,9 @@
     <script>
         $('#generate_barcode').click(function(){
             var result           = '';
-            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var characters       = '0123456789';
             var charactersLength = characters.length;
-            for ( var i = 0; i < 20; i++ ) {
+            for ( var i = 0; i < 11; i++ ) {
                 result += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
 
@@ -56,16 +56,20 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="text-muted" for="image">Gambar</label>
-                                <input type="text" name="image" class="form-control" id="image" placeholder="insert image">
-                            </div>
-                            <div class="form-group">
                                 <label class="text-muted" for="unit">Satuan *</label>
                                 <select name="unit" id="unit" class="form-control" required>
                                     @foreach($units as $unit)
                                     <option value="{{ $unit->id }}">{{ $unit->unit }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Satuan Dasar *</label>
+                                <input name="base_unit" type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Konversi Satuan Dasar *</label>
+                                <input name="base_unit_conversion" type="text" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="category">Jenis *</label>
@@ -86,13 +90,6 @@
                             <div class="form-group">
                                 <label class="text-muted" for="cabinet">Rak</label>
                                 <input type="text" name="cabinet" class="form-control" id="cabinet" placeholder="insert location">
-                            </div>
-                            <div class="form-group">
-                                <label class="text-muted" for="sale_status">Status Penjualan *</label>
-                                <select name="sale_status" id="sale_status" class="form-control" required>
-                                    <option value="0">Tidak Dijual</option>
-                                    <option value="1">Dijual</option>
-                                </select>
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="main_cost">Harga Pokok *</label>

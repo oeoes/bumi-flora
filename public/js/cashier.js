@@ -1,0 +1,246 @@
+function push_data(id, item, barcode, unit, qty, price) {
+    let state = true
+    let items = []
+
+    // create localstorage/or update
+    if (localStorage.getItem("items") !== null) {
+        items = JSON.parse(localStorage.getItem('items'))
+    }
+
+    // kalau ada item yg sama, gausah disimpen ke localstorage, cukup tambah qty nya aja
+    if (items.length > 0) {
+        for (let i = 0; i < items.length; i++) {
+            if (id == items[i][0]) {
+                state = false
+            }
+        }
+        localStorage.setItem('items', JSON.stringify(items));
+    }
+
+    if (state) {
+        items.push([id, item, barcode, unit, qty, price])
+        localStorage.setItem('items', JSON.stringify(items));
+
+        // cetak item ke layar setelah scan barcode
+        $('#none').remove()
+        $('#data-item tr').remove()
+        print_items()
+    }
+
+    // print total price everytime data pushed
+    print_total_price()
+    print_accumulate()
+
+    $('#item_code').val('')
+    $('#item_code').focus()
+    $('#jumlah').val(1)
+}
+
+function print_items() {
+    let items = JSON.parse(localStorage.getItem('items'))
+
+    if (items == null) {
+        $('#data-item').append(
+            '<tr id="none"><td class="text-muted" colspan="7" align="center">Belum ada item ditambahkan</td></tr>'
+        )
+    } else {
+        for (let i = 0; i < items.length; i++) {
+            $('#data-item').append(
+                '<tr><td>' + items[i][1] + '</td><td>' + items[i][2] + '</td><td>' + items[i][3] + '</td><td> <input id="' + items[i][0] + '" type="number" class="form-control form-control-sm" value="' + items[i][4] + '"></td><td>Rp.' + parseInt(items[i][5]).toLocaleString() + '</td><td>Rp. <span id="acc_' + items[i][0] + '"></span></td><td><span onclick="remove_item(' + i + ')" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>'
+            ).fadeIn(3000, 'ease')
+
+        }
+    }
+}
+
+function print_total_price() {
+    let total = 0
+    let total_price = total
+    let items = JSON.parse(localStorage.getItem('items'))
+
+    if (items != null) {
+        for (let i = 0; i < items.length; i++) {
+            total = total + (parseInt(items[i][4]) * parseInt(items[i][5]))
+        }
+    }    
+
+    // perhitungan total price setalh dipotong discount
+    if ($('#discount_type').val() == 'nominal') {
+        total_price = total - $('#discount_value').val()
+        $('#desired_discount_value').text(parseInt($('#discount_value').val()).toLocaleString())
+    } else {
+        total_price = total - ((total * $('#discount_value').val()) / 100)
+        $('#desired_discount_value').text($('#discount_value').val() + '%')
+    }
+    localStorage.setItem('total_price', total_price);
+
+    $('#total_price').text(total.toLocaleString())
+    $('#bill').text(total_price.toLocaleString())
+    $('#final_price').text(parseInt(total_price).toLocaleString())
+}
+
+
+function get_id(id, item, barcode, unit, price) {
+    if (id != null)
+        push_data(id, item, barcode, unit, $('#jumlah').val(), price)
+    
+    // tutup modal sama clear input search
+    $('#kasir-data-item_filter input').val('')
+    $('#search-item').modal('hide')
+
+    // location.reload()
+}
+
+function print_accumulate() {
+    let items = JSON.parse(localStorage.getItem('items'))
+
+    if (items != null) {
+        for (let i = 0; i < items.length; i++) {
+            $('#acc_' + items[i][0]).text(parseInt(items[i][5] * items[i][4]).toLocaleString())
+        }
+    }
+    
+}
+
+function remove_item(index) {
+    let items = JSON.parse(localStorage.getItem('items'))
+    items.splice(index, 1)
+
+    localStorage.setItem('items', JSON.stringify(items))
+
+    $('#data-item tr').remove()
+    print_items()
+    print_total_price()
+    print_accumulate()
+    $('#item_code').focus()
+}
+
+
+$(document).ready(function () {
+    // print item yg ada di localstorage
+    print_items()
+    print_total_price()
+    print_accumulate()
+
+    // create discount localstorage
+    localStorage.setItem('discount', 0)
+
+    // autofocus ke field jumlah dan kode item
+    $(document).on('keypress', 'input', (function (e) {
+        if (e.which == 13) {
+            if ($('#item_code').is(':focus')) {
+                $('#jumlah').focus().select()
+            }
+
+            else if ($('#jumlah').is(':focus')) {
+                $('#item_code').focus().select()
+            }
+        }        
+    }))
+
+    // tekan tombil Q untuk melakukan pembayaran
+    $(document).on('keypress', 'html', (function (e) {
+        if (e.which == 47) {
+            $('#payment').modal('toggle');
+        }
+        
+        
+    }))
+
+    // scan barcode
+    $(document).on('keyup', '#item_code', (function () {
+        if ($('#item_code').val().length > 1) {
+            axios.get('/cashier/check', { params: { code: $('#item_code').val() } })
+                .then(function (response) {
+                    if (response.data.status == true) {
+                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, $('#jumlah').val(), response.data.data.price)
+                        console.log('Found.')
+                    }      
+                    else {
+                        $('#search-item').modal('show')
+                        $('#kasir-data-item_filter input').focus().val($('#item_code').val())
+                    }
+                })
+        }
+    }));
+
+    // field jumlah diupdate
+    $(document).on('keyup', '#data-item input', (function () {
+        let items = JSON.parse(localStorage.getItem('items'))
+
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {              
+                if (items[i][0] == $(this).attr('id')) {
+                    items[i][4] = $(this).val()
+                }
+            }
+        }
+
+        localStorage.setItem('items', JSON.stringify(items));
+
+        print_accumulate()
+        print_total_price()
+    }))
+
+    // show/hide text for discount
+    if ($('#discount_value').val() < 1) {
+        $('#cont_discount').css('display', 'none')
+    } else {
+        $('#cont_discount').css('display', 'block')
+    }
+
+    // perhitungan discount
+    $(document).on('keyup', '#discount_value', (function () {
+        
+        // show/hide text for discount
+        if ($('#discount_value').val() < 1) {
+            $('#cont_discount').css('display', 'none')
+        } else {
+            $('#cont_discount').css('display', 'block')
+        }
+        
+        let total = 0
+        let items = JSON.parse(localStorage.getItem('items'))
+        let total_price = 0
+
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                total = total + (parseInt(items[i][4]) * parseInt(items[i][5]))
+            }
+        }
+
+        // define discount type
+        if ($('#discount_type').val() == 'nominal') {
+            total_price = total - $('#discount_value').val()
+            $('#desired_discount_value').text(parseInt($('#discount_value').val()).toLocaleString())
+
+            // store discount value to localStorage
+            if ($('#discount_value').val() == '') {
+                localStorage.setItem('discount', 0)
+            } else {
+                localStorage.setItem('discount', $('#discount_value').val())
+            }
+                
+        } else {
+            total_price = total - ((total * $('#discount_value').val()) / 100)
+            $('#desired_discount_value').text($('#discount_value').val() + '%')
+
+            // store discount value to localStorage
+            localStorage.setItem('discount', (total * $('#discount_value').val()) / 100)
+        }
+        localStorage.setItem('total_price', total_price);
+
+        $('#final_price').text(parseInt(total_price).toLocaleString())
+        $('#bill').text(total_price.toLocaleString())
+    }));
+
+    // reset transaksi
+    $(document).on('click', '#reset_transaction', (function () {
+        localStorage.removeItem('items')
+        localStorage.removeItem('total_price')
+        $('#cancle_payment').modal('toggle')
+
+        location.reload()
+    }))
+
+});

@@ -64,7 +64,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $key+1 }}
+                                                        {{ $brand->id }}
                                                     </div>
                                                 </td>
                                                 <td>
@@ -182,7 +182,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $key+1 }}
+                                                        {{ $unit->id }}
                                                     </div>
                                                 </td>
                                                 <td>
@@ -299,7 +299,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="text-muted text-sm">
-                                                        {{ $key+1 }}
+                                                        {{ $category->id }}
                                                     </div>
                                                 </td>
                                                 <td>

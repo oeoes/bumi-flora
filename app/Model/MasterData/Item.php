@@ -4,6 +4,7 @@ namespace App\Model\MasterData;
 
 use Illuminate\Database\Eloquent\Model;
 use Emadadly\LaravelUuid\Uuids;
+use App\Model\MasterData\Unit;
 
 class Item extends Model
 {

@@ -21,12 +21,13 @@ class CreateItemsTable extends Migration
             $table->foreignId('category_id');
             $table->string('name');
             $table->string('image')->nullable();
+            $table->string('base_unit');
+            $table->integer('base_unit_conversion');
             $table->string('cabinet')->nullable(); # rak
-            $table->tinyInteger('sale_status')->default(1);
             $table->text('description')->nullable();
             $table->string('main_cost'); # harga pokok
-            $table->string('barcode')->unique();
             $table->integer('price'); # harga jual
+            $table->string('barcode')->unique();
             $table->integer('min_stock')->default(0);
             $table->timestamps();
 

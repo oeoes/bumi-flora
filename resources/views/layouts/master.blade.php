@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Dashboard | Basik - Bootstrap 4 Web Application</title>
+        <title>Bumi Flora</title>
         <meta name="description" content="Responsive, Bootstrap, BS4" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <!-- style -->
@@ -22,9 +22,9 @@
                 box-sizing: border-box;
             }
         </style>
+        @yield('custom-js-2')
     </head>
     <body class="layout-row">
-
         @if(session()->has('message'))
         <div id="myalert" class="my-alert animate__animated animate__bounce">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -104,9 +104,6 @@
         <!-- Bootstrap -->
         <script src="{{ asset('libs/popper.js/dist/umd/popper.min.js') }}"></script>
         <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-        <!-- ajax page -->
-        <script src="{{ asset('libs/pjax/pjax.min.js') }}"></script>
-        <script src="{{ asset('assets/js/ajax.js') }}"></script>
         <!-- lazyload plugin -->
         <script src="{{ asset('assets/js/lazyload.config.js') }}"></script>
         <script src="{{ asset('assets/js/lazyload.js') }}"></script>
@@ -126,9 +123,6 @@
                 setTimeout(() => {
                     $('#myalert').slideUp('slow')
             }, 5000);
-
-            location.reload();
-            return false;
         </script>
 
         @yield('custom-js')

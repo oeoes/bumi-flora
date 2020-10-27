@@ -19,7 +19,7 @@
                         <i data-feather="search"></i>
                     </button>
                 </div>
-                <input type="text" class="form-control no-border no-shadow no-bg typeahead" placeholder="Search components..." data-plugin="typeahead" data-api="../assets/api/menu.json">
+                <input type="text" class="form-control no-border no-shadow no-bg typeahead" placeholder="Search components..." data-plugin="typeahead" data-api="">
             </form>
         </div>
         <ul class="nav navbar-menu order-1 order-lg-2">
@@ -127,7 +127,7 @@
                                 <div>
                                     <a href="music.detail.html">
                                         <span class="w-32 avatar gd-success">
-                        <img src="../assets/img/a8.jpg" alt=".">
+                        <img src="{{ asset('assets/img/a8.jpg') }}" alt=".">
                 </span>
                                     </a>
                                 </div>
@@ -141,7 +141,7 @@
                                 <div>
                                     <a href="music.detail.html">
                                         <span class="w-32 avatar gd-primary">
-                        <img src="../assets/img/a3.jpg" alt=".">
+                        <img src="{{ asset('assets/img/a3.jpg') }}" alt=".">
                 </span>
                                     </a>
                                 </div>
@@ -155,7 +155,7 @@
                                 <div>
                                     <a href="music.detail.html">
                                         <span class="w-32 avatar gd-success">
-                        <img src="../assets/img/a4.jpg" alt=".">
+                        <img src="{{ asset('assets/img/a4.jpg') }}" alt=".">
                 </span>
                                     </a>
                                 </div>
@@ -170,7 +170,7 @@
                                 <div>
                                     <a href="music.detail.html">
                                         <span class="w-32 avatar gd-info">
-                        <img src="../assets/img/a9.jpg" alt=".">
+                        <img src="{{ asset('assets/img/a9.jpg') }}" alt="">
                 </span>
                                     </a>
                                 </div>
@@ -197,15 +197,11 @@
             <!-- User dropdown menu -->
             <li class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link d-flex align-items-center px-2 text-color">
-                    <span class="avatar w-24" style="margin: -2px;"><img src="../assets/img/a3.jpg" alt="..."></span>
+                    <span class="avatar w-24" style="margin: -2px;"><img src="{{ asset('assets/img/a3.jpg') }}" alt="..."></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right w mt-3 animate fadeIn">
                     <a class="dropdown-item" href="page.profile.html">
-                        <span>Jacqueline Reid</span>
-                    </a>
-                    <a class="dropdown-item" href="page.price.html">
-                        <span class="badge bg-success text-uppercase">Upgrade</span>
-                        <span>to Pro</span>
+                        <span>{{ auth()->user()->name }}</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="page.profile.html">
@@ -220,7 +216,7 @@
                     <a class="dropdown-item" href="page.setting.html">
                         <span>Account Settings</span>
                     </a>
-                    <a class="dropdown-item" href="signin.html">Sign out</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}">Sign out</a>
                 </div>
             </li>
             <!-- Navarbar toggle btn -->

@@ -11,7 +11,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         Category::create([
-            'category' => $request->category,
+            'category' => strtolower($request->category),
             'description' => $request->description
         ]);
         session()->flash('message', 'Yeay! Kategori berhasil ditambahkan.');
@@ -21,7 +21,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $category->update([
-            'category' => $request->category,
+            'category' => strtolower($request->category),
             'description' => $request->description
         ]);
         session()->flash('message', 'OK! Data berhasil diperbarui.');

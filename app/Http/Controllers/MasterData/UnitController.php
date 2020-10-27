@@ -11,7 +11,7 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         Unit::create([
-            'unit' => $request->unit,
+            'unit' => strtolower($request->unit),
             'description' => $request->description
         ]);
 
@@ -22,7 +22,7 @@ class UnitController extends Controller
     public function update(Request $request, Unit $unit)
     {
         $unit->update([
-            'unit' => $request->unit,
+            'unit' => strtolower($request->unit),
             'description' => $request->description
         ]);
 

@@ -11,7 +11,7 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         Brand::create([
-            'brand' => $request->brand,
+            'brand' => strtolower($request->brand),
             'description' => $request->description
         ]);
 
@@ -22,7 +22,7 @@ class BrandController extends Controller
     public function update(Request $request, Brand $brand)
     {
         $brand->update([
-            'brand' => $request->brand,
+            'brand' => strtolower($request->brand),
             'description' => $request->description
         ]);
         session()->flash('message', 'OK! Data berhasil diperbarui.');

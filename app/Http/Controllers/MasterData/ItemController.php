@@ -11,21 +11,51 @@ use App\Model\MasterData\Unit;
 use App\Model\MasterData\Category;
 use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
+use Illuminate\Support\Facades\Storage;
+use DataTables;
 
 class ItemController extends Controller
 {
     public function index()
     {   
-        return view('pages.data-item.items')->with('items', self::items_query()->get());
+        return view('pages.data-item.items');
+    }
+
+    public function data_item_page () {
+        $data = self::items_query();
+        return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('price', function($row) {
+                    $content = 'Rp.'.number_format($row->price);
+                    return $content;
+                })
+                ->addColumn('main_cost', function($row) {
+                    $content = 'Rp.'.number_format($row->main_cost);
+                    return $content;
+                })
+                ->addColumn('action', function($row) {
+                    $btn = '<a href="'.route('items.show', ['item' => $row->id]).'" class="btn btn-sm btn-outline-info rounded-pill">View</a>
+                            <a href="'.route('items.edit', ['item' => $row->id]).'" class="btn btn-sm btn-outline-primary rounded-pill">Edit</a>';
+    
+                    return $btn;
+                })
+                ->rawColumns(['action', 'main_cost', 'price'])
+                ->make(true);
     }
 
     public static function items_query () {
+        return DB::table('items')
+                ->select('id', 'name', 'barcode', 'base_unit', 'base_unit_conversion', 'main_cost', 'price');
+    }
+
+    public static function items_show_query() {
         return DB::table('items')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->select('items.*', 'units.unit', 'categories.category', 'brands.brand', 'balances.dept');
+                ->where('balances.dept', 'utama')
+                ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'balances.dept', 'balances.amount as stock');
     }
 
     public function create()
@@ -41,14 +71,13 @@ class ItemController extends Controller
     {
         $item = Item::create([
             'name' => $request->name,
-            'image' => $request->image,
             'unit_id' => $request->unit,
             'brand_id' => $request->brand,
             'category_id' => $request->category,
             'stake_holder_id' => $request->stake_holder,
-            'type' => $request->type,
+            'base_unit' => $request->base_unit,
+            'base_unit_conversion' => $request->base_unit_conversion,
             'cabinet' => $request->cabinet,
-            'sale_status' => $request->sale_status,
             'description' => $request->description,
             'main_cost' => $request->main_cost,
             'barcode' => $request->barcode,
@@ -84,7 +113,7 @@ class ItemController extends Controller
      */
     public function show($item)
     {
-        return view('pages.data-item.show-item')->with('item', self::items_query()->where('items.id', $item)->first());
+        return view('pages.data-item.show-item')->with('item', self::items_show_query()->where('items.id', $item)->first());
     }
 
     /**
@@ -120,13 +149,13 @@ class ItemController extends Controller
     public function update(Request $request, Item $item) {
         $item->update([
             'name' => $request->name,
-            'image' => $request->image,
             'unit_id' => $request->unit,
             'brand_id' => $request->brand,
             'category_id' => $request->category,
             'stake_holder_id' => $request->stake_holder,
+            'base_unit' => $request->base_unit,
+            'base_unit_conversion' => $request->base_unit_conversion,
             'cabinet' => $request->cabinet,
-            'sale_status' => $request->sale_status,
             'description' => $request->description,
             'main_cost' => $request->main_cost,
             'barcode' => $request->barcode,
@@ -136,5 +165,85 @@ class ItemController extends Controller
 
         session()->flash('message', 'OK! Data berhasil diperbarui.');
         return redirect()->route('items.index');
+    }
+
+    public function import_item () {
+        $file = request()->file('file');
+        $extension = $file->getClientOriginalExtension();
+
+        // save file
+        request()->file('file')->storeAs('/product_files', 'import_item_data'.'.'.strtolower($extension));
+
+        $csv_file = fopen(storage_path('app/product_files/import_item_data.csv'),"r");
+        
+        $flag = true;
+        while (($line = fgetcsv($csv_file)) !== FALSE) {
+            if($flag) {
+                $flag = false;
+                continue;
+            } else {
+                $item = Item::create([
+                    'barcode' => $line[0],
+                    'name' => $line[1],
+                    'category_id' => self::findOrCreate('category', $line[2]),
+                    'unit_id' => self::findOrCreate('unit', $line[3]),
+                    'brand_id' => self::findOrCreate('brand', $line[4]),
+                    'base_unit' => $line[5],
+                    'base_unit_conversion' => $line[6],
+                    'main_cost' => $line[7],
+                    'price' => $line[8],
+                    'min_stock' => $line[9],
+                    'cabinet' => self::isNull($line[10]),
+                    'stake_holder_id' => self::isNull($line[11]),
+                    'description' => self::isNull($line[12]),
+                ]);
+
+                self::create_saldo_awal($item->id, 'utama');
+                self::create_saldo_awal($item->id, 'gudang');
+            }
+        }
+        // delete right away
+        Storage::delete('product_files/import_item_data.csv');
+        
+        return response()->json(['status' => true, 'message' => 'File uploaded successfully']);
+    }
+
+    /**
+     * $entity = [unit, brand, category]
+     */
+    public static function findOrCreate ($entity, $key) {
+        if ($entity == 'unit') {
+            $unit = Unit::where('unit', strtolower($key))->first();
+            if ($unit) {
+                return $unit->id;
+            } else {
+                $new_unit = Unit::create(['unit' => $key, 'description' => $key]);
+                return $new_unit->id;
+            }
+        }
+        else if ($entity == 'brand') {
+            $brand = Brand::where('brand', strtolower($key))->first();
+            if($brand) {
+                return $brand->id;
+            } else {
+                $new_brand = Brand::create(['brand' => $key, 'description' => $key]);
+                return $new_brand->id;
+            }
+        }
+        else {
+            $category = Category::where('category', strtolower($key))->first();
+            if($category) {
+                return $category->id;
+            } else {
+                $new_category = Category::create(['category' => $key, 'description' => $key]);
+                return $new_category->id;
+            }
+        }
+    }
+
+    public static function isNull($var) {
+        if($var == '')
+            return NULL;
+        return $var;
     }
 }

@@ -12,6 +12,7 @@
             </li>
         </ul>
         <ul class="nav ">
+        @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'admin']))
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -123,7 +124,9 @@
                     <span class="nav-text">Roles & Permission</span>
                 </a>
             </li>
+            <!-- @endif -->
 
+            <!-- @if(auth()->user()->hasAnyRole(['cashier'])) -->
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
@@ -142,6 +145,7 @@
                     <span class="nav-text">History Transaksi</span>
                 </a>
             </li>
+            <!-- @endif -->
         </ul>
     </div>
 </div>
