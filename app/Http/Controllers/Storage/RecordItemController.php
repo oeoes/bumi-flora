@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Model\Storage\ItemIn;
-use App\Model\Storage\ItemOut;
+use App\Model\Storage\StorageRecord;
 use App\Model\Storage\Stock;
 
 class RecordItemController extends Controller
@@ -43,22 +42,22 @@ class RecordItemController extends Controller
         
         // update stock
         if ($request->type == 'in') {
-            ItemIn::create([
+            StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
                 'transaction_no' => $request->transaction_no,
-                'amount' => $request->amount,
+                'amount_in' => $request->amount,
                 'description' => $request->description,
             ]);
             $stock->update([
                 'amount' => $stock->amount + $request->amount
             ]);
         } else {
-            ItemOut::create([
+            StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
                 'transaction_no' => $request->transaction_no,
-                'amount' => $request->amount,
+                'amount_out' => $request->amount,
                 'description' => $request->description,
             ]);
             $stock->update([

@@ -8,7 +8,7 @@
                 </g>
             </svg>
             <!-- <img src="../assets/img/logo.png" alt="..."> -->
-            <span class="hidden-folded d-inline l-s-n-1x d-lg-none">Basik</span>
+            <span class="hidden-folded d-inline l-s-n-1x d-lg-none">BumiFlora</span>
         </a>
         <!-- / brand -->
         <!-- Navbar collapse -->

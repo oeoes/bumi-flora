@@ -23,6 +23,10 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/storages/item/gudang', 'Storage\StorageController@storage_gudang')->name('storages.gudang');
     Route::get('/storages/item/opname', 'Storage\StorageController@stock_opname')->name('storages.opname');
 
+    // endpoint for ajax call opname
+    Route::get('/storages/item/opname/filter', 'Storage\StorageController@filter_opname')->name('storages.filter_opname');
+    Route::post('/storages/item/opname/export', 'Storage\StorageController@export_opname')->name('storages.export_opname');
+
     Route::resource('/records', 'Storage\RecordItemController');
     Route::get('/records/item/masuk', 'Storage\RecordItemController@item_masuk')->name('records.masuk');
     Route::get('/records/item/keluar', 'Storage\RecordItemController@item_keluar')->name('records.keluar');
@@ -59,6 +63,12 @@ Route::prefix('app')->middleware('admin')->group(function () {
     // barcode
     Route::get('/barcodes', 'Admin\BarcodeGenerator@index')->name('barcodes.index');
     Route::post('/barcodes/generate', 'Admin\BarcodeGenerator@generate')->name('barcodes.generate');
+
+    // omset
+    Route::get('/omsets', 'Admin\OmsetController@index')->name('omsets.index');
+    Route::get('/omsets/calculate', 'Admin\OmsetController@calculate_omset')->name('omsets.calculate_omset');
+    // omset ajax export
+    Route::post('/omsets/calculate/export', 'Admin\OmsetController@export_omset')->name('omsets.export_omset');
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

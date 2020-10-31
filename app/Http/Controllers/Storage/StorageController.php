@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
+use App\Model\MasterData\Category;
+use App\Model\MasterData\Item;
+use App\Exports\StockOpnameExport;
+use Excel;
 
 class StorageController extends Controller
 {
@@ -46,25 +50,38 @@ class StorageController extends Controller
     }
 
     public function storage_utama () {
-        return view('pages.persediaan.penyimpanan.utama')->with('items', self::items_query('utama')->get());
+        return view('pages.persediaan.penyimpanan.utama')->with('items', self::items_query('utama')->limit(100)->get());
     }
 
     public function storage_gudang () {
-        return view('pages.persediaan.penyimpanan.gudang')->with('items', self::items_query('gudang')->get());
+        return view('pages.persediaan.penyimpanan.gudang')->with('items', self::items_query('gudang')->limit(100)->get());
     }
 
     public function stock_opname () {
-        return $query = DB::table('items')
+        $category = Category::select('id', 'category')->get();
+        $cabs = Item::select('cabinet')->distinct()->get();
+
+        return view('pages.persediaan.opname')->with(['categories' => $category, 'cabinet' => $cabs]);
+    }
+
+    public function export_opname () {
+        Excel::store(new StockOpnameExport(request()), 'export.xlsx');
+        return response()->download(storage_path().'/app/export.xlsx', 'data-opname-eport.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();
+    }
+
+    public function filter_opname () {
+        $opname = DB::table('items')
+                ->leftJoin('storage_records', 'items.id', '=', 'storage_records.item_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('balances', 'items.id', '=', 'balances.item_id')
-                ->join('item_ins', 'items.id', '=', 'item_ins.item_id')
-                ->join('item_outs', 'items.id', '=', 'item_outs.item_id')
                 ->join('stocks', 'items.id', '=', 'stocks.item_id')
-                ->select('items.*', 'units.unit', 'item_ins.*', 'categories.category', 'balances.amount as balance', 'balances.dept', 'stocks.amount as stock')
-                ->where(['balances.dept' => 'utama', 'stocks.dept' => 'utama'])->get();
-                
-        return view('pages.persediaan.opname')->with('opname', $query);
+                ->select('items.*', DB::raw('sum(storage_records.amount_in) as amount_in'), DB::raw('sum(storage_records.amount_out) as amount_out'), 'units.unit', 'categories.category', 'balances.amount as balance', 'balances.dept', 'stocks.amount as stock')
+                ->where(['items.cabinet' => request('cabinet'), 'categories.id' => request('category'), 'storage_records.dept' => request('dept'), 'stocks.dept' => request('dept'), 'balances.dept' => request('dept')])
+                ->whereBetween('items.created_at', [request('from'), request('to')])
+                ->groupBy('storage_records.item_id')
+                ->get();
+        return response()->json(['status' => true, 'data' => $opname]);
     }
 
     public static function items_query ($dept) {

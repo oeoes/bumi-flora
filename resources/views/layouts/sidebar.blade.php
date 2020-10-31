@@ -45,6 +45,12 @@
                     <span class="nav-text">Barcode Generator</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('omsets.index') }}">
+                    <span class="nav-icon"><i data-feather='pocket'></i></span>
+                    <span class="nav-text">Omset</span>
+                </a>
+            </li>
 
             <!-- persediaan -->
             <li class="nav-header hidden-folded">
