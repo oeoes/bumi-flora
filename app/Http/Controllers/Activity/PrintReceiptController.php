@@ -17,6 +17,15 @@ class PrintReceiptController extends Controller
             $printer = new Printer($connector);
             $printer -> text("Hello World!\n");
             $printer -> cut();
+
+
+            /* Name of shop */
+            $printer -> selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+            $printer -> text("BUMI FLORA 80\n");
+            $printer -> feed();
+
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer -> text("JL. KH. MAULANA HASANUDIN NO. 80 CIPONDOH TANGERANG \n Telp: 085772386441 Fax: ");
             
             /* Close printer */
             $printer -> close();
