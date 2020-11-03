@@ -11,12 +11,13 @@ class PrintReceiptController extends Controller
 {
     public function print_receipt () {
         try {
-            $connector = new WindowsPrintConnector("namaprinter");
+            $connector = new WindowsPrintConnector("zahra");
 
             /* Print a "Hello world" receipt" */
             $printer = new Printer($connector);
-            $printer -> text("Hello World!\n");
+            $printer -> text("Hello Nisa!\n");
             $printer -> cut();
+            $printer -> pulse(); // ini buat triger cash draw
             
             /* Close printer */
             $printer -> close();
