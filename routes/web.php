@@ -69,6 +69,12 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/omsets/calculate', 'Admin\OmsetController@calculate_omset')->name('omsets.calculate_omset');
     // omset ajax export
     Route::post('/omsets/calculate/export', 'Admin\OmsetController@export_omset')->name('omsets.export_omset');
+
+    // payments method&type
+    Route::post('payments/method', 'MasterData\PaymentController@store_payment_method')->name('payments.payment-method.store');
+    Route::put('payments/method/{payment_method_id}', 'MasterData\PaymentController@update_payment_method')->name('payments.payment-method.update');
+    Route::post('payments/type', 'MasterData\PaymentController@store_payment_type')->name('payments.payment-type.store');
+    Route::put('payments/type/{payment_type_id}', 'MasterData\PaymentController@update_payment_type')->name('payments.payment-type.update');
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

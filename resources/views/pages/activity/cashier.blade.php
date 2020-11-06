@@ -180,10 +180,9 @@
                         <div class="form-group">
                             <select id="payment_option" class="form-control">
                                 <option>Pilih metode pembayaran</option>
-                                <option value="tunai">Tunai</option>
-                                <option value="ewallet">Ewallet</option>
-                                <option value="debit">Debit</option>
-                                <option value="transfer">Bank Transfer</option>
+                                @foreach($payment_method as $pm)
+                                <option value="{{ strtolower($pm->method_name) }}">{{ $pm->method_name }}</option>
+                                @endforeach
                             </select>
                         </div>
 

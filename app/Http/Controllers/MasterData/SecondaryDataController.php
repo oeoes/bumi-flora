@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Model\MasterData\Brand;
 use App\Model\MasterData\Unit;
 use App\Model\MasterData\Category;
+use App\Model\MasterData\PaymentMethod;
+use Illuminate\Support\Facades\DB;
 
 class SecondaryDataController extends Controller
 {
@@ -20,7 +22,10 @@ class SecondaryDataController extends Controller
         $brands = Brand::all();
         $units = Unit::all();
         $categories = Category::all();
-        return view('pages.data-pendukung.data-pendukung', ['brands' => $brands, 'units' => $units, 'categories' => $categories]);
+        $payment_methods = PaymentMethod::all();
+        $payment_types = DB::table('payment_types')->join('payment_methods', 'payment_methods.id', '=', 'payment_types.payment_method_id')->select('payment_types.*', 'payment_methods.id as payment_method_id', 'payment_methods.method_name')->get();
+
+        return view('pages.data-pendukung.data-pendukung', ['brands' => $brands, 'units' => $units, 'categories' => $categories, 'payment_methods' => $payment_methods, 'payment_types' => $payment_types]);
     }
 
     /**

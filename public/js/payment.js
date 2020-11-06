@@ -50,7 +50,8 @@ function store_transaction(e) {
 $(document).ready(function () {
 
     $(document).on('change', '#payment_option', (function () {
-        switch ($('#payment_option').val()) {
+        console.log($('#payment_option').val());
+        switch ($('#payment_option').val()) {        
             case 'tunai':
                 // kosongin field nominal
                 $('#nominal').val('')
@@ -124,7 +125,7 @@ $(document).ready(function () {
                 })
                 break;
             
-            case 'transfer':
+            case 'bank_transfer':
                 // disable button pay
                 $('#save_n_pay').prop('disabled', true)
 

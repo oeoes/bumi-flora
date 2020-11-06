@@ -21,6 +21,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="category-tab" data-toggle="tab" href="#category3" role="tab" aria-controls="category" aria-selected="false">Kategori</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="payment_method-tab" data-toggle="tab" href="#payment_method3" role="tab" aria-controls="payment_method" aria-selected="false">Payment Method</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="payment_type-tab" data-toggle="tab" href="#payment_type3" role="tab" aria-controls="payment_type" aria-selected="false">Payment Type</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -360,6 +366,233 @@
                                                             <div class="p-2">
                                                                 <p>You're about to delete existing category. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete category that has a relation to item data.</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
+                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="payment_method3" role="tabpanel" aria-labelledby="payment_method-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form method="post" action="{{ route('payments.payment-method.store') }}">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label class="text-muted" for="exampleInputEmail1">Payment method</label>
+                                            <input type="text" name="method_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of payment method">
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-responsive table-theme v-middle table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div class="th-inner">No.</div>
+                                                    <div class="fht-cell"></div>
+                                                </th>
+                                                <th>
+                                                    <div class="th-inner">Method</div>
+                                                    <div class="fht-cell"></div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($payment_methods as $key => $payment_method)
+                                            <tr>
+                                                <td>
+                                                    <div class="text-muted text-sm">
+                                                        {{ $payment_method->id }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-muted text-sm">
+                                                        {{ $payment_method->method_name }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editpayment-method{{ $key }}">Edit</span>
+                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletepayment-method{{ $key }}">Delete</span>
+                                                </td>
+                                            </tr>
+                                            <!-- payment-method modal edit -->
+                                            <div id="editpayment-method{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog ">
+                                                    <div class="modal-content ">
+                                                        <div class="modal-header ">
+                                                            <div class="modal-title text-md">Edit Payment Method</div>
+                                                            <button class="close" data-dismiss="modal">×</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" action="{{ route('payments.payment-method.update', ['payment_method_id' => $payment_method->id]) }}">
+                                                                @method('PUT')
+                                                                @csrf
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="exampleInputEmail1">Payment Method</label>
+                                                                    <input type="text" name="method_name" class="form-control" id="exampleInputEmail1" placeholder="Enter Payment method" value="{{ $payment_method->method_name }}">
+                                                                </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            </div>
+
+                                            <!-- category modal delete -->
+                                            <div id="deletecategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog ">
+                                                    <div class="modal-content ">
+                                                        <div class="modal-header ">
+                                                            <div class="modal-title text-md">Confirm Dletion</div>
+                                                            <button class="close" data-dismiss="modal">×</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="p-2">
+                                                                <p>You're about to delete existing Payment method. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete Payment method that has a relation to item data.</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
+                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="payment_type3" role="tabpanel" aria-labelledby="payment_type-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form method="post" action="{{ route('payments.payment-type.store') }}">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label class="text-muted" for="exampleInputEmail1">Payment method</label>
+                                            <select class="form-control" name="payment_method_id" id="" required>
+                                            @foreach($payment_methods as $pm)
+                                                <option value="{{ $pm->id }}">{{ $pm->method_name }}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-muted" for="exampleInputPassword1">Payment type</label>
+                                            <input type="text" name="type_name" class="form-control" placeholder="Name of payment type">
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-responsive table-theme v-middle table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div class="th-inner">No.</div>
+                                                    <div class="fht-cell"></div>
+                                                </th>
+                                                <th>
+                                                    <div class="th-inner">Method</div>
+                                                    <div class="fht-cell"></div>
+                                                </th>
+                                                <th>
+                                                    <div class="th-inner">Type</div>
+                                                    <div class="fht-cell"></div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($payment_types as $key => $payment_type)
+                                            <tr>
+                                                <td>
+                                                    <div class="text-muted text-sm">
+                                                        {{ $key+1 }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-muted text-sm">
+                                                        {{ $payment_type->method_name }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-muted text-sm">
+                                                        {{ $payment_type->type_name }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-primary text-uppercase" data-toggle="modal" data-target="#editpayment-type{{ $key }}">Edit</span>
+                                                    <span class="badge badge-danger text-uppercase" data-toggle="modal" data-target="#deletepayment-type{{ $key }}">Delete</span>
+                                                </td>
+                                            </tr>
+                                            <!-- payment-type modal edit -->
+                                            <div id="editpayment-type{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog ">
+                                                    <div class="modal-content ">
+                                                        <div class="modal-header ">
+                                                            <div class="modal-title text-md">Edit Payment Type</div>
+                                                            <button class="close" data-dismiss="modal">×</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" action="{{ route('payments.payment-type.update', ['payment_type_id' => $payment_type->id]) }}">
+                                                                @method('PUT')
+                                                                @csrf
+                                                                <div class="form-group">
+                                                                    <label class="text-muted">Payment Method</label>
+                                                                    <select name="payment_method_id" class="form-control">
+                                                                        @foreach($payment_methods as $pm) 
+                                                                            @if($pm->id == $payment_type->payment_method_id)
+                                                                                <option value="{{ $pm->id }}" selected>{{$pm->method_name}}</option>
+                                                                            @else
+                                                                                <option value="{{ $pm->id }}">{{$pm->method_name}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="text-muted" for="exampleInputPassword1">Payment Type</label>
+                                                                    <input type="text" name="type_name" class="form-control" placeholder="Type a bit of description" value="{{ $payment_type->type_name }}">
+                                                                </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            </div>
+
+                                            <!-- category modal delete -->
+                                            <div id="deletecategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog ">
+                                                    <div class="modal-content ">
+                                                        <div class="modal-header ">
+                                                            <div class="modal-title text-md">Confirm Dletion</div>
+                                                            <button class="close" data-dismiss="modal">×</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="p-2">
+                                                                <p>You're about to delete existing Payment type. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete payment type that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
