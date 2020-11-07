@@ -147,7 +147,9 @@ class OrderController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->where('stocks.dept', 'utama')
                 ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price')->get();
+        $customer = StakeHolder::where('type', 'customer')->get();
         $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
-        return view('pages.activity.cashier')->with(['items' => $items, 'payment_method' => $payment_method]);
+
+        return view('pages.activity.cashier')->with(['items' => $items, 'payment_method' => $payment_method, 'customers' => $customer]);
     }
 }

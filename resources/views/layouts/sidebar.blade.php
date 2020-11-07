@@ -12,7 +12,6 @@
             </li>
         </ul>
         <ul class="nav ">
-        @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'admin']))
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -51,11 +50,24 @@
                     <span class="nav-text">Omset</span>
                 </a>
             </li>
-             <li>
-                <a href="">
+            <li class="">
+                <a href="#" class="" data-pjax-state="anchor-empty">
                     <span class="nav-icon"><i data-feather='dollar-sign'></i></span>
-                    <span class="nav-text">Discount <small class="text-danger">(soon)</small></span>
+                    <span class="nav-text">Discount</span>
+                    <span class="nav-caret"></span>
                 </a>
+                <ul class="nav-sub nav-mega">
+                    <li>
+                        <a href="{{ route('discounts.customer') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Customer</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('discounts.item') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Item</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- persediaan -->
@@ -135,10 +147,7 @@
                     <span class="nav-icon"><i data-feather='lock'></i></span>
                     <span class="nav-text">Roles & Permission</span>
                 </a>
-            </li>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['cashier']))          
+            </li>         
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
@@ -157,7 +166,6 @@
                     <span class="nav-text">History Transaksi</span>
                 </a>
             </li>
-            @endif
         </ul>
     </div>
 </div>

@@ -54,7 +54,7 @@ function print_items() {
 }
 
 function print_total_price() {
-    let total = 0
+    let total = 0 + parseInt(localStorage.getItem('additional_fee'))
     let total_price = total
     let items = JSON.parse(localStorage.getItem('items'))
 
@@ -62,7 +62,7 @@ function print_total_price() {
         for (let i = 0; i < items.length; i++) {
             total = total + (parseInt(items[i][4]) * parseInt(items[i][5]))
         }
-    }    
+    }
 
     // perhitungan total price setalh dipotong discount
     if ($('#discount_type').val() == 'nominal') {
@@ -83,7 +83,7 @@ function print_total_price() {
 function get_id(id, item, barcode, unit, price) {
     if (id != null)
         push_data(id, item, barcode, unit, $('#jumlah').val(), price)
-    
+
     // tutup modal sama clear input search
     $('#kasir-data-item_filter input').val('')
     $('#search-item').modal('hide')
@@ -99,7 +99,7 @@ function print_accumulate() {
             $('#acc_' + items[i][0]).text(parseInt(items[i][5] * items[i][4]).toLocaleString())
         }
     }
-    
+
 }
 
 function remove_item(index) {
@@ -117,6 +117,9 @@ function remove_item(index) {
 
 
 $(document).ready(function () {
+    // insert value ke kolom biaya lain    
+    localStorage.getItem('additional_fee') == null ? localStorage.setItem('additional_fee', 0) : $('#additional_fee').val(JSON.parse(localStorage.getItem('additional_fee')))
+
     // print item yg ada di localstorage
     print_items()
     print_total_price()
@@ -124,39 +127,42 @@ $(document).ready(function () {
 
     // create discount localstorage
     localStorage.setItem('discount', 0)
+    localStorage.setItem('customer_discount', 0)
+
 
     // autofocus ke field jumlah dan kode item
     $(document).on('keypress', 'input', (function (e) {
         if (e.which == 13) {
             if ($('#item_code').is(':focus')) {
                 $('#jumlah').focus().select()
-            }
-
-            else if ($('#jumlah').is(':focus')) {
+            } else if ($('#jumlah').is(':focus')) {
                 $('#item_code').focus().select()
             }
-        }        
+        }
     }))
 
-    // tekan tombil Q untuk melakukan pembayaran
+    // tekan tombil / untuk melakukan pembayaran
     $(document).on('keypress', 'html', (function (e) {
         if (e.which == 47) {
             $('#payment').modal('toggle');
         }
-        
-        
+
+
     }))
 
     // scan barcode
     $(document).on('keyup', '#item_code', (function () {
         if ($('#item_code').val().length > 1) {
-            axios.get('/cashier/check', { params: { code: $('#item_code').val() } })
+            axios.get('/cashier/check', {
+                    params: {
+                        code: $('#item_code').val()
+                    }
+                })
                 .then(function (response) {
                     if (response.data.status == true) {
                         push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, $('#jumlah').val(), response.data.data.price)
                         console.log('Found.')
-                    }      
-                    else {
+                    } else {
                         $('#search-item').modal('show')
                         $('#kasir-data-item_filter input').focus().val($('#item_code').val())
                     }
@@ -169,7 +175,7 @@ $(document).ready(function () {
         let items = JSON.parse(localStorage.getItem('items'))
 
         if (items != null) {
-            for (let i = 0; i < items.length; i++) {              
+            for (let i = 0; i < items.length; i++) {
                 if (items[i][0] == $(this).attr('id')) {
                     items[i][4] = $(this).val()
                 }
@@ -191,15 +197,18 @@ $(document).ready(function () {
 
     // perhitungan discount
     $(document).on('keyup', '#discount_value', (function () {
-        
+        // reset discount customer
+        $('#customer').val('umum');
+        localStorage.setItem('customer_discount', 0)
+        $('#discount-info').text('')
         // show/hide text for discount
         if ($('#discount_value').val() < 1) {
             $('#cont_discount').css('display', 'none')
         } else {
             $('#cont_discount').css('display', 'block')
         }
-        
-        let total = 0
+
+        let total = JSON.parse(localStorage.getItem('additional_fee'))
         let items = JSON.parse(localStorage.getItem('items'))
         let total_price = 0
 
@@ -220,7 +229,7 @@ $(document).ready(function () {
             } else {
                 localStorage.setItem('discount', $('#discount_value').val())
             }
-                
+
         } else {
             total_price = total - ((total * $('#discount_value').val()) / 100)
             $('#desired_discount_value').text($('#discount_value').val() + '%')
@@ -242,5 +251,61 @@ $(document).ready(function () {
 
         location.reload()
     }))
+
+    // biaya lainya
+    $(document).on('keyup', '#additional_fee', function () {
+        let add_fee = 0
+        let additional_fee = JSON.parse(localStorage.getItem('additional_fee'))
+        let total_price = JSON.parse(localStorage.getItem('total_price'))
+
+        if ($('#additional_fee').val() > 0) {
+            add_fee = add_fee + parseInt($('#additional_fee').val())
+
+            localStorage.setItem('additional_fee', add_fee)
+
+            print_total_price()
+
+        } else {
+            total_price = total_price - additional_fee
+            localStorage.setItem('total_price', total_price)
+            localStorage.setItem('additional_fee', 0)
+            print_total_price()
+        }
+    })
+
+    // get customer discount
+    $(document).on('change', '#customer', function () {
+        let current_total_price = JSON.parse(localStorage.getItem('total_price'))
+        let current_discount = JSON.parse(localStorage.getItem('discount'))
+        let customer_discount = JSON.parse(localStorage.getItem('customer_discount'))
+
+        if ($('#customer').val() != 'umum') {
+            axios.get(`/app/discounts/customer/${$('#customer').val()}`)
+                .then(function (response) {
+                    let disc = response.data.status ? current_total_price * (response.data.data[0].value / 100) : ''
+
+                    if (response.data.status == true) {
+                        $('#discount-info').text(`Discount available: -${response.data.data[0].value}%`)
+                        localStorage.setItem('customer_discount', disc)
+
+                        current_total_price = current_total_price - disc
+
+                        localStorage.setItem('total_price', current_total_price);
+                        localStorage.setItem('discount', (current_discount + disc));
+
+                    } else {
+                        current_total_price = current_total_price + customer_discount
+
+                        localStorage.setItem('total_price', current_total_price);
+                        localStorage.setItem('discount', current_discount - customer_discount)
+                        localStorage.setItem('customer_discount', 0)
+                        $('#discount-info').text('')
+                    }
+                }).finally(function () {
+                    $('#final_price').text(parseInt(current_total_price).toLocaleString())
+                    $('#bill').text(current_total_price.toLocaleString())
+                })
+        }
+    })
 
 });

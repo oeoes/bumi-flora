@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Activity\Transaction;
+use App\Model\MasterData\PaymentType;
 use Carbon\Carbon;
 
 class CashierController extends Controller
@@ -23,14 +24,17 @@ class CashierController extends Controller
 
     public function store_transaction (Request $request) {
         $time = Carbon::now()->format('H:i:s');
+        $payment_type = PaymentType::find($request->payment_type);
+        $no_urut = Transaction::whereDate('created_at', Carbon::now()->format('Y-m-d'))->groupBy('transaction_time')->count();
 
         foreach ($request->items as $item) {
             Transaction::create([
                 'user_id' => auth()->user()->id,
                 'item_id' => $item[0],
+                'transaction_number' => ($no_urut+1) . '/KSR/' . Carbon::now()->format('Y-m-d'),
                 'qty' => $item[1],
-                'payment_method' => $request->payment_method,
-                'payment_type' => $request->payment_type,
+                'payment_method_id' => $payment_type->payment_method_id,
+                'payment_type_id' => $payment_type->id,
                 'discount' => $request->discount,
                 'transaction_time' => $time
             ]);
@@ -46,10 +50,11 @@ class CashierController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                 ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
                 ->where(['balances.dept' => 'utama', 'transactions.user_id' => auth()->user()->id])
-                ->orderBy('transactions.payment_type', 'desc')
-                ->select('items.*', 'transactions.qty', 'transactions.payment_method', 'transactions.payment_type', 'transactions.discount', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')->get();
+                ->select('items.*', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')->get();
 
         return view('pages.activity.cashier-history')->with('items', $items);
     }

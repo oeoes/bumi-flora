@@ -1,6 +1,6 @@
 function store_transaction(e) {
     $(e).text('Simpan & Bayar...')
-    
+
     let items = JSON.parse(localStorage.getItem('items'))
     let item_data = []
 
@@ -12,7 +12,6 @@ function store_transaction(e) {
 
     axios.post('/cashier/store', {
         items: item_data,
-        payment_method: $('#payment_option').val(), 
         payment_type: localStorage.getItem('payment_type'),
         discount: localStorage.getItem('discount')
     }).then(function (response) {
@@ -29,7 +28,7 @@ function store_transaction(e) {
             print_total_price()
         }
     }).catch(function (error) {
-        console.log(error);        
+        console.log(error);
     }).finally(function (e) {
         $(e).text('Simpan & Bayar')
         $('#payment').modal('toggle')
@@ -50,112 +49,76 @@ function store_transaction(e) {
 $(document).ready(function () {
 
     $(document).on('change', '#payment_option', (function () {
-        console.log($('#payment_option').val());
-        switch ($('#payment_option').val()) {        
-            case 'tunai':
-                // kosongin field nominal
-                $('#nominal').val('')
-                // disable button pay
-                $('#save_n_pay').prop('disabled', true)
+        let method = '';
+        let types = [];
 
-                $('#nominal_block').removeClass('payment_toggle')
-                $('#ewallet_block').addClass('payment_toggle')
-                $('#debit_block').addClass('payment_toggle')
-                $('#transfer_block').addClass('payment_toggle')
-
-                $('#nominal').keyup(function () {
-                    let total_price = localStorage.getItem('total_price')
-                    let result = $('#nominal').val() - total_price
-                    $('#cashback').text(result.toLocaleString())
-
-                    if (result < 0) {
-                        $('#cashback').addClass('text-danger')
-                        $('#cashback').removeClass('text-success')
-                    } else {
-                        $('#cashback').addClass('text-success')
-                        $('#cashback').removeClass('text-danger')
-                    }
-
-                    // enable button pay
-                    $('#save_n_pay').prop('disabled', false)
-
-                    // payment type in localstorage
-                    localStorage.setItem('payment_type', 'cash')
+        axios.get(`/app/payments/${$('#payment_option').val()}`)
+            .then((response) => {
+                response.data.data.forEach((element) => {
+                    method = element.method_name.toLowerCase()
+                    types.push([element.payment_type_id, element.type_name])
                 })
+                if (method == 'cash' || method == 'tunai') {
+                    $('#payment_types').children().remove()
+                    // kosongin field nominal
+                    $('#nominal').val('')
+                    // disable button pay
+                    $('#save_n_pay').prop('disabled', true)
 
-                break;
+                    $('#payment_types').append(
+                        `<div class="input-group"> 
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrepend">Rp</span> 
+                            </div>
+                            <input type="number" min="0" class="form-control" id="nominal" placeholder="Nominal" aria-describedby="inputGroupPrepend">
+                        </div>`
+                    )
 
-            case 'ewallet':
-                // disable button pay
-                $('#save_n_pay').prop('disabled', true)
+                    $('#nominal').keyup(function () {
+                        let total_price = localStorage.getItem('total_price')
+                        let result = $('#nominal').val() - total_price
+                        $('#cashback').text(result.toLocaleString())
 
-                $('#nominal_block').addClass('payment_toggle')
-                $('#ewallet_block').removeClass('payment_toggle')
-                $('#debit_block').addClass('payment_toggle')
-                $('#transfer_block').addClass('payment_toggle')
+                        if (result < 0) {
+                            $('#cashback').addClass('text-danger')
+                            $('#cashback').removeClass('text-success')
+                            $('#save_n_pay').prop('disabled', true)
+                        } else {
+                            $('#cashback').addClass('text-success')
+                            $('#cashback').removeClass('text-danger')
+                            // enable button pay
+                            $('#save_n_pay').prop('disabled', false)
+                        }
 
-                $('#cashback').text('-')
+                        // payment type in localstorage
+                        localStorage.setItem('payment_type', types[0][0])
+                    })
+                }
+                else {
+                    $('#payment_types').children().remove()
+                    $('#save_n_pay').prop('disabled', true)
+                    $('#cashback').text('-')
 
-                // payment type in localstorage
-                $("input[name='ewallet_method']").change(function () {
-                    localStorage.setItem('payment_type', $(this).val())
+                    types.forEach((element) => {
+                        $('#payment_types').append(
+                            `<div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="payment_type" id="${element[1].toLowerCase().split("_")}"
+                                value="${element[0]}">
+                            <label class="form-check-label" for="${element[1].toLowerCase().split("_")}">${element[1]}</label>
+                        </div>`
+                        )
+                    })
 
-                    // enable button pay
-                    $('#save_n_pay').prop('disabled', false)
-                })
-                
-                break;
-            
-            case 'debit':
-                // disable button pay
-                $('#save_n_pay').prop('disabled', true)
+                    $("input[name='payment_type']").change(function () {
+                        localStorage.setItem('payment_type', $(this).val())
 
-                $('#nominal_block').addClass('payment_toggle')
-                $('#ewallet_block').addClass('payment_toggle')
-                $('#debit_block').removeClass('payment_toggle')
-                $('#transfer_block').addClass('payment_toggle')
-
-                $('#cashback').text('-')
-
-                // payment type in localstorage
-                $("input[name='debit_method']").change(function () {
-                    localStorage.setItem('payment_type', $(this).val())
-                    // enable button pay
-                    $('#save_n_pay').prop('disabled', false)
-                })
-                break;
-            
-            case 'bank_transfer':
-                // disable button pay
-                $('#save_n_pay').prop('disabled', true)
-
-                $('#nominal_block').addClass('payment_toggle')
-                $('#ewallet_block').addClass('payment_toggle')
-                $('#debit_block').addClass('payment_toggle')
-                $('#transfer_block').removeClass('payment_toggle')
-
-                $('#cashback').text('-')
-
-                // payment type in localstorage
-                localStorage.setItem('payment_type', $("#transfer_block input").val())
-                // enable button pay
-                $('#save_n_pay').prop('disabled', false)
-                break;
-
-            default:
-                // disable button pay
-                $('#save_n_pay').prop('disabled', true)
-
-                $('#nominal_block').addClass('payment_toggle')
-                $('#ewallet_block').addClass('payment_toggle')
-                $('#debit_block').addClass('payment_toggle')
-                $('#transfer_block').addClass('payment_toggle')
-
-                $('#cashback').text('-')
-
-                // payment type in localstorage
-                localStorage.setItem('payment_type', '')
-                break;
-        }
+                        // enable button pay
+                        $('#save_n_pay').prop('disabled', false)
+                    })
+                }
+            })
+            .finally(function () {
+                //  
+            })
     }))
 })

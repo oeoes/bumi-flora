@@ -17,8 +17,9 @@ class CreateTransactionsTable extends Migration
             $table->uuid('id')->unique()->primary();
             $table->foreignId('user_id')->constrained();
             $table->uuid('item_id');
-            $table->string('payment_method');
-            $table->string('payment_type');
+            $table->string('transaction_number');
+            $table->foreignId('payment_method_id')->constrained();
+            $table->foreignId('payment_type_id')->constrained();
             $table->integer('discount');
             $table->integer('qty');
             $table->time('transaction_time');

@@ -75,6 +75,16 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::put('payments/method/{payment_method_id}', 'MasterData\PaymentController@update_payment_method')->name('payments.payment-method.update');
     Route::post('payments/type', 'MasterData\PaymentController@store_payment_type')->name('payments.payment-type.store');
     Route::put('payments/type/{payment_type_id}', 'MasterData\PaymentController@update_payment_type')->name('payments.payment-type.update');
+    /** get payment method using ajax */
+    Route::get('/payments/{payment_method_id}', 'MasterData\PaymentController@get_payment_detail');
+
+    // Discount
+    Route::get('/discounts/customer', 'Admin\DiscountController@discount_customer')->name('discounts.customer');
+    Route::get('/discounts/item', 'Admin\DiscountController@discount_item')->name('discounts.item');
+    /** discount using ajax */
+    Route::post('/discounts/customer', 'Admin\DiscountController@store_discount_customer');
+    Route::post('/discounts/item', 'Admin\DiscountController@store_discount_item');
+    Route::get('/discounts/customer/{stake_holder_id}', 'Admin\DiscountController@get_customer_discount');
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

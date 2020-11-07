@@ -120,9 +120,21 @@
 
                     <div class="card-footer">
                         <div class="row">
-                            <div class="col-md-4 offset-md-8">
+                            <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label>Pelanggan</label>
+                                            <select id="customer" class="form-control form-control-sm">
+                                                <option value="umum">Umum</option>
+                                                @foreach($customers as $customer)
+                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <small id="discount-info" class="text-success"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
                                         <div class="form-group">
                                             <label>Satuan diskon</label>
                                             <select id="discount_type" class="form-control form-control-sm">
@@ -131,10 +143,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-3">
                                         <div class="form-group">
                                             <label>Besaran</label>
                                             <input min="0" id="discount_value" type="number"
+                                                class="form-control form-control-sm" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label>Biaya lain</label>
+                                            <input min="0" id="additional_fee" type="number"
                                                 class="form-control form-control-sm" value="0">
                                         </div>
                                     </div>
@@ -181,53 +200,14 @@
                             <select id="payment_option" class="form-control">
                                 <option>Pilih metode pembayaran</option>
                                 @foreach($payment_method as $pm)
-                                <option value="{{ strtolower($pm->method_name) }}">{{ $pm->method_name }}</option>
+                                <option value="{{ $pm->id }}">{{ $pm->method_name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <!-- untuk nominal -->
-                        <div id="nominal_block" class="form-group payment_toggle">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupPrepend">Rp</span>
-                                </div>
-                                <input type="number" min="0" class="form-control" id="nominal"
-                                    placeholder="Nominal" aria-describedby="inputGroupPrepend">
-                            </div>
-                        </div>
-
-                        <!-- untuk ewallet -->
-                        <div id="ewallet_block" class="form-group payment_toggle">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ewallet_method" id="ovo"
-                                    value="ovo">
-                                <label class="form-check-label" for="ovo">OVO</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="ewallet_method" id="gopay"
-                                    value="gopay">
-                                <label class="form-check-label" for="gopay">GOPAY</label>
-                            </div>
-                        </div>
-
-                        <!-- untuk debit -->
-                        <div id="debit_block" class="form-group payment_toggle">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="debit_method" id="bca"
-                                    value="bca">
-                                <label class="form-check-label" for="bca">BCA</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="debit_method" id="mandiri"
-                                    value="mandiri">
-                                <label class="form-check-label" for="mandiri">Mandiri</label>
-                            </div>
-                        </div>
-
-                        <!-- untuk bank transfer -->
-                        <div id="transfer_block" class="form-group payment_toggle">
-                            <input type="text" class="form-control" readonly value="mandiri">
+                        <!-- payment types -->
+                        <div id="payment_types" class="form-group">
+                            
                         </div>
 
                     </div>

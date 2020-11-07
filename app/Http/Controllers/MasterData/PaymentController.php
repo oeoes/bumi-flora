@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\MasterData\PaymentMethod;
 use App\Model\MasterData\PaymentType;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -43,5 +44,18 @@ class PaymentController extends Controller
         
         session()->flash('message', 'Yeay! Payment type berhasil diperbarui.');
         return back();
+    }
+
+    public function get_payment_method ($payment_method_id) {
+        return response()->json(['status' => true, 'message' => 'payment method' , 'data' => PaymentMethod::find($payment_method_id)]);
+    }
+
+    public function get_payment_detail ($payment_method_id) {
+        $payment = DB::table('payment_types')
+                ->join('payment_methods', 'payment_methods.id', '=', 'payment_types.payment_method_id')
+                ->where('payment_types.payment_method_id', $payment_method_id)
+                ->select('payment_types.id as payment_type_id', 'payment_types.type_name', 'payment_methods.id as payment_method_id', 'payment_methods.method_name')->get();
+
+        return response()->json(['status' => true, 'message' => 'payment detail' , 'data' => $payment]);
     }
 }
