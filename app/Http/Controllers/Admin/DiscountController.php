@@ -63,7 +63,7 @@ class DiscountController extends Controller
         $discounts = DB::table('discounts')
                     ->join('stake_holders', 'stake_holders.id', '=', 'discounts.stake_holder_id')
                     ->select('discounts.promo_name', 'discounts.status', 'discounts.value', 'stake_holders.name')
-                    ->where('stake_holders.id', $stake_holder_id)->get();
+                    ->where(['stake_holders.id' => $stake_holder_id, 'discounts.status' => 1])->get();
 
         if (count($discounts)) return response()->json(['status' => true, 'message' => 'customer discount', 'data' => $discounts]);
 

@@ -77,6 +77,7 @@
 @endsection
 
 @section('content')
+{{$items}}
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row">
@@ -314,7 +315,9 @@
                             <th><span class="text-muted">Item</span></th>
                             <th><span class="text-muted">Barcode</span></th>
                             <th><span class="text-muted">Satuan</span></th>
-                            <th><span class="text-muted">Harga</span></th>
+                            <th><span class="text-muted">Harga Asli</span></th>
+                            <th><span class="text-muted">Disc.</span></th>
+                            <th><span class="text-muted">Harga Promo</span></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -335,6 +338,22 @@
                                 <div class="text-sm">
                                     {{ $item->unit }}
                                 </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    Rp.{{ number_format($item->original_price) }}
+                                </div>
+                            </td>
+                            <td style="">
+                                @if($item->discount > 0)
+                                <div class="text-sm text-danger">
+                                    {{ $item->discount }}%
+                                </div>
+                                @else
+                                <div class="text-sm">
+                                    -
+                                </div>
+                                @endif
                             </td>
                             <td style="">
                                 <div class="text-sm">

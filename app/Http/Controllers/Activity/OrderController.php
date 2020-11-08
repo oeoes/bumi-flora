@@ -145,8 +145,10 @@ class OrderController extends Controller
         $items = DB::table('items')
                 ->join('stocks', 'items.id', '=', 'stocks.item_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('categories', 'categories.id', '=', 'items.category_id')
+                ->leftJoin('discounts', 'categories.id', '=', 'discounts.category_id')
                 ->where('stocks.dept', 'utama')
-                ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price')->get();
+                ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discounts.value, 0)as discount'), DB::raw('items.price - (items.price * IFNULL(discounts.value, 0) / 100) as price'))->get();
         $customer = StakeHolder::where('type', 'customer')->get();
         $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
 

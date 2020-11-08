@@ -285,6 +285,8 @@ $(document).ready(function () {
                     let disc = response.data.status ? current_total_price * (response.data.data[0].value / 100) : ''
 
                     if (response.data.status == true) {
+                        $('#cont_discount').css('display', 'block')
+
                         $('#discount-info').text(`Discount available: -${response.data.data[0].value}%`)
                         localStorage.setItem('customer_discount', disc)
 
@@ -300,6 +302,10 @@ $(document).ready(function () {
                         localStorage.setItem('discount', current_discount - customer_discount)
                         localStorage.setItem('customer_discount', 0)
                         $('#discount-info').text('')
+
+                        JSON.parse(localStorage.getItem('discount')) > 0 ? '' : $('#cont_discount').css('display', 'none')
+
+                        
                     }
                 }).finally(function () {
                     $('#final_price').text(parseInt(current_total_price).toLocaleString())
