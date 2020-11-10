@@ -138,7 +138,7 @@
                                                     @csrf
                                                     <div class="form-group">
                                                         <label>Promo name</label>
-                                                        <input id="promo_name" name="promo_name" type="text"
+                                                        <input name="promo_name" type="text"
                                                             class="form-control" value="{{ $discount->promo_name }}">
                                                     </div>
 
@@ -174,7 +174,7 @@
 
                                                     <div class="form-group">
                                                         <label>Value</label>
-                                                        <input id="value" name="value" type="number" min="0"
+                                                        <input name="value" type="number" min="0"
                                                             class="form-control" value="{{ $discount->value }}">
                                                     </div>
 
@@ -219,7 +219,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label>Promo name</label>
-                            <input id="promo_name" type="text" class="form-control form-control-sm">
+                            <input name="promo_name" id="promo_name" type="text" class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
                             <label>Jenis promo</label>
