@@ -134,12 +134,12 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                {{ $item->amount }}
+                                                {{ $item->amount_out }}
                                             </span>
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                Rp.{{ number_format($item->price * $item->amount, 2) }}
+                                                Rp.{{ number_format($item->price * $item->amount_out, 2) }}
                                             </span>
                                         </td>
                                     </tr>

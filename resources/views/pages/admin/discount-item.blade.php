@@ -57,19 +57,154 @@
                                 <th>Jenis promo</th>
                                 <th>Value</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </thead>
                             <tbody>
                                 @foreach($discounts as $key => $discount)
                                 <tr>
                                     <td>{{ $discount->promo_name }}</td>
-                                    <td>{{ $discount->promo_item_type }}</td>
+                                    @if($discount->promo_item_type == 'category')
+                                    <td><span
+                                            class="badge badge-primary text-uppercase">{{ $discount->promo_item_type }}</span>
+                                        : {{ strtoupper($discount->category) }}</td>
+                                    @else
+                                    <td><span
+                                            class="badge badge-success text-uppercase">{{ $discount->promo_item_type }}</span>
+                                        : {{ ucwords($discount->name) }}</td>
+                                    @endif
                                     <td>{{ $discount->value }}%</td>
                                     @if($discount->status == 1)
                                     <td><small class="text-success">Active</small></td>
                                     @else
-                                    <td><small class="text-secondary">Off</small></td>
+                                    <td><small class="text-danger">Off</small></td>
                                     @endif
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4"
+                                            data-toggle="modal" data-target="#editdiscount{{$key}}">Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4"
+                                            data-toggle="modal" data-target="#deletediscount{{$key}}">Delete</button>
+                                    </td>
                                 </tr>
+
+                                <!-- modal delete discount -->
+                                <div class="modal fade" id="deletediscount{{$key}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="paymentLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentLabel">Perbarui Discount</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post"
+                                                    action="{{ route('discounts.delete_discount_item', ['discount_item_id' => $discount->discount_item_id]) }}">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    Anda yakin untuk menghapus diskon pelanggan?
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <input type="submit"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary"
+                                                    value="Ya">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- modal edit discount -->
+                                <div class="modal fade" id="editdiscount{{$key}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="paymentLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentLabel">Perbarui Discount</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post"
+                                                    action="{{ route('discounts.update_discount_item', ['discount_item_id' => $discount->discount_item_id]) }}">
+                                                    @method('PUT')
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label>Promo name</label>
+                                                        <input id="promo_name" name="promo_name" type="text"
+                                                            class="form-control" value="{{ $discount->promo_name }}">
+                                                    </div>
+
+                                                    @if($discount->promo_item_type == 'item')
+                                                    <div class="form-group">
+                                                        <label>Item</label>
+                                                        <select name="item_id" class="form-control">
+                                                        @foreach($items as $item)
+                                                            @if($discount->item_id == $item->id)
+                                                            <option selected value="{{ $item->id }}">
+                                                                {{ ucwords($item->name) }}</option>
+                                                            @else
+                                                            <option value="{{ $item->id }}">
+                                                                {{ ucwords($item->name) }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                        </select>
+                                                    </div>
+                                                    @else
+                                                    <div class="form-group">
+                                                        <label>Category</label>
+                                                        <select name="category_id" class="form-control">
+                                                            @foreach($categories as $category)
+                                                            @if($discount->category_id == $category->id)
+                                                            <option selected value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
+                                                            @else
+                                                            <option value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
+                                                            @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    @endif
+
+                                                    <div class="form-group">
+                                                        <label>Value</label>
+                                                        <input id="value" name="value" type="number" min="0"
+                                                            class="form-control" value="{{ $discount->value }}">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Status</label>
+                                                        <select name="status" class="form-control" id="">
+                                                            @if($discount->status == 1)
+                                                            <option selected value="1">Active</option>
+                                                            <option value="0">Off</option>
+                                                            @else
+                                                            <option value="1">Active</option>
+                                                            <option selected value="0">Off</option>
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <input type="submit"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary"
+                                                    value="Perbarui">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
                                 @endforeach
                             </tbody>
                         </table>

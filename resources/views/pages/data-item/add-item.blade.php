@@ -59,7 +59,7 @@
                                 <label class="text-muted" for="unit">Satuan *</label>
                                 <select name="unit" id="unit" class="form-control" required>
                                     @foreach($units as $unit)
-                                    <option value="{{ $unit->id }}">{{ $unit->unit }}</option>
+                                    <option value="{{ $unit->id }}">{{ strtoupper($unit->unit) }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -75,7 +75,7 @@
                                 <label class="text-muted" for="category">Jenis *</label>
                                 <select name="category" id="category" class="form-control" required>
                                     @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                    <option value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
                                     @endforeach
                                 </select>
                             </div>

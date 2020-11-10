@@ -1,4 +1,4 @@
-function push_data(id, item, barcode, unit, qty, price) {
+function push_data(id, item, barcode, unit, qty, price, original_price, discount) {
     let state = true
     let items = []
 
@@ -11,6 +11,8 @@ function push_data(id, item, barcode, unit, qty, price) {
     if (items.length > 0) {
         for (let i = 0; i < items.length; i++) {
             if (id == items[i][0]) {
+                items[i][4] = parseInt(items[i][4]) + 1
+                $(`#${id}`).val(items[i][4])
                 state = false
             }
         }
@@ -18,7 +20,7 @@ function push_data(id, item, barcode, unit, qty, price) {
     }
 
     if (state) {
-        items.push([id, item, barcode, unit, qty, price])
+        items.push([id, item, barcode, unit, qty, price, original_price, discount])
         localStorage.setItem('items', JSON.stringify(items));
 
         // cetak item ke layar setelah scan barcode
@@ -46,7 +48,7 @@ function print_items() {
     } else {
         for (let i = 0; i < items.length; i++) {
             $('#data-item').append(
-                '<tr><td>' + items[i][1] + '</td><td>' + items[i][2] + '</td><td>' + items[i][3] + '</td><td> <input id="' + items[i][0] + '" type="number" class="form-control form-control-sm" value="' + items[i][4] + '"></td><td>Rp.' + parseInt(items[i][5]).toLocaleString() + '</td><td>Rp. <span id="acc_' + items[i][0] + '"></span></td><td><span onclick="remove_item(' + i + ')" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>'
+                `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="discount" aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.${parseInt(items[i][6]).toLocaleString()}</td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
             ).fadeIn(3000, 'ease')
 
         }
@@ -60,7 +62,8 @@ function print_total_price() {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            total = total + (parseInt(items[i][4]) * parseInt(items[i][5]))
+            let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+            total = total + (pr - (pr * parseInt(items[i][7]) / 100))
         }
     }
 
@@ -80,9 +83,9 @@ function print_total_price() {
 }
 
 
-function get_id(id, item, barcode, unit, price) {
+function get_id(id, item, barcode, unit, price, original_price, discount) {
     if (id != null)
-        push_data(id, item, barcode, unit, $('#jumlah').val(), price)
+        push_data(id, item, barcode, unit, $('#jumlah').val(), price, original_price, discount)
 
     // tutup modal sama clear input search
     $('#kasir-data-item_filter input').val('')
@@ -96,7 +99,8 @@ function print_accumulate() {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            $('#acc_' + items[i][0]).text(parseInt(items[i][5] * items[i][4]).toLocaleString())
+            let pr = parseInt(items[i][6] * items[i][4]) // original_price * quantity 
+            $('#acc_' + items[i][0]).text(parseInt(pr - (pr * items[i][7] / 100)).toLocaleString())
         }
     }
 
@@ -141,17 +145,29 @@ $(document).ready(function () {
         }
     }))
 
-    // tekan tombil / untuk melakukan pembayaran
+    // tekan tombol / untuk melakukan pembayaran
     $(document).on('keypress', 'html', (function (e) {
-        if (e.which == 47) {
-            $('#payment').modal('toggle');
-        }
+        console.log(e.which);
 
+        if (e.which == 44) {
+            $('#cancle_payment').modal('toggle');
+            return false
+        }else if (e.which == 46) {
+            $('#payment').modal('toggle');
+            return false
+        } else if (e.which == 47) {
+            $('#pending_payment').modal('toggle');
+            return false
+        }
+        else if (e.which == 43) {
+            $('#item_code').select().focus();
+            return false
+        }
 
     }))
 
     // scan barcode
-    $(document).on('keyup', '#item_code', (function () {
+    $(document).on('input', '#item_code', (function () {
         if ($('#item_code').val().length > 1) {
             axios.get('/cashier/check', {
                     params: {
@@ -160,7 +176,7 @@ $(document).ready(function () {
                 })
                 .then(function (response) {
                     if (response.data.status == true) {
-                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, $('#jumlah').val(), response.data.data.price)
+                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, $('#jumlah').val(), response.data.data.price, response.data.data.original_price, response.data.data.discount)
                         console.log('Found.')
                     } else {
                         $('#search-item').modal('show')
@@ -170,14 +186,32 @@ $(document).ready(function () {
         }
     }));
 
-    // field jumlah diupdate
-    $(document).on('keyup', '#data-item input', (function () {
+    // field discount diupdate
+    $(document).on('keyup', "#data-item input[name='discount']", (function () {
         let items = JSON.parse(localStorage.getItem('items'))
 
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
                 if (items[i][0] == $(this).attr('id')) {
-                    items[i][4] = $(this).val()
+                    items[i][7] = $(this).val() // increase or decrease qty
+                }
+            }
+        }
+
+        localStorage.setItem('items', JSON.stringify(items));
+
+        print_accumulate()
+        print_total_price()
+    }))
+
+    // field jumlah diupdate
+    $(document).on('keyup', "#data-item input[name='jumlah_item']", (function () {
+        let items = JSON.parse(localStorage.getItem('items'))
+
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                if (items[i][0] == $(this).attr('id')) {
+                    items[i][4] = $(this).val() // increase or decrease qty
                 }
             }
         }

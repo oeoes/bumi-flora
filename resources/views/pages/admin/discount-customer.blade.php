@@ -53,6 +53,7 @@
                                 <th>Promo Name</th>
                                 <th>Discount</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </thead>
                             <tbody>
                                 @foreach($discounts as $key => $discount)
@@ -63,9 +64,105 @@
                                     @if($discount->status == 1)
                                     <td><small class="text-success">Active</small></td>
                                     @else
-                                    <td><small class="text-secondary">Off</small></td>
+                                    <td><small class="text-danger">Off</small></td>
                                     @endif
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#editdiscount{{$key}}">Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#deletediscount{{$key}}">Delete</button>
+                                    </td>
                                 </tr>
+
+                                <!-- modal delete discount -->
+                                <div class="modal fade" id="deletediscount{{$key}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="paymentLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentLabel">Perbarui Discount</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                           <div class="modal-body">
+                                               <form method="post" action="{{ route('discounts.delete_discount_customer', ['discount_customer_id' => $discount->discount_customer_id]) }}">
+                                                   @method('DELETE')
+                                                   @csrf
+                                                   Anda yakin untuk menghapus diskon pelanggan?
+                                               
+                                           </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
+                                                <input type="submit" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary" value="Ya">
+                                            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- modal edit discount -->
+                                <div class="modal fade" id="editdiscount{{$key}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="paymentLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentLabel">Perbarui Discount</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                           <div class="modal-body">
+                                               <form method="post" action="{{ route('discounts.update_discount_customer', ['discount_customer_id' => $discount->discount_customer_id]) }}">
+                                                   @method('PUT')
+                                                   @csrf
+                                               <div class="form-group">
+                                                   <label>Promo name</label>
+                                                   <input id="promo_name" name="promo_name" type="text"
+                                                       class="form-control" value="{{ $discount->promo_name }}">
+                                               </div>
+
+                                               <div class="form-group">
+                                                   <label>Customer</label>
+                                                   <select id="" name="stake_holder_id" class="form-control">
+                                                    @foreach($customers as $key => $customer) 
+                                                        @if($customer->id == $discount->id)  
+                                                        <option selected value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                                        @else
+                                                        <option value="{{ $customer->id }}">{{ $customer->name }}
+                                                        </option>
+                                                        @endif
+                                                    @endforeach
+                                                   </select>
+                                               </div>
+
+                                               <div class="form-group">
+                                                   <label>Value</label>
+                                                   <input id="value" name="value" type="number" min="0" class="form-control"
+                                                       value="{{ $discount->value }}">
+                                               </div>
+
+                                               <div class="form-group">
+                                                   <label>Status</label>
+                                                   <select name="status" class="form-control" id="">
+                                                       @if($discount->status == 1)
+                                                       <option selected value="1">Active</option>
+                                                       <option value="0">Off</option>
+                                                       @else
+                                                       <option value="1">Active</option>
+                                                       <option selected value="0">Off</option>
+                                                       @endif
+                                                   </select>
+                                               </div>
+                                           </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
+                                                <input type="submit" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary" value="Perbarui">
+                                            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>
@@ -104,8 +201,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">Select Customer</h5>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -132,26 +228,28 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach($customers as $key => $customer)
-                                                        <tr>
-                                                            <td>
-                                                                <div class="text-muted text-sm">
-                                                                    {{ $customer->name }}
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="text-muted text-sm">
-                                                                    {{ $customer->address }}
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="text-muted text-sm">
-                                                                    {{ $customer->phone }}
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <button onclick="get_customer('{{ $customer->name }}', '{{ $customer->id }}')" class="btn btn-sm btn-primary rounded-pill">Select</button>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="text-muted text-sm">
+                                                                {{ $customer->name }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted text-sm">
+                                                                {{ $customer->address }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-muted text-sm">
+                                                                {{ $customer->phone }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button
+                                                                onclick="get_customer('{{ $customer->name }}', '{{ $customer->id }}')"
+                                                                class="btn btn-sm btn-primary rounded-pill">Select</button>
+                                                        </td>
+                                                    </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -164,7 +262,7 @@
 
                         <div class="form-group">
                             <label>Value</label>
-                            <input id="value" type="number" min="0" class="form-control" >
+                            <input id="value" type="number" min="0" class="form-control">
                         </div>
 
                         <button id="create-discount" class="btn btn-sm btn-primary rounded-pill">Create</button>

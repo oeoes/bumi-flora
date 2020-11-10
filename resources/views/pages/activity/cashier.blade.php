@@ -77,7 +77,6 @@
 @endsection
 
 @section('content')
-{{$items}}
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row">
@@ -108,6 +107,7 @@
                                     <th><span class="text-muted">Barcode</span></th>
                                     <th><span class="text-muted">Satuan</span></th>
                                     <th><span class="text-muted">Jumlah</span></th>
+                                    <th><span class="text-muted">Pot.</span></th>
                                     <th><span class="text-muted">Harga</span></th>
                                     <th><span class="text-muted">Total</span></th>
                                     <th><span class="text-muted">Action</span></th>
@@ -119,7 +119,7 @@
                         </table>
                     </div>
 
-                    <div class="card-footer">
+                    <div class="card-footer" style="background: #f5f5f5">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
@@ -201,7 +201,11 @@
                             <select id="payment_option" class="form-control">
                                 <option>Pilih metode pembayaran</option>
                                 @foreach($payment_method as $pm)
+                                @if($pm->id == 1)
+                                <option selected value="{{ $pm->id }}">{{ $pm->method_name }}</option>
+                                @else
                                 <option value="{{ $pm->id }}">{{ $pm->method_name }}</option>
+                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -361,10 +365,10 @@
                                 </div>
                             </td>
                             <td>
-                                <span onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price }}')" style="cursor: pointer"
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                    '{{ $item->unit }}', '{{ $item->price }}', '{{ $item->original_price }}', '{{ $item->discount }}')" style="cursor: pointer"
                                     class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                        data-feather='plus'></i></span>
+                                        data-feather='plus'></i></button>
                             </td>
                         </tr>
                         @endforeach

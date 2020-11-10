@@ -125,16 +125,18 @@ class RecordItemController extends Controller
     public function item_masuk () {
         $items = DB::table('items')
                 ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('item_ins', 'items.id', '=', 'item_ins.item_id')
-                ->select('item_ins.*', 'items.name', 'items.price', 'units.unit')->get();
+                ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
+                ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
+                ->where('storage_records.amount_in', '!=', 'NULL')->get();
         return view('pages.persediaan.item-masuk')->with('items', $items);
     }
 
     public function item_keluar () {
         $items = DB::table('items')
                 ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('item_outs', 'items.id', '=', 'item_outs.item_id')
-                ->select('item_outs.*', 'items.name', 'items.price', 'units.unit')->get();
+                ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
+                ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
+                ->where('storage_records.amount_out', '!=', 'NULL')->get();
 
         return view('pages.persediaan.item-keluar')->with('items', $items);
     }
@@ -145,6 +147,24 @@ class RecordItemController extends Controller
 
         $from->update(['amount' => $from->amount - $request->amount]);
         $to->update(['amount' => $to->amount + $request->amount]);
+
+        // record item masuk
+        StorageRecord::create([
+            'item_id' => $request->item_id,
+            'dept' => $request->to,
+            'transaction_no' => \Str::random(10),
+            'amount_in' => $request->amount,
+            'description' => 'Transfer item dari gudang',
+        ]);
+
+        // record item keluar
+        StorageRecord::create([
+            'item_id' => $request->item_id,
+            'dept' => $request->from,
+            'transaction_no' => \Str::random(10),
+            'amount_out' => $request->amount,
+            'description' => 'Transfer item ke penyimpanan utama',
+        ]);
         
         return back();
     }

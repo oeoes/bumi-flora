@@ -17,10 +17,10 @@ class CreateDiscountsTable extends Migration
             $table->uuid('id')->unique()->primary();
             $table->string('promo_name');
             $table->enum('promo_target', ['customer', 'item']);
-            $table->foreignId('stake_holder_id')->nullable();
+            $table->foreignId('stake_holder_id')->nullable(); // untuk promo target customer
             $table->enum('promo_item_type', ['item', 'category'])->nullable();
-            $table->uuid('item_id')->nullable();
-            $table->foreignId('category_id')->nullable();
+            $table->uuid('item_id')->nullable(); // untuk promo_item_type item
+            $table->foreignId('category_id')->nullable(); // untuk promo_item_type category
             $table->integer('value');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

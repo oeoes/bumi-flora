@@ -148,8 +148,8 @@ class OrderController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->leftJoin('discounts', 'categories.id', '=', 'discounts.category_id')
                 ->where('stocks.dept', 'utama')
-                ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discounts.value, 0)as discount'), DB::raw('items.price - (items.price * IFNULL(discounts.value, 0) / 100) as price'))->get();
-        $customer = StakeHolder::where('type', 'customer')->get();
+                ->select('items.id', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discounts.value, 0) * CAST(discounts.status as UNSIGNED) as discount'), DB::raw('items.price - ((items.price * IFNULL(discounts.value, 0) / 100) * CAST(discounts.status as UNSIGNED)) as price'))->get();
+        $customer = StakeHolder::where('type', 'customer')->distinct()->get();
         $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
 
         return view('pages.activity.cashier')->with(['items' => $items, 'payment_method' => $payment_method, 'customers' => $customer]);

@@ -1,5 +1,6 @@
 function store_transaction(e) {
     $(e).text('Simpan & Bayar...')
+    console.log(e);    
 
     let items = JSON.parse(localStorage.getItem('items'))
     let item_data = []
@@ -20,9 +21,11 @@ function store_transaction(e) {
             localStorage.removeItem('total_price')
             localStorage.removeItem('payment_type')
             localStorage.setItem('discount', 0)
+            localStorage.setItem('additional_fee', 0)
 
             $('#data-item tr').remove()
             $('#discount_value').val(0)
+            $('#additional_fee').val(0)
             print_items()
             print_accumulate()
             print_total_price()
@@ -46,7 +49,76 @@ function store_transaction(e) {
     })
 }
 
-$(document).ready(function () {
+$(document).ready(function () {  
+
+/** Enable payment method cash on startup */
+    $("#payment").on('shown.bs.modal', function () {
+        $(this).find('#nominal').select().focus();
+    });
+    $("#pending_payment").on('shown.bs.modal', function () {
+        $(this).find('#pending_description').select().focus();
+    });
+    $("#cancle_payment").on('shown.bs.modal', function () {
+        $(this).find('#reset_transaction').select().focus();
+    });
+
+    // tekan enter untuk simpan dan bayar
+    $(document).on('keypress', '#payment', (function (e) {
+        if (e.which == 13) {
+            if (localStorage.getItem('total_price') > 0) {
+                store_transaction()
+                $('#save_n_pay').text('Simpan & Bayar...')
+            } else {
+                alert('No Transaction.')
+            }
+        }
+    }))
+
+    $('#payment_types').children().remove()
+    // kosongin field nominal
+    $('#nominal').val('')
+    // disable button pay
+    $('#save_n_pay').prop('disabled', true)
+
+    $('#payment_types').append(
+        `<div class="input-group"> 
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupPrepend">Rp</span> 
+            </div>
+            <input type="number" min="0" class="form-control" id="nominal" placeholder="Nominal" aria-describedby="inputGroupPrepend">
+        </div>`
+    )
+
+    /**  */
+    let payment_types = [];
+
+    axios.get(`/app/payments/${$('#payment_option').val()}`)
+        .then((response) => {
+            response.data.data.forEach((element) => {
+                payment_types.push([element.payment_type_id, element.type_name])
+            })
+        })
+
+    $('#nominal').keyup(function () {
+        let total_price = localStorage.getItem('total_price')
+        let result = $('#nominal').val() - total_price
+        $('#cashback').text(result.toLocaleString())
+
+        if (result < 0) {
+            $('#cashback').addClass('text-danger')
+            $('#cashback').removeClass('text-success')
+            $('#save_n_pay').prop('disabled', true)
+        } else {
+            $('#cashback').addClass('text-success')
+            $('#cashback').removeClass('text-danger')
+            // enable button pay
+            $('#save_n_pay').prop('disabled', false)
+        }
+
+        // payment type in localstorage
+        localStorage.setItem('payment_type', payment_types[0][0])
+    })
+/** sampe sini */
 
     $(document).on('change', '#payment_option', (function () {
         let method = '';

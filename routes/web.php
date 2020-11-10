@@ -84,6 +84,10 @@ Route::prefix('app')->middleware('admin')->group(function () {
     /** discount using ajax */
     Route::post('/discounts/customer', 'Admin\DiscountController@store_discount_customer');
     Route::post('/discounts/item', 'Admin\DiscountController@store_discount_item');
+    Route::put('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@update_discount_customer')->name('discounts.update_discount_customer');
+    Route::put('/discounts/item/{discount_item_id}', 'Admin\DiscountController@update_discount_item')->name('discounts.update_discount_item');
+    Route::delete('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@delete_discount_customer')->name('discounts.delete_discount_customer');
+    Route::delete('/discounts/item/{discount_item_id}', 'Admin\DiscountController@delete_discount_item')->name('discounts.delete_discount_item');
     Route::get('/discounts/customer/{stake_holder_id}', 'Admin\DiscountController@get_customer_discount');
 });
 
@@ -93,4 +97,3 @@ Route::get('/logout', 'Authentication\AuthenticationController@logout')->name('l
 
 Route::get('/cashier/check', 'Activity\CashierController@check_item');
 Route::post('/cashier/store', 'Activity\CashierController@store_transaction');
-
