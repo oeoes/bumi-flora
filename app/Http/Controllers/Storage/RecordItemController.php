@@ -154,7 +154,7 @@ class RecordItemController extends Controller
             'dept' => $request->to,
             'transaction_no' => \Str::random(10),
             'amount_in' => $request->amount,
-            'description' => 'Transfer item dari gudang',
+            'description' => 'Transfer item dari ' . $request->from,
         ]);
 
         // record item keluar
@@ -163,7 +163,7 @@ class RecordItemController extends Controller
             'dept' => $request->from,
             'transaction_no' => \Str::random(10),
             'amount_out' => $request->amount,
-            'description' => 'Transfer item ke penyimpanan utama',
+            'description' => 'Transfer item ke penyimpanan ' . $request->to,
         ]);
         
         return back();
