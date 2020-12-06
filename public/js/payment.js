@@ -39,7 +39,7 @@ function store_transaction(e) {
             print_total_price()
         }
     }).catch(function (error) {
-        console.log(error);
+        alert(error.response.message)
     }).finally(function (e) {
         $(e).text('Simpan & Bayar')
         $('#payment').modal('toggle')

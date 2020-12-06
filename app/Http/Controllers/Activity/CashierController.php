@@ -97,8 +97,13 @@ class CashierController extends Controller
             ];
             // push ke array load data receipt
             array_push($print_items, $data_item);
-            // print receipt
-            PrintReceiptController::print_receipt($print_items, $calc);
+            try {
+                // print receipt
+                PrintReceiptController::print_receipt($print_items, $calc);
+            } catch (\Throwable $th) {
+                return response()->json(['status' => false, 'message' => 'Printer error'], 400);
+            }
+            
         }
 
         return response()->json(['status' => true, 'message' => 'Transaction recorded']);
