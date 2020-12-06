@@ -398,7 +398,7 @@
                             </td>
                             <td>
                                 <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item }}', '{{ $item->stock }}')" style="cursor: pointer"
+                                    '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}')" style="cursor: pointer"
                                     class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                         data-feather='plus'></i></button>
                             </td>
@@ -410,7 +410,7 @@
                             </td>
                             <td>
                                 <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category }}', '{{ $item->stock }}')" style="cursor: pointer"
+                                    '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}')" style="cursor: pointer"
                                     class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                         data-feather='plus'></i></button>
                             </td>
