@@ -46,6 +46,21 @@ function store_transaction(e) {
         $('#item_code').val('');
         $('#item_code').focus();
 
+        localStorage.removeItem('items')
+        localStorage.removeItem('total_price')
+        localStorage.removeItem('payment_type')
+        localStorage.setItem('discount', 0)
+        localStorage.setItem('additional_fee', 0)
+        localStorage.setItem('tax', 0)
+
+        $('#data-item tr').remove()
+        $('#discount_value').val(0)
+        $('#additional_fee').val(0)
+        $('#tax').val(0)
+        print_items()
+        print_accumulate()
+        print_total_price()
+
         // interface payment modal
         $('#save_n_pay').prop('disabled', true)
 
