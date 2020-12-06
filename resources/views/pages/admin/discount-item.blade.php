@@ -142,7 +142,7 @@
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('monday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('monday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="monday" id="monday{{$key}}">
                                                                 <label class="custom-control-label" for="monday{{$key}}">
@@ -150,7 +150,7 @@
                                                                 </label>
                                                             </div>
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('tuesday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('tuesday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="tuesday" id="tuesday{{$key}}">
                                                                 <label class="custom-control-label" for="tuesday{{$key}}">
@@ -161,7 +161,7 @@
 
                                                         <div class="col-4">
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('wednesday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('wednesday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="wednesday" id="wednesday{{$key}}">
                                                                 <label class="custom-control-label" for="wednesday{{$key}}">
@@ -169,7 +169,7 @@
                                                                 </label>
                                                             </div>
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('thursday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('thursday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="thursday" id="thursday{{$key}}">
                                                                 <label class="custom-control-label" for="thursday{{$key}}">
@@ -180,7 +180,7 @@
 
                                                         <div class="col-4">
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('friday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('friday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="friday" id="friday{{$key}}">
                                                                 <label class="custom-control-label" for="friday{{$key}}">
@@ -188,7 +188,7 @@
                                                                 </label>
                                                             </div>
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('saturday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('saturday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="saturday" id="saturday{{$key}}">
                                                                 <label class="custom-control-label" for="saturday{{$key}}">
@@ -199,7 +199,7 @@
 
                                                         <div class="col-4">
                                                             <div class="custom-control custom-checkbox mb-2">
-                                                                <input <?php if(in_array('sunday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                <input <?php if(in_array('sunday', unserialize($discount->occurences) ? unserialize($discount->occurences) : [])) echo "checked" ?> class="custom-control-input"
                                                                     name="discount_active_at[]" type="checkbox"
                                                                     value="sunday" id="sunday{{$key}}">
                                                                 <label class="custom-control-label" for="sunday{{$key}}">
