@@ -364,7 +364,7 @@
                                 </div>
                             </td>
                             <td style="">
-                                @if($item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences)))
+                                @if($item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []))
                                     @if($item->discount_item > 0)
                                         <div class="text-sm text-danger">
                                             {{ $item->discount_item }}%
@@ -374,7 +374,7 @@
                                             -
                                         </div>
                                     @endif
-                                @elseif($item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences)))
+                                @elseif($item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []))
                                     @if($item->discount_category > 0)
                                         <div class="text-sm text-danger">
                                             {{ $item->discount_category }}%
