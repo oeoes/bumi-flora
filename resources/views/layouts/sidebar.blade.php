@@ -77,7 +77,7 @@
             <li class="">
                 <a href="#" class="" data-pjax-state="anchor-empty">
                     <span class="nav-icon"><i data-feather='database'></i></span>
-                    <span class="nav-text">Penyimpanan</span>
+                    <span class="nav-text">Penyimpanan Offline</span>
                     <span class="nav-caret"></span>
                 </a>
                 <ul class="nav-sub nav-mega">
@@ -91,6 +91,15 @@
                             <span class="nav-text">Gudang</span>
                         </a>
                     </li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="" data-pjax-state="anchor-empty">
+                    <span class="nav-icon"><i data-feather='database'></i></span>
+                    <span class="nav-text">Penyimpanan Online</span>
+                    <span class="nav-caret"></span>
+                </a>
+                <ul class="nav-sub nav-mega">
                     <li>
                         <a href="{{ route('storages.ecommerce') }}" class="" data-pjax-state="">
                             <span class="nav-text">E-Commerce</span>
