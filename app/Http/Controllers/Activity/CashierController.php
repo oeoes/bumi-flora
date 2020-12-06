@@ -91,7 +91,7 @@ class CashierController extends Controller
                 "satuan" => $item[3],
                 "price" => $item[4],
                 "qty" => $item[1],
-                "total" => number_format($item[4] * $item[1]),
+                "total" => number_format((integer) $item[4] * (integer) $item[1]),
                 "discount" => $item[5],
                 "transaction_number" => $trx_number
             ];
