@@ -84,7 +84,7 @@
                                         <th><span class="text-muted">No. Transaksi</span></th>
                                         <th><span class="text-muted">Tanggal</span></th>
                                         <th><span class="text-muted">Deskripsi</span></th>
-                                        <th><span class="text-muted">Dept</span></th>
+                                        <th><span class="text-muted">Ke Peny.</span></th>
                                         <th><span class="text-muted">Harga</span></th>
                                         <th><span class="text-muted">Jumlah</span></th>
                                         <th><span class="text-muted">Total</span></th>
@@ -122,8 +122,10 @@
                                             <span class="item-amount d-sm-block text-sm">
                                                 @if ($item->dept == 'utama')
                                                 <span class="badge badge-primary text-uppercase">{{ strtoupper($item->dept) }}</span>
-                                                @else
+                                                @elseif($item->dept == 'gudang')
                                                 <span class="badge badge-secondary text-uppercase">{{ strtoupper($item->dept) }}</span>
+                                                @else
+                                                <span class="badge badge-success text-uppercase">{{ strtoupper($item->dept) }}</span>
                                                 @endif
                                             </span>
                                         </td>

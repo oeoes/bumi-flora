@@ -17,7 +17,7 @@ class CreateStorageRecordsTable extends Migration
             $table->uuid('id')->unique()->primary();
             $table->uuid('item_id');
             $table->string('transaction_no');
-            $table->enum('dept', ['gudang', 'utama']);
+            $table->enum('dept', ['gudang', 'utama', 'ecommerce']);
             $table->text('description')->nullable();
             $table->integer('amount_in')->nullable();
             $table->integer('amount_out')->nullable();

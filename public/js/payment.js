@@ -7,14 +7,20 @@ function store_transaction(e) {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            item_data.push([items[i][0], items[i][4]])
+            // item_id, qty, item_name, satuan, price, discount item
+            item_data.push([items[i][0], items[i][4], items[i][1], items[i][5], items[i][3], items[i][7]])
         }
     }
 
     axios.post('/cashier/store', {
         items: item_data,
         payment_type: localStorage.getItem('payment_type'),
-        discount: localStorage.getItem('discount')
+        discount: localStorage.getItem('discount'),
+        customer: $('#customer').val(),
+        additional_fee: $('#additional_fee').val(),
+        tax: localStorage.getItem('tax'),
+        dept: $('#dept').val(),
+        nominal: $('#nominal').val()
     }).then(function (response) {
         if (response.data.status == true) {
             localStorage.removeItem('items')
@@ -22,10 +28,12 @@ function store_transaction(e) {
             localStorage.removeItem('payment_type')
             localStorage.setItem('discount', 0)
             localStorage.setItem('additional_fee', 0)
+            localStorage.setItem('tax', 0)
 
             $('#data-item tr').remove()
             $('#discount_value').val(0)
             $('#additional_fee').val(0)
+            $('#tax').val(0)
             print_items()
             print_accumulate()
             print_total_price()

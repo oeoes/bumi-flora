@@ -1,3 +1,9 @@
+function select_item(item_id, item_name) {
+    $('#item_name').val(item_name)
+    $('#item_id').val(item_id)
+    $('#pilih-item').modal('toggle')
+}
+
 $(document).ready(function () {
     $('#omset-run-sort').prop('disabled', true)
     $('#data-omset').append('<tr><td colspan="9" align="center">Tidak ada data yang ditampilkan.</td></tr>')
@@ -19,7 +25,11 @@ $(document).ready(function () {
         axios.get('/app/omsets/calculate', {
             params: { 
                 date_from: $('#transaction_date_from').val(),
-                date_to: $('#transaction_date_to').val()
+                date_to: $('#transaction_date_to').val(),
+                omset_type: $('#omset_type').val(),
+                category: $('#category').val(),
+                item: $('#item_id').val(),
+                dept: $('#dept').val()
             }
         }).then(function (response) {
             $('#data-omset').children().remove()
@@ -51,13 +61,18 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#export-omset', function () {
+        $('#export-omset').text('Exporting...')
         axios({
             method: 'post',
             url: '/app/omsets/calculate/export',
             responseType: 'arraybuffer',
             data: {
                 date_from: $('#transaction_date_from').val(),
-                date_to: $('#transaction_date_to').val()
+                date_to: $('#transaction_date_to').val(),
+                omset_type: $('#omset_type').val(),
+                category: $('#category').val(),
+                item: $('#item_id').val(),
+                dept: $('#dept').val()
             }
         }).then(function (response) {
             let blob = new Blob([response.data], {
@@ -70,6 +85,21 @@ $(document).ready(function () {
             link.click();
         }).catch(function (error) {
             console.log(error);            
+        }).finally(function () {
+            $('#export-omset').text('Export')
         })
+    })
+
+    $(document).on('change', '#omset_type', function () {
+        if ($('#omset_type').val() == 'item') {
+            $('#item-block').removeClass('hide-el')
+            $('#category-block').addClass('hide-el')
+        } else if ($('#omset_type').val() == 'category') {
+            $('#item-block').addClass('hide-el')
+            $('#category-block').removeClass('hide-el')
+        } else {
+            $('#item-block').addClass('hide-el')
+            $('#category-block').addClass('hide-el')
+        }
     })
 })

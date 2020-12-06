@@ -42,7 +42,6 @@
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">
-
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -57,6 +56,7 @@
                                 <th>Jenis promo</th>
                                 <th>Value</th>
                                 <th>Status</th>
+                                <th>Jadwal</th>
                                 <th>Action</th>
                             </thead>
                             <tbody>
@@ -79,6 +79,10 @@
                                     <td><small class="text-danger">Off</small></td>
                                     @endif
                                     <td>
+                                        <button class="btn btn-sm btn-outline-info rounded-pill pr-4 pl-4"
+                                            data-toggle="modal" data-target="#aturjadwal{{$key}}">Atur</button>
+                                    </td>
+                                    <td>
                                         <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4"
                                             data-toggle="modal" data-target="#editdiscount{{$key}}">Edit</button>
                                         <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4"
@@ -92,7 +96,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="paymentLabel">Perbarui Discount</h5>
+                                                <h5 class="modal-title" id="paymentLabel">Delete Discount</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -119,6 +123,106 @@
                                     </div>
                                 </div>
 
+                                <!-- modal atur jadwal discount -->
+                                <div class="modal fade" id="aturjadwal{{$key}}" tabindex="-1" role="dialog"
+                                    aria-labelledby="paymentLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentLabel">Atur Jadwal Aktif Discount
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="{{ route('discounts.occurences', ['discount_id' => $discount->discount_item_id]) }}">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('monday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="monday" id="monday{{$key}}">
+                                                                <label class="custom-control-label" for="monday{{$key}}">
+                                                                    Senin
+                                                                </label>
+                                                            </div>
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('tuesday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="tuesday" id="tuesday{{$key}}">
+                                                                <label class="custom-control-label" for="tuesday{{$key}}">
+                                                                    Selasa
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('wednesday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="wednesday" id="wednesday{{$key}}">
+                                                                <label class="custom-control-label" for="wednesday{{$key}}">
+                                                                    Rabu
+                                                                </label>
+                                                            </div>
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('thursday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="thursday" id="thursday{{$key}}">
+                                                                <label class="custom-control-label" for="thursday{{$key}}">
+                                                                    Kamis
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('friday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="friday" id="friday{{$key}}">
+                                                                <label class="custom-control-label" for="friday{{$key}}">
+                                                                    Jum'at
+                                                                </label>
+                                                            </div>
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('saturday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="saturday" id="saturday{{$key}}">
+                                                                <label class="custom-control-label" for="saturday{{$key}}">
+                                                                    Sabtu
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <div class="custom-control custom-checkbox mb-2">
+                                                                <input <?php if(in_array('sunday', unserialize($discount->occurences))) echo "checked" ?> class="custom-control-input"
+                                                                    name="discount_active_at[]" type="checkbox"
+                                                                    value="sunday" id="sunday{{$key}}">
+                                                                <label class="custom-control-label" for="sunday{{$key}}">
+                                                                    Minggu
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
+                                                    data-dismiss="modal">Batal</button>
+                                                <input type="submit"
+                                                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary"
+                                                    value="Simpan">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- modal edit discount -->
                                 <div class="modal fade" id="editdiscount{{$key}}" tabindex="-1" role="dialog"
                                     aria-labelledby="paymentLabel" aria-hidden="true">
@@ -138,15 +242,15 @@
                                                     @csrf
                                                     <div class="form-group">
                                                         <label>Promo name</label>
-                                                        <input name="promo_name" type="text"
-                                                            class="form-control" value="{{ $discount->promo_name }}">
+                                                        <input name="promo_name" type="text" class="form-control"
+                                                            value="{{ $discount->promo_name }}">
                                                     </div>
 
                                                     @if($discount->promo_item_type == 'item')
                                                     <div class="form-group">
                                                         <label>Item</label>
                                                         <select name="item_id" class="form-control">
-                                                        @foreach($items as $item)
+                                                            @foreach($items as $item)
                                                             @if($discount->item_id == $item->id)
                                                             <option selected value="{{ $item->id }}">
                                                                 {{ ucwords($item->name) }}</option>
@@ -154,7 +258,7 @@
                                                             <option value="{{ $item->id }}">
                                                                 {{ ucwords($item->name) }}</option>
                                                             @endif
-                                                        @endforeach
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     @else
@@ -163,9 +267,11 @@
                                                         <select name="category_id" class="form-control">
                                                             @foreach($categories as $category)
                                                             @if($discount->category_id == $category->id)
-                                                            <option selected value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
+                                                            <option selected value="{{ $category->id }}">
+                                                                {{ strtoupper($category->category) }}</option>
                                                             @else
-                                                            <option value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
+                                                            <option value="{{ $category->id }}">
+                                                                {{ strtoupper($category->category) }}</option>
                                                             @endif
                                                             @endforeach
                                                         </select>
@@ -174,8 +280,8 @@
 
                                                     <div class="form-group">
                                                         <label>Value</label>
-                                                        <input name="value" type="number" min="0"
-                                                            class="form-control" value="{{ $discount->value }}">
+                                                        <input name="value" type="number" min="0" class="form-control"
+                                                            value="{{ $discount->value }}">
                                                     </div>
 
                                                     <div class="form-group">
@@ -204,7 +310,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 @endforeach
                             </tbody>
                         </table>

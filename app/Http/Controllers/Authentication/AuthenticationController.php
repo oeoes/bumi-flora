@@ -18,17 +18,21 @@ class AuthenticationController extends Controller
         
         if(!auth()->attempt($credentials))
         {
-            return back()->withErrors(['message' => 'Invalid Credentials']);
+            return response()->json(['status' => false, 'message' => 'Invalid Credentials'], 401);
         }
         else {
             if(auth()->user()->role == 'user')
-                return redirect()->route('orders.cashier_page');
-            return redirect()->route('dashboard.index');
+                return response()->json(['status' => true, 'role' => 'user'], 200);
+            return response()->json(['status' => true, 'role' => 'admin'], 200);
         }
     }
 
     public function logout () {
         Auth::logout();
+        return redirect()->route('page.login');
+    }
+
+    public function redirect_login () {
         return redirect()->route('page.login');
     }
 }

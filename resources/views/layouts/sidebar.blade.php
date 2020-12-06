@@ -91,6 +91,11 @@
                             <span class="nav-text">Gudang</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('storages.ecommerce') }}" class="" data-pjax-state="">
+                            <span class="nav-text">E-Commerce</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="">
@@ -108,6 +113,16 @@
                     <li>
                         <a href="{{ route('records.masuk') }}" class="" data-pjax-state="">
                             <span class="nav-text">Item Masuk</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('records.offline_transaction_history') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Transaksi Offline</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('records.online_transaction_history') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Transaksi Online</span>
                         </a>
                     </li>
                 </ul>

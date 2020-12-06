@@ -50,11 +50,15 @@ class StorageController extends Controller
     }
 
     public function storage_utama () {
-        return view('pages.persediaan.penyimpanan.utama')->with('items', self::items_query('utama')->limit(100)->get());
+        return view('pages.persediaan.penyimpanan.utama')->with('items', self::items_query('utama')->get());
     }
 
     public function storage_gudang () {
-        return view('pages.persediaan.penyimpanan.gudang')->with('items', self::items_query('gudang')->limit(100)->get());
+        return view('pages.persediaan.penyimpanan.gudang')->with('items', self::items_query('gudang')->get());
+    }
+
+    public function storage_ecommerce () {
+        return view('pages.persediaan.penyimpanan.ecommerce')->with('items', self::items_query('ecommerce')->get());
     }
 
     public function stock_opname () {

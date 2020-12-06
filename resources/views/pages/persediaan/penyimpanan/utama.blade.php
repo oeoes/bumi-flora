@@ -90,7 +90,7 @@
                             </td>
                             <td style="">
                                 <span class="item-amount d-sm-block text-sm ">
-                                    Rp.{{ number_format($item->price * $item->amount, 2) }}
+                                    Rp.{{ number_format($item->price * $item->stock, 2) }}
                                 </span>
                             </td>
                             <td style="">

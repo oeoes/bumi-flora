@@ -1,8 +1,16 @@
 @extends('layouts.master')
 
-@section('page-title', 'Penyimpanan Gudang')
-@section('page-description', 'Daftar item pada penyimpanan gudang.')
+@section('page-title', 'Penyimpanan E-Commerce')
+@section('page-description', 'Daftar item pada penyimpanan ecommerce.')
 
+
+@section('btn-custom')
+<div>
+    <a href="{{ route('orders.cashier_ecommerce') }}" class="btn btn-sm text-muted">
+        <span class="d-none d-sm-inline mx-1">Create Transaction</span>
+        <i data-feather="shopping-cart"></i>
+    </a>
+@endsection
 
 @section('custom-js')
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -116,11 +124,11 @@
                                                     <button class="close" data-dismiss="modal">×</button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo Awal</button>
-                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
+                                                    <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo Awal</button> -->
+                                                    <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button> -->
                                                     <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button> -->
                                                     <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer Item</button>
-                                                    <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
+                                                    <!-- <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a> -->
                                                 </div>
                                             </div>
                                             <!-- /.modal-content -->
@@ -245,14 +253,11 @@
                                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
                                                         <div class="form-group">
                                                             <label>Dari</label>
-                                                            <input name="from" type="text" class="form-control" value="gudang" readonly>
+                                                            <input name="from" type="text" class="form-control" value="ecommerce" readonly>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Ke</label>
-                                                            <select name="to" class="form-control">
-                                                                <option value="utama">Penyimpanan Utama</option>
-                                                                <option value="ecommerce">Penyimpanan E-Commerce</option>
-                                                            </select>
+                                                            <input name="to" type="text" class="form-control" value="gudang" readonly>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Jumlah Transfer</label>

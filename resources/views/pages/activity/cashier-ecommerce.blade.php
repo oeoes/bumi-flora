@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
-@section('page-title', 'Kasir')
-@section('page-description', 'Payment corner.')
+@section('page-title', 'Kasir Storage E-commerce')
+@section('page-description', 'Payment corner for online marketplace.')
 
 @section('btn-custom')
 <div>
@@ -197,7 +197,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <!-- storage -->
-                <input type="hidden" id="dept" value="utama">
+                <input type="hidden" id="dept" value="ecommerce">
             </div>
             <div class="modal-body">
                 <div class="h1 text-right mb-4">Rp. <span id="bill"></span></div>

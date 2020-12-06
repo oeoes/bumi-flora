@@ -1,4 +1,4 @@
-function push_data(id, item, barcode, unit, qty, price, original_price, discount) {
+function push_data(id, item, barcode, unit, qty, price, original_price, discount, stock) {
     let state = true
     let items = []
 
@@ -11,8 +11,12 @@ function push_data(id, item, barcode, unit, qty, price, original_price, discount
     if (items.length > 0) {
         for (let i = 0; i < items.length; i++) {
             if (id == items[i][0]) {
-                items[i][4] = parseInt(items[i][4]) + 1
-                $(`#${id}`).val(items[i][4])
+                if (stock - qty < 0) {
+                    alert('Stock tidak boleh kurang dari 0')
+                } else {
+                    items[i][4] = parseInt(items[i][4]) + 1
+                    $(`#${id}`).val(items[i][4])
+                }
                 state = false
             }
         }
@@ -20,7 +24,7 @@ function push_data(id, item, barcode, unit, qty, price, original_price, discount
     }
 
     if (state) {
-        items.push([id, item, barcode, unit, qty, price, original_price, discount])
+        items.push([id, item, barcode, unit, qty, price, original_price, Number(discount), stock])
         localStorage.setItem('items', JSON.stringify(items));
 
         // cetak item ke layar setelah scan barcode
@@ -48,7 +52,7 @@ function print_items() {
     } else {
         for (let i = 0; i < items.length; i++) {
             $('#data-item').append(
-                `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="discount" aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.${parseInt(items[i][6]).toLocaleString()}</td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
+                `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.${parseInt(items[i][6]).toLocaleString()}</td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
             ).fadeIn(3000, 'ease')
 
         }
@@ -56,7 +60,7 @@ function print_items() {
 }
 
 function print_total_price() {
-    let total = 0 + parseInt(localStorage.getItem('additional_fee'))
+    let total = 0 + parseInt(localStorage.getItem('additional_fee')) + parseInt(localStorage.getItem('tax'))
     let total_price = total
     let items = JSON.parse(localStorage.getItem('items'))
 
@@ -83,9 +87,11 @@ function print_total_price() {
 }
 
 
-function get_id(id, item, barcode, unit, price, original_price, discount) {
-    if (id != null)
-        push_data(id, item, barcode, unit, $('#jumlah').val(), price, original_price, discount)
+function get_id(id, item, barcode, unit, price, original_price, discount, stock) {
+    if (id != null) {
+        let amount = stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
+        push_data(id, item, barcode, unit, amount, price, original_price, discount, stock)
+    }
 
     // tutup modal sama clear input search
     $('#kasir-data-item_filter input').val('')
@@ -123,6 +129,8 @@ function remove_item(index) {
 $(document).ready(function () {
     // insert value ke kolom biaya lain    
     localStorage.getItem('additional_fee') == null ? localStorage.setItem('additional_fee', 0) : $('#additional_fee').val(JSON.parse(localStorage.getItem('additional_fee')))
+    // insert value ke kolom pajak
+    localStorage.getItem('tax') == null ? localStorage.setItem('tax', 0) : $('#tax').val(JSON.parse(localStorage.getItem('tax')))
 
     // print item yg ada di localstorage
     print_items()
@@ -147,8 +155,6 @@ $(document).ready(function () {
 
     // tekan tombol / untuk melakukan pembayaran
     $(document).on('keypress', 'html', (function (e) {
-        console.log(e.which);
-
         if (e.which == 44) {
             $('#cancle_payment').modal('toggle');
             return false
@@ -171,13 +177,14 @@ $(document).ready(function () {
         if ($('#item_code').val().length > 1) {
             axios.get('/cashier/check', {
                     params: {
-                        code: $('#item_code').val()
+                        code: $('#item_code').val(),
+                        dept: $('#dept').val()
                     }
                 })
                 .then(function (response) {
                     if (response.data.status == true) {
-                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, $('#jumlah').val(), response.data.data.price, response.data.data.original_price, response.data.data.discount)
-                        console.log('Found.')
+                        let amount = response.data.data.stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
+                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, amount, response.data.data.price, response.data.data.original_price, response.data.data.discount, response.data.data.stock)
                     } else {
                         $('#search-item').modal('show')
                         $('#kasir-data-item_filter input').focus().val($('#item_code').val())
@@ -211,7 +218,12 @@ $(document).ready(function () {
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
                 if (items[i][0] == $(this).attr('id')) {
-                    items[i][4] = $(this).val() // increase or decrease qty
+                    if (items[i][8] - $(this).val() < 0) {
+                        alert('Stock tidak boleh kurang dari 0')
+                        $(this).val(0)
+                    } else {
+                        items[i][4] = $(this).val() // increase or decrease qty
+                    }
                 }
             }
         }
@@ -223,10 +235,10 @@ $(document).ready(function () {
     }))
 
     // show/hide text for discount
-    if ($('#discount_value').val() < 1) {
-        $('#cont_discount').css('display', 'none')
-    } else {
+    if ($('#discount_value').val() > 0) {
         $('#cont_discount').css('display', 'block')
+    } else {
+        $('#cont_discount').css('display', 'none')
     }
 
     // perhitungan discount
@@ -236,21 +248,23 @@ $(document).ready(function () {
         localStorage.setItem('customer_discount', 0)
         $('#discount-info').text('')
         // show/hide text for discount
-        if ($('#discount_value').val() < 1) {
-            $('#cont_discount').css('display', 'none')
-        } else {
+        if ($('#discount_value').val() > 0) {
             $('#cont_discount').css('display', 'block')
+        } else {
+            $('#cont_discount').css('display', 'none')
         }
 
-        let total = JSON.parse(localStorage.getItem('additional_fee'))
+        let total = 0
         let items = JSON.parse(localStorage.getItem('items'))
         let total_price = 0
 
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
-                total = total + (parseInt(items[i][4]) * parseInt(items[i][5]))
+                total = total + (items[i][4] * items[i][5])
             }
-        }
+        }    
+        console.log(total);
+        
 
         // define discount type
         if ($('#discount_type').val() == 'nominal') {
@@ -303,6 +317,27 @@ $(document).ready(function () {
             total_price = total_price - additional_fee
             localStorage.setItem('total_price', total_price)
             localStorage.setItem('additional_fee', 0)
+            print_total_price()
+        }
+    })
+
+    // pajak
+    $(document).on('keyup', '#tax', function () {
+        let tax_val = 0
+        let tax = JSON.parse(localStorage.getItem('tax'))
+        let total_price = JSON.parse(localStorage.getItem('total_price'))
+
+        if ($('#tax').val() > 0) {
+            tax_val = tax_val + (total_price * parseInt($('#tax').val()) / 100)
+
+            localStorage.setItem('tax', tax_val)
+
+            print_total_price()
+
+        } else {
+            total_price = total_price - tax
+            localStorage.setItem('total_price', total_price)
+            localStorage.setItem('tax', 0)
             print_total_price()
         }
     })

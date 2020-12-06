@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', 'Authentication\AuthenticationController@redirect_login');
+
 Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard.index');
     Route::get('/dashboard/demand', 'DashboardController@demand')->name('dashboard.demand');
@@ -21,6 +23,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/storages/dept/{dept}', 'Storage\StorageController@filter_by_dept')->name('storages.filter_by_dept');
     Route::get('/storages/item/utama', 'Storage\StorageController@storage_utama')->name('storages.utama');
     Route::get('/storages/item/gudang', 'Storage\StorageController@storage_gudang')->name('storages.gudang');
+    Route::get('/storages/item/ecommerce', 'Storage\StorageController@storage_ecommerce')->name('storages.ecommerce');
     Route::get('/storages/item/opname', 'Storage\StorageController@stock_opname')->name('storages.opname');
 
     // endpoint for ajax call opname
@@ -30,7 +33,15 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::resource('/records', 'Storage\RecordItemController');
     Route::get('/records/item/masuk', 'Storage\RecordItemController@item_masuk')->name('records.masuk');
     Route::get('/records/item/keluar', 'Storage\RecordItemController@item_keluar')->name('records.keluar');
+    /** transaction history */
+    Route::get('/records/item/transaction/online', 'Storage\RecordItemController@online_transaction_history')->name('records.online_transaction_history');
+    Route::get('/records/item/transaction/offline', 'Storage\RecordItemController@offline_transaction_history')->name('records.offline_transaction_history');
+    Route::get('/records/item/transaction/detail/{transaction_id}/{dept}', 'Storage\RecordItemController@detail_transaction_history')->name('records.detail_transaction_history');
+    /** transfer item */
     Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_item')->name('records.transfer');
+    /** get ajax request */
+    Route::get('/records/item/transaction/history/{dept}', 'Storage\RecordItemController@get_transaction_data')->name('records.get_transaction_data');
+    Route::get('/records/item/transaction/filter/{dept}/{from}/{to}', 'Storage\RecordItemController@get_transaction_data_sorted')->name('records.get_transaction_data_sorted');
 
     // activity
     Route::resource('/orders', 'Activity\OrderController');
@@ -38,6 +49,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::post('/orders/accept/{order}', 'Activity\OrderController@accept_item')->name('orders.accept_item');
     Route::post('/orders/return/{order}', 'Activity\OrderController@return_item')->name('orders.return_item');
     Route::get('/orders/cashier/page', 'Activity\OrderController@cashier_page')->name('orders.cashier_page');
+    Route::get('/orders/cashier/ecommerce', 'Activity\OrderController@cashier_ecommerce')->name('orders.cashier_ecommerce');
 
     // print receipt
     Route::get('/prints/receipt', 'Activity\PrintReceiptController@print_receipt')->name('prints.print_receipt');
@@ -81,6 +93,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     // Discount
     Route::get('/discounts/customer', 'Admin\DiscountController@discount_customer')->name('discounts.customer');
     Route::get('/discounts/item', 'Admin\DiscountController@discount_item')->name('discounts.item');
+    Route::post('/discounts/{discount_id}/occurences', 'Admin\DiscountController@discount_occurences')->name('discounts.occurences');
     /** discount using ajax */
     Route::post('/discounts/customer', 'Admin\DiscountController@store_discount_customer');
     Route::post('/discounts/item', 'Admin\DiscountController@store_discount_item');
