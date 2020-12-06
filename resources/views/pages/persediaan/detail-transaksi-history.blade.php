@@ -179,13 +179,13 @@
                                         </td>
                                     </tr>
 
-                                    <!-- supplier modal edit -->
+                                    <!-- item modal edit -->
                                     <div id="edit-item{{ $key }}" class="modal fade" data-backdrop="true"
                                         aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog ">
                                             <div class="modal-content ">
                                                 <div class="modal-header ">
-                                                    <div class="modal-title text-md">Edit Supplier</div>
+                                                    <div class="modal-title text-md">Edit Item</div>
                                                     <button class="close" data-dismiss="modal">×</button>
                                                 </div>
                                                 <div class="modal-body">
@@ -224,7 +224,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- brand modal delete -->
+                                    <!-- item modal delete -->
                                     <div id="delete-item{{ $key }}" class="modal fade" data-backdrop="true"
                                         aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog ">

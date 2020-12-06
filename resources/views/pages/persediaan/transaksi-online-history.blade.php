@@ -28,7 +28,7 @@
                         <td style="">
                             <div class="text-muted text-sm">
                                 <a
-                                    href="/app/records/item/transaction/detail/${data.id}/ecommerce">${data.transaction_number}</a>
+                                    href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
                             </div>
                         </td>
                         <td style="">
@@ -106,7 +106,7 @@
                                     <td style="">
                                         <div class="text-muted text-sm">
                                             <a
-                                                href="/app/records/item/transaction/detail/${data.id}/ecommerce">${data.transaction_number}</a>
+                                                href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
                                         </div>
                                     </td>
                                     <td style="">

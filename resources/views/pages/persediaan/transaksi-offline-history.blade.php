@@ -3,26 +3,164 @@
 @section('page-title', 'Transaksi Offline')
 @section('page-description', 'Histori transaksi offline.')
 
+
 @section('custom-js')
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('js/axios.js') }}"></script>
 <script>
-    $(document).ready(function() {
-        $('#data-item').DataTable();
+    $(document).ready(function () {
+        let dept = 'utama'
+        $('#view-transaction').prop('disabled', true)
+
+        // view data transaction
+        axios.get(`/app/records/item/transaction/history/${dept}`)
+            .then(function (response) {
+                if (!response.data.status) {
+                    $('#online-data').append(`
+                    <tr class=" " data-index="0" data-id="17">
+                        <td colspan="7" align="center">Data transaksi tidak ditemukan</td></tr
+                    </tr>
+                `)
+                } else {
+                    response.data.data.forEach(data => {
+                        $('#online-data').append(`
+                    <tr class=" " data-index="0" data-id="17">
+                        <td style="">
+                            <div class="text-muted text-sm">
+                                <a
+                                    href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
+                            </div>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.quantity}
+                            </span>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.method_name}
+                            </span>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.type_name}
+                            </span>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.customer == null ? "Umum" : data.customer}
+                            </span>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.created_at}
+                            </span>
+                        </td>
+                        <td style="">
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.transaction_time}
+                            </span>
+                        </td>
+                    </tr>
+                    `)
+                    })
+                }
+
+            })
+
+        $(document).on('change', '#from', function () {
+            if (!$('#to').val()) {
+                $('#view-transaction').prop('disabled', true)
+            } else {
+                $('#view-transaction').prop('disabled', false)
+            }
+        })
+
+        $(document).on('change', '#to', function () {
+            if (!$('#from').val()) {
+                $('#view-transaction').prop('disabled', true)
+            } else {
+                $('#view-transaction').prop('disabled', false)
+            }
+        })
+
+
+        $(document).on('click', '#view-transaction', function () {
+            $('#online-data').children().remove()
+
+            axios.get(
+                    `/app/records/item/transaction/filter/${dept}/${$('#from').val()}/${$('#to').val()}`
+                )
+                .then(function (response) {
+
+                    if (!response.data.status) {
+                        $('#online-data').append(`
+                            <tr class=" " data-index="0" data-id="17">
+                                <td colspan="7" align="center">Data transaksi tidak ditemukan</td>
+                            </tr </tr> 
+                        `)
+                    } else {
+                        response.data.data.forEach(data => {
+                            $('#online-data').append(`
+                                <tr class=" " data-index="0" data-id="17">
+                                    <td style="">
+                                        <div class="text-muted text-sm">
+                                            <a
+                                                href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.quantity}
+                                        </span>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.method_name}
+                                        </span>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.type_name}
+                                        </span>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.customer == null ? "Umum" : data.customer}
+                                        </span>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.created_at}
+                                        </span>
+                                    </td>
+                                    <td style="">
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.transaction_time}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `)
+                        })
+                    }
+                })
+        })
     });
+
 </script>
 @endsection
 
 @section('custom-css')
-    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
-    <style>
-        @media only screen and (max-width: 600px) {
-            .my-responsive {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-            }
+<style>
+    @media only screen and (max-width: 600px) {
+        .my-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
         }
-    </style>
+    }
+
+</style>
 @endsection
 
 @section('content')
@@ -30,11 +168,29 @@
     <div class="padding">
 
         <div class="row">
+            <div class="col-md-12 mb-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Dari</label>
+                        <input id="from" type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Hingga</label>
+                        <input id="to" type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <button id="view-transaction"
+                            class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4 mt-4">View</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-sm-12 col-md-12">
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
+                            <table class="table my-responsive table-theme v-middle table-hover"
+                                style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
                                         <th style="" data-field="type">
@@ -69,48 +225,8 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach($items as $key => $item)
-                                    <tr class=" " data-index="0" data-id="17">
-                                        <td style="">
-                                            <div class="text-muted text-sm">
-                                                <a href="{{ route('records.detail_transaction_history', ['transaction_id' => $item->id, 'dept' => 'utama']) }}">{{ $item->transaction_number }}</a>
-                                            </div>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->quantity }}
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->method_name }}
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->type_name }}
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                <?php
-                                                echo $item->customer == null ? "Umum" : $item->customer;
-                                                ?>
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->transaction_time }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                <tbody id="online-data">
+
                                 </tbody>
                             </table>
                         </div>
@@ -125,10 +241,10 @@
                 </div>
             </div>
 
-            
+
         </div>
 
-        
+
         <div class="clearfix"></div>
     </div>
 </div>
