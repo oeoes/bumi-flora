@@ -14,6 +14,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/items/get/ajax', 'MasterData\ItemController@data_item_page')->name('items.ajax');
     Route::post('/items/filter', 'MasterData\ItemController@filter_item')->name('items.filter-item');
     Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
+    Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
     
     Route::resource('/supports', 'MasterData\SecondaryDataController')->only(['index']);
     Route::resource('/brands', 'MasterData\BrandController')->only(['store', 'update', 'destroy']);
@@ -102,6 +103,10 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::delete('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@delete_discount_customer')->name('discounts.delete_discount_customer');
     Route::delete('/discounts/item/{discount_item_id}', 'Admin\DiscountController@delete_discount_item')->name('discounts.delete_discount_item');
     Route::get('/discounts/customer/{stake_holder_id}', 'Admin\DiscountController@get_customer_discount');
+
+    // Warn Notification
+    Route::resource('/notifications', 'Activity\StockWarnNotificationController');
+    Route::get('/notifications/page/list', 'Activity\StockWarnNotificationController@notification_page')->name('notifications.page');
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

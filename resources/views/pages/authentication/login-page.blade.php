@@ -85,19 +85,19 @@
                 }).catch(function (error) {
                     if (!error.response.data.status) {
                         $('#email').addClass('error')
-                        $('#email').addClass('animate__animated animate__shakeX')
+                        $('#email').addClass('animate__animated animate__headShake')
 
                         $('#password').addClass('error')
-                        $('#password').addClass('animate__animated animate__shakeX')
+                        $('#password').addClass('animate__animated animate__headShake')
 
                     }
                 }).finally(function () {
                     setTimeout(() => {
                         $('#email').removeClass('error')
-                        $('#email').removeClass('animate__animated animate__shakeX')
+                        $('#email').removeClass('animate__animated animate__headShake')
 
                         $('#password').removeClass('error')
-                        $('#password').removeClass('animate__animated animate__shakeX')
+                        $('#password').removeClass('animate__animated animate__headShake')
                     }, 3500);
                 })
             })

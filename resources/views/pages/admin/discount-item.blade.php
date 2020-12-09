@@ -139,6 +139,13 @@
                                             <div class="modal-body">
                                                 <form method="post" action="{{ route('discounts.occurences', ['discount_id' => $discount->discount_item_id]) }}">
                                                     @csrf
+                                                    <div class="custom-control custom-checkbox mb-2">
+                                                        <input class="custom-control-input" type="checkbox"
+                                                            value="monday" id="check-all">
+                                                        <label class="custom-control-label" for="check-all">
+                                                            Pilih semua
+                                                        </label>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <div class="custom-control custom-checkbox mb-2">

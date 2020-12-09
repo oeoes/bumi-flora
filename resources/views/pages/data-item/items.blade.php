@@ -12,8 +12,12 @@
     <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#import"
         data-toggle-class="modal-open-aside">
         <span class="d-none d-sm-inline mx-1">Import</span>
-        <i data-feather="upload-cloud"></i>
+        <i data-feather="download-cloud"></i>
     </button>
+    <a href="{{ route('items.export-item') }}" class="btn btn-sm text-muted" >
+        <span class="d-none d-sm-inline mx-1">Export</span>
+        <i data-feather="upload-cloud"></i>
+    </a>
 
     <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#filter"
         data-toggle-class="modal-open-aside">

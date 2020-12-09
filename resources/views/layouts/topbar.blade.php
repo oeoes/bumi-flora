@@ -89,108 +89,22 @@
             </li>
             <!-- Notification -->
             <li class="nav-item dropdown">
-                <a class="nav-link px-2 mr-lg-2" data-toggle="dropdown">
+                <a id="bell" class="nav-link px-2 mr-lg-2" data-toggle="dropdown">
                     <i data-feather="bell"></i>
-                    <span class="badge badge-pill badge-up bg-primary">5</span>
+                    <span id="bell-badge" class="badge badge-pill badge-up bg-primary"></span>
                 </a>
                 <!-- dropdown -->
                 <div class="dropdown-menu dropdown-menu-right mt-3 w-md animate fadeIn p-0">
                     <div class="scrollable hover" style="max-height: 250px">
-                        <div class="list list-row">
-                            <div class="list-item " data-id="11">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-info">
-                                            K
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        Prepare the documentation for the
-                                        <a href='#'>Fitness app</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-item " data-id="15">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-success">
-                                            J
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        Fun project from this weekend. Both computer replicas are fully functional
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-item " data-id="8">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-success">
-                                            <img src="{{ asset('assets/img/a8.jpg') }}" alt=".">
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        The biggest software developer conference
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-item " data-id="3">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-primary">
-                                            <img src="{{ asset('assets/img/a3.jpg') }}" alt=".">
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        <a href='#'>@NextUI</a> submit a ticket request
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-item " data-id="4">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-success">
-                                            <img src="{{ asset('assets/img/a4.jpg') }}" alt=".">
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        Big News! Introducing
-                                        <a href='#'>NextUX</a> Enterprise 2.1 - additional #Windows Server support
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-item " data-id="9">
-                                <div>
-                                    <a href="music.detail.html">
-                                        <span class="w-32 avatar gd-info">
-                                            <img src="{{ asset('assets/img/a9.jpg') }}" alt="">
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        Added to
-                                        <a href='#'>@TUT</a> team
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="notif-list" class="list list-row">
+                                                        
                         </div>
                     </div>
                     <div class="d-flex px-3 py-2 b-t">
                         <div class="flex">
-                            <span>6 Notifications</span>
+                            <span id="notif-count"></span> Unread Messages
                         </div>
-                        <a href="page.setting.html">See all
+                        <a href="{{ route('notifications.page') }}">See all
                             <i class="fa fa-angle-right text-muted"></i>
                         </a>
                     </div>

@@ -12,7 +12,9 @@ use App\Model\MasterData\Category;
 use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\MasterDataExport;
 use DataTables;
+use Excel;
 
 class ItemController extends Controller
 {
@@ -53,9 +55,9 @@ class ItemController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->where('balances.dept', 'utama')
-                ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'balances.dept', 'balances.amount as stock');
+                ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                ->where('stocks.dept', 'utama')
+                ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'stocks.dept', 'stocks.amount as stock');
     }
 
     public function create()
@@ -165,6 +167,10 @@ class ItemController extends Controller
 
         session()->flash('message', 'OK! Data berhasil diperbarui.');
         return redirect()->route('items.index');
+    }
+
+    public function export_item () {
+        return Excel::download(new MasterDataExport, 'master-data.xlsx');
     }
 
     public function import_item () {

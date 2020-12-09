@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Activity\Transaction;
+use App\Model\Activity\StockWarnNotification;
 use App\Model\MasterData\PaymentType;
 use App\Model\MasterData\Item;
 use App\Model\Storage\StorageRecord;
@@ -52,6 +53,7 @@ class CashierController extends Controller
         ];
 
         foreach ($request->items as $item) {
+            $master_item = Item::find($item[0]);
             $stock = Stock::where(['item_id' => $item[0], 'dept' => $request->dept])->first();
             $trx_number = (count($no_urut)+1) . '/KSR/' . strtoupper($request->dept);
             // count price of all items
@@ -97,13 +99,35 @@ class CashierController extends Controller
             ];
             // push ke array load data receipt
             array_push($print_items, $data_item);
-            try {
-                // print receipt
-                PrintReceiptController::print_receipt($print_items, $calc);
-            } catch (\Throwable $th) {
-                return response()->json(['status' => false, 'message' => 'Printer error'], 400);
-            }
             
+        }
+
+        try {
+            // print receipt
+            PrintReceiptController::print_receipt($print_items, $calc);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Printer error'], 400);
+        }
+
+        // warning if stock less than minimum stock or even zero left
+        if ($stock->amount < $master_item->min_stock && $stock->amount > 0) {
+            $title = $master_item->name . ' kurang dari stock minimum.';
+            $link = route('items.show', ['item' => $master_item->id]);
+            $body = 'Jumlah item untuk '. $master_item->name . ' kurang dari stock minimum. Segera lakukan restock sebelum kehabisan, untuk lebih detail klik tautan ini <a href="'.$link.'">detail.</a>';
+            StockWarnNotification::create([
+                'title' => $title,
+                'body' => $body,
+                'urgency' => 1,
+            ]);
+        } else if ($stock->amount == 0) {
+            $title = $master_item->name . ' stock habis.';
+            $link = route('items.show', ['item' => $master_item->id]);
+            $body = 'Jumlah item untuk '. $master_item->name . ' tersisa 0. Segera lakukan restock, klik tautan ini untuk lebih detail <a href="'.$link.'">detail.</a>';
+            StockWarnNotification::create([
+                'title' => $title,
+                'body' => $body,
+                'urgency' => 2,
+            ]);
         }
 
         return response()->json(['status' => true, 'message' => 'Transaction recorded']);

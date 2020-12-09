@@ -35,4 +35,12 @@ $(document).ready(() => {
             location.reload()
         })
     })
+
+    $(document).on('click', '#check-all', function () {
+        if (this.checked) {
+            $('input[name="discount_active_at[]"]').prop('checked', true)
+        } else {
+            $('input[name="discount_active_at[]"]').prop('checked', false)
+        }
+    })
 })
