@@ -32,48 +32,48 @@
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-muted" for="name">Name</label>
-                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name">
                                             <input type="hidden" name="type" value="supplier">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="address">Address</label>
-                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address" required>
+                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="country">Country</label>
-                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country" required>
+                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="province">Province</label>
-                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province" required>
+                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="city">City</label>
-                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city" required>
+                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="postal_code">Postal code</label>
-                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" required>
+                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="phone">Phone</label>
-                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" required>
+                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="email">Email</label>
-                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email" required>
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="card_number">Card Number</label>
-                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" required>
+                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="owner">Owner</label>
-                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" required>
+                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="bank">Bank</label>
-                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" required>
+                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank">
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-primary">Add</button>
                                     </form>
@@ -133,48 +133,48 @@
                                                                 @csrf
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="name">Name</label>
-                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $supplier->name }}" required>
+                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $supplier->name }}">
                                                                     <input type="hidden" name="type" value="supplier">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="address">Address</label>
-                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $supplier->address }}" required>
+                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $supplier->address }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="country">Country</label>
-                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $supplier->country }}" required>
+                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $supplier->country }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="province">Province</label>
-                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $supplier->province }}" required>
+                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $supplier->province }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="city">City</label>
-                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $supplier->city }}" required>
+                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $supplier->city }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="postal_code">Postal code</label>
-                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $supplier->postal_code }}" required>
+                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $supplier->postal_code }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="phone">Phone</label>
-                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $supplier->phone }}" required>
+                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $supplier->phone }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="email">Email</label>
-                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $supplier->email }}" required>
+                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $supplier->email }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="card_number">Card Number</label>
-                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $supplier->card_number }}" required>
+                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $supplier->card_number }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="owner">Owner</label>
-                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $supplier->owner }}" required>
+                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $supplier->owner }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="bank">Bank</label>
-                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $supplier->bank }}" required>
+                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $supplier->bank }}">
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -224,48 +224,48 @@
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-muted" for="name">Name</label>
-                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name">
                                             <input type="hidden" name="type" value="customer">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="address">Address</label>
-                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address" required>
+                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="country">Country</label>
-                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country" required>
+                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="province">Province</label>
-                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province" required>
+                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="city">City</label>
-                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city" required>
+                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="postal_code">Postal code</label>
-                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" required>
+                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="phone">Phone</label>
-                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" required>
+                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="email">Email</label>
-                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email" required>
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="card_number">Card Number</label>
-                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" required>
+                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="owner">Owner</label>
-                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" required>
+                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="bank">Bank</label>
-                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" required>
+                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank">
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-primary">Add</button>
                                     </form>
@@ -325,48 +325,48 @@
                                                                 @csrf
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="name">Name</label>
-                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $customer->name }}" required>
+                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $customer->name }}">
                                                                     <input type="hidden" name="type" value="customer">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="address">Address</label>
-                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $customer->address }}" required>
+                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $customer->address }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="country">Country</label>
-                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $customer->country }}" required>
+                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $customer->country }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="province">Province</label>
-                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $customer->province }}" required>
+                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $customer->province }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="city">City</label>
-                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $customer->city }}" required>
+                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $customer->city }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="postal_code">Postal code</label>
-                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $customer->postal_code }}" required>
+                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $customer->postal_code }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="phone">Phone</label>
-                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $customer->phone }}" required>
+                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $customer->phone }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="email">Email</label>
-                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $customer->email }}" required>
+                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $customer->email }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="card_number">Card Number</label>
-                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $customer->card_number }}" required>
+                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $customer->card_number }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="owner">Owner</label>
-                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $customer->owner }}" required>
+                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $customer->owner }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="bank">Bank</label>
-                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $customer->bank }}" required>
+                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $customer->bank }}">
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -416,49 +416,49 @@
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-muted" for="name">Name</label>
-                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name" required>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="insert name">
                                             <input type="hidden" name="type" value="sales">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="address">Address</label>
-                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address" required>
+                                            <input name="address" type="text" class="form-control" id="address" placeholder="insert address">
                                             
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="country">Country</label>
-                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country" required>
+                                            <input name="country" type="text" class="form-control" id="country" placeholder="insert country">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="province">Province</label>
-                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province" required>
+                                            <input name="province" type="text" class="form-control" id="province" placeholder="insert province">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="city">City</label>
-                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city" required>
+                                            <input name="city" type="text" class="form-control" id="city" placeholder="insert city">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="postal_code">Postal code</label>
-                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" required>
+                                            <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="phone">Phone</label>
-                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" required>
+                                            <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="email">Email</label>
-                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email" required>
+                                            <input name="email" type="email" class="form-control" id="email" placeholder="insert email">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="card_number">Card Number</label>
-                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" required>
+                                            <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="owner">Owner</label>
-                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" required>
+                                            <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner">
                                         </div>
                                         <div class="form-group">
                                             <label class="text-muted" for="bank">Bank</label>
-                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" required>
+                                            <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank">
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-primary">Add</button>
                                     </form>
@@ -518,48 +518,48 @@
                                                                 @csrf
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="name">Name</label>
-                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $sale->name }}" required>
+                                                                    <input name="name" type="text" class="form-control" id="name" placeholder="insert name" value="{{ $sale->name }}">
                                                                     <input type="hidden" name="type" value="sales">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="address">Address</label>
-                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $sale->address }}" required>
+                                                                    <input name="address" type="text" class="form-control" id="address" placeholder="insert address" value="{{ $sale->address }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="country">Country</label>
-                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $sale->country }}" required>
+                                                                    <input name="country" type="text" class="form-control" id="country" placeholder="insert country" value="{{ $sale->country }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="province">Province</label>
-                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $sale->province }}" required>
+                                                                    <input name="province" type="text" class="form-control" id="province" placeholder="insert province" value="{{ $sale->province }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="city">City</label>
-                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $sale->city }}" required>
+                                                                    <input name="city" type="text" class="form-control" id="city" placeholder="insert city" value="{{ $sale->city }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="postal_code">Postal code</label>
-                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $sale->postal_code }}" required>
+                                                                    <input name="postal_code" type="text" class="form-control" id="postal_code" placeholder="insert postal_code" value="{{ $sale->postal_code }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="phone">Phone</label>
-                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $sale->phone }}" required>
+                                                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="insert phone" value="{{ $sale->phone }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="email">Email</label>
-                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $sale->email }}" required>
+                                                                    <input name="email" type="email" class="form-control" id="email" placeholder="insert email" value="{{ $sale->email }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="card_number">Card Number</label>
-                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $sale->card_number }}" required>
+                                                                    <input name="card_number" type="text" class="form-control" id="card_number" placeholder="insert card_number" value="{{ $sale->card_number }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="owner">Owner</label>
-                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $sale->owner }}" required>
+                                                                    <input name="owner" type="text" class="form-control" id="owner" placeholder="insert owner" value="{{ $sale->owner }}">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="text-muted" for="bank">Bank</label>
-                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $sale->bank }}" required>
+                                                                    <input name="bank" type="text" class="form-control" id="bank" placeholder="insert bank" value="{{ $sale->bank }}">
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">

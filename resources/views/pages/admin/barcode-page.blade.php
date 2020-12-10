@@ -27,10 +27,10 @@
         }
     }
 
-    #barcode_canvas img {
+    /* #barcode_canvas img {
         height: 55px;
         width: 100%;
-    }
+    } */
 
 </style>
 @endsection
@@ -40,19 +40,19 @@
     <div class="padding">
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
                         Barcode Preview
                         <button id="print" class="btn btn-sm btn-primary rounded-pill pr-3 pl-3" style=" position: absolute; right: 8px;"><i data-feather="printer"></i></button>
                     </div>
-                    <div class="card-body" style="height: 300px">
+                    <div class="card-body" style="height: 300px; overflow: auto">
                         <div class="row" id="barcode_canvas" ></div>
                         <div class="h4 text-muted text-center" style="margin-top: 100px">No item selected.</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
                         Configure
@@ -61,7 +61,7 @@
                         <div class="form-group">
                             <label>Item</label>
                             <div class="row no-gutters">
-                                <div class="col-10">
+                                <div class="col-8">
                                     <input id="item_name" type="text" class="form-control" style="border-radius: 4px 0 0 4px!important" placeholder="select item" readonly>
                                     <input id="item_id" type="hidden" class="form-control">
                                     </div>
@@ -141,6 +141,20 @@
                                 </div>
                             </div>
                             <!-- end modal pilih item -->
+                        </div>
+
+                        <div class="form-group">
+                            <label for="size">Size</label>
+                            <select id="size" class="form-control" id="size">
+                                <option value="large">Rol - 106x28mm</option>
+                                <option value="medium">Rol - 106x28mm</option>
+                                <option value="small">Rol - 33x15mm</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="copy">Copy</label>
+                            <input id="copy" type="number" class="form-control" min="1" value="10">
                         </div>
 
                         <div class="form-group">

@@ -50,6 +50,12 @@
                     <span class="nav-text">Omset</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('grosirs.index') }}">
+                    <span class="nav-icon"><i data-feather='shopping-cart'></i></span>
+                    <span class="nav-text">Grosir</span>
+                </a>
+            </li>
             <li class="">
                 <a href="#" class="" data-pjax-state="anchor-empty">
                     <span class="nav-icon"><i data-feather='dollar-sign'></i></span>

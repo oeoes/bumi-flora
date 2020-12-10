@@ -110,6 +110,10 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     // change user credentials
     Route::post('/user/update', 'Authentication\AuthenticationController@change_user_credentials');
+
+    // Item grosir
+    Route::resource('/grosirs', 'Activity\GrosirItemController');
+    Route::get('/grosirs/item/lists', 'Activity\GrosirItemController@get_grosir_data'); //ajax request
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

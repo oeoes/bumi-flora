@@ -16,13 +16,13 @@ class CreateStakeHoldersTable extends Migration
         Schema::create('stake_holders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('address');
-            $table->string('country');
-            $table->string('province');
-            $table->string('city');
-            $table->string('postal_code');
+            $table->text('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal_code')->nullable();
             $table->string('phone');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('card_number')->nullable(); # no rek
             $table->string('owner')->nullable();
             $table->string('bank')->nullable();

@@ -27,6 +27,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('additional_fee');
             $table->integer('tax');
             $table->time('transaction_time');
+            $table->tinyInteger('daily_complete')->default(0);
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');
