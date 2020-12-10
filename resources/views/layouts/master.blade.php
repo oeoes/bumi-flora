@@ -254,6 +254,25 @@
                         }
                     })
             }, 5000);
+
+            $(document).on('click', '#update-account', function (e) {
+                $('#update-account').text('Validating...')
+                e.preventDefault()
+
+                axios.post('/app/user/update', {
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    old_password: $('#old_password').val(),
+                }).then(function (response) {
+                    alert(response.data.message)
+                    location.reload()
+                }).catch(function (error) {
+                    alert(error.response.data.message)
+                    
+                }).finally(function () {
+                    $('#update-account').text('Save Changes')
+                })
+            })
         })
 
     </script>

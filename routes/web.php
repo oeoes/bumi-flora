@@ -107,6 +107,9 @@ Route::prefix('app')->middleware('admin')->group(function () {
     // Warn Notification
     Route::resource('/notifications', 'Activity\StockWarnNotificationController');
     Route::get('/notifications/page/list', 'Activity\StockWarnNotificationController@notification_page')->name('notifications.page');
+
+    // change user credentials
+    Route::post('/user/update', 'Authentication\AuthenticationController@change_user_credentials');
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

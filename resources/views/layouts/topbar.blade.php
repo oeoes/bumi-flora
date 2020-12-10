@@ -153,8 +153,7 @@
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                <form method="post" action="">
-                    @method('PUT')
+                <form method="post">
                     @csrf
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -162,7 +161,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">New Password</label>
                         <input id="password" type="password" class="form-control rounded-pill" required>
                     </div>
                     <div class="form-group">
@@ -174,7 +173,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4"
                     data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4">Save
+                <button id="update-account" type="submit" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4">Save
                     Changes</button>
             </form>
             </div>
