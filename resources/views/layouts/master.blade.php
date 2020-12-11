@@ -15,6 +15,9 @@
     <!-- endbuild -->
     @yield('custom-css')
     <style>
+        .text-12 {
+            font-size: 12px;
+        }
         .my-alert {
             position: fixed;
             bottom: 5px;

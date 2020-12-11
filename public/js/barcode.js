@@ -15,7 +15,7 @@ function generate() {
 
         for (let i = 0; i < $('#copy').val(); i++) {
             if ($('#size').val() == 'small') {
-                $('#barcode_canvas').append('<div class="col-md-4 text-center" style="margin-top: 70px"><div class="h6 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
+                $('#barcode_canvas').append('<div class="col-md-3 text-center" style="margin-top: 70px"><div class="h6 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left text-12"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right text-12"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
             } else {
                 $('#barcode_canvas').append('<div class="col-md-6 text-center" style="margin-top: 70px"><div class="h4 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
             }
