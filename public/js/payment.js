@@ -39,7 +39,7 @@ function store_transaction(e) {
             print_total_price()
         }
     }).catch(function (error) {
-        alert(error.response.message)
+        alert(error.response.data.message)
     }).finally(function (e) {
         location.reload()
 
