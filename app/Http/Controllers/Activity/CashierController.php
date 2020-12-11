@@ -102,13 +102,6 @@ class CashierController extends Controller
             
         }
 
-        try {
-            // print receipt
-            PrintReceiptController::print_receipt($print_items, $calc);
-        } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'message' => 'Printer error'], 400);
-        }
-
         // warning if stock less than minimum stock or even zero left
         if ($stock->amount < $master_item->min_stock && $stock->amount > 0) {
             $title = $master_item->name . ' kurang dari stock minimum.';
@@ -128,6 +121,13 @@ class CashierController extends Controller
                 'body' => $body,
                 'urgency' => 2,
             ]);
+        }
+
+        try {
+            // print receipt
+            PrintReceiptController::print_receipt($print_items, $calc);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Printer error'], 400);
         }
 
         return response()->json(['status' => true, 'message' => 'Transaction recorded']);
