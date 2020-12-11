@@ -110,7 +110,7 @@ function print_total_price() {
 function get_id(id, item, barcode, unit, price, original_price, discount, stock, minimum_item, grosir_price) {
     if (id != null) {
         let amount = stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
-        push_data(id, item, barcode, unit, amount, price, original_price, discount, stock, minimum_item, grosir_price, price)
+        push_data(id, item, barcode, unit, amount, price, original_price, discount, stock, minimum_item, grosir_price, original_price)
     }
 
     // tutup modal sama clear input search
@@ -125,8 +125,13 @@ function print_accumulate() {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            let pr = parseInt(items[i][6] * items[i][4]) // original_price * quantity 
-            $('#acc_' + items[i][0]).text(parseInt(pr - (pr * items[i][7] / 100)).toLocaleString())
+            if (items[i][9] > 0 && items[i][4] > items[i][9]) { // kalau grosir true dan qty lebih dari grosir
+                let pr = parseInt(items[i][10] * items[i][4]) // grosir price * quantity 
+                $('#acc_' + items[i][0]).text(parseInt(pr - (pr * items[i][7] / 100)).toLocaleString())
+            } else {
+                let pr = parseInt(items[i][6] * items[i][4]) // original_price * quantity 
+                $('#acc_' + items[i][0]).text(parseInt(pr - (pr * items[i][7] / 100)).toLocaleString())
+            }
         }
     }
 
