@@ -332,6 +332,8 @@
                             <th><span class="text-muted">Harga Asli</span></th>
                             <th><span class="text-muted">Disc.</span></th>
                             <th><span class="text-muted">Harga Promo</span></th>
+                            <th><span class="text-muted">Grosir</span></th>
+                            <th><span class="text-muted">Ketentuan</span></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -391,41 +393,129 @@
                                 @endif
                             </td>
                             @if($item->discount_item > 0)
-                            <td style="">
-                                <div class="text-sm">
-                                    Rp.{{ number_format($item->price_item) }}
-                                </div>
-                            </td>
-                            <td>
-                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}')" style="cursor: pointer"
-                                    class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                        data-feather='plus'></i></button>
-                            </td>
+                                <td style="">
+                                    <div class="text-sm">
+                                        Rp.{{ number_format($item->price_item) }}
+                                    </div>
+                                </td>
+                                @if($item->minimum_item > 0)
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-success">Yes</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                        </div>
+                                    </td>
+                                    <td>
+                                    <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                        '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
+                                        class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                            data-feather='plus'></i></button>
+                                </td>
+                                @else
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-secondary">No</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            -
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
+                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                                data-feather='plus'></i></button>
+                                    </td>
+                                @endif
+                                
                             @elseif($item->discount_category > 0)
                             <td style="">
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->price_category) }}
                                 </div>
                             </td>
-                            <td>
-                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}')" style="cursor: pointer"
-                                    class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                        data-feather='plus'></i></button>
-                            </td>
+                                @if($item->minimum_item > 0)
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-success">Yes</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
+                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                                data-feather='plus'></i></button>
+                                    </td>
+                                @else
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-secondary">No</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            -
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
+                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                                data-feather='plus'></i></button>
+                                    </td>
+                                @endif
                             @else
                             <td style="">
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->original_price) }}
                                 </div>
                             </td>
-                            <td>
-                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}')" style="cursor: pointer"
-                                    class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                        data-feather='plus'></i></button>
-                            </td>
+                                @if($item->minimum_item > 0)
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-success">Yes</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
+                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                                data-feather='plus'></i></button>
+                                    </td>
+                                @else
+                                    <td style="">
+                                        <div class="text-sm">
+                                            <span class="text-secondary">No</span>
+                                        </div>
+                                    </td>
+                                    <td style="">
+                                        <div class="text-sm">
+                                            -
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
+                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
+                                                data-feather='plus'></i></button>
+                                    </td>
+                                @endif
                             @endif
                         </tr>
                         @endforeach
