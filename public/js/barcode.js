@@ -14,22 +14,35 @@ function generate() {
         $('#barcode_canvas').children().remove()
 
         for (let i = 0; i < $('#copy').val(); i++) {
-            $('#barcode_canvas').append('<div class="col-md-6 text-center" style="margin-top: 70px"><div class="h4 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
+            if ($('#size').val() == 'small') {
+                $('#barcode_canvas').append('<div class="col-md-4 text-center" style="margin-top: 70px"><div class="h6 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
+            } else {
+                $('#barcode_canvas').append('<div class="col-md-6 text-center" style="margin-top: 70px"><div class="h4 text-left">' + response.data.item.name + '</div><img src=\"data:image/png;base64,' + response.data.barcode + '\" /><div class="row no-gutters"><div class="col-6 text-left"><span>' + response.data.item.barcode + '</span></div><div class="col-6 text-right"><span>Rp.' + response.data.item.price.toLocaleString() + '</span></div></div></div>')
+            }
         }
 
         switch ($('#size').val()) {
             case 'small':
-                $('#barcode_canvas img').css({ "height": "15mm", "width": "33mm" })
+                $('#barcode_canvas img').css({
+                    "height": "15mm",
+                    "width": "33mm"
+                })
                 break;
 
             case 'medium':
-                $('#barcode_canvas img').css({ "height": "18mm", "width": "96mm" })
+                $('#barcode_canvas img').css({
+                    "height": "18mm",
+                    "width": "96mm"
+                })
                 break;
-            
+
             case 'large':
-                $('#barcode_canvas img').css({ "height": "28mm", "width": "105%" })
+                $('#barcode_canvas img').css({
+                    "height": "28mm",
+                    "width": "105%"
+                })
                 break;
-        } 
+        }
 
         $('#barcode_canvas').siblings().remove()
     })
