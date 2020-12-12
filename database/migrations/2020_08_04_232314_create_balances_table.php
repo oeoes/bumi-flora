@@ -17,7 +17,7 @@ class CreateBalancesTable extends Migration
             $table->uuid('id')->unique()->primary();
             $table->uuid('item_id');
             $table->integer('amount')->default(0);
-            $table->enum('dept', ['gudang', 'utama']);
+            $table->enum('dept', ['gudang', 'utama', 'ecommerce']);
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');

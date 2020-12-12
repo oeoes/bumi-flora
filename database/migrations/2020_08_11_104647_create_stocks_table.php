@@ -16,7 +16,7 @@ class CreateStocksTable extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
             $table->uuid('item_id');
-            $table->enum('dept', ['utama', 'gudang']);
+            $table->enum('dept', ['utama', 'gudang', 'ecommerce']);
             $table->integer('amount')->default(0);
             $table->timestamps();
 

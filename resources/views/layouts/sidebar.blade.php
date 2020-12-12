@@ -12,7 +12,6 @@
             </li>
         </ul>
         <ul class="nav ">
-        @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'admin']))
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -51,11 +50,30 @@
                     <span class="nav-text">Omset</span>
                 </a>
             </li>
-             <li>
-                <a href="">
-                    <span class="nav-icon"><i data-feather='dollar-sign'></i></span>
-                    <span class="nav-text">Discount <small class="text-danger">(soon)</small></span>
+            <li>
+                <a href="{{ route('grosirs.index') }}">
+                    <span class="nav-icon"><i data-feather='shopping-cart'></i></span>
+                    <span class="nav-text">Grosir</span>
                 </a>
+            </li>
+            <li class="">
+                <a href="#" class="" data-pjax-state="anchor-empty">
+                    <span class="nav-icon"><i data-feather='dollar-sign'></i></span>
+                    <span class="nav-text">Discount</span>
+                    <span class="nav-caret"></span>
+                </a>
+                <ul class="nav-sub nav-mega">
+                    <li>
+                        <a href="{{ route('discounts.customer') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Customer</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('discounts.item') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Item</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- persediaan -->
@@ -65,7 +83,7 @@
             <li class="">
                 <a href="#" class="" data-pjax-state="anchor-empty">
                     <span class="nav-icon"><i data-feather='database'></i></span>
-                    <span class="nav-text">Penyimpanan</span>
+                    <span class="nav-text">Penyimpanan Offline</span>
                     <span class="nav-caret"></span>
                 </a>
                 <ul class="nav-sub nav-mega">
@@ -77,6 +95,20 @@
                     <li>
                         <a href="{{ route('storages.gudang') }}" class="" data-pjax-state="">
                             <span class="nav-text">Gudang</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="#" class="" data-pjax-state="anchor-empty">
+                    <span class="nav-icon"><i data-feather='database'></i></span>
+                    <span class="nav-text">Penyimpanan Online</span>
+                    <span class="nav-caret"></span>
+                </a>
+                <ul class="nav-sub nav-mega">
+                    <li>
+                        <a href="{{ route('storages.ecommerce') }}" class="" data-pjax-state="">
+                            <span class="nav-text">E-Commerce</span>
                         </a>
                     </li>
                 </ul>
@@ -96,6 +128,16 @@
                     <li>
                         <a href="{{ route('records.masuk') }}" class="" data-pjax-state="">
                             <span class="nav-text">Item Masuk</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('records.offline_transaction_history') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Transaksi Offline</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('records.online_transaction_history') }}" class="" data-pjax-state="">
+                            <span class="nav-text">Transaksi Online</span>
                         </a>
                     </li>
                 </ul>
@@ -135,10 +177,7 @@
                     <span class="nav-icon"><i data-feather='lock'></i></span>
                     <span class="nav-text">Roles & Permission</span>
                 </a>
-            </li>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['cashier']))          
+            </li>         
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
@@ -157,7 +196,6 @@
                     <span class="nav-text">History Transaksi</span>
                 </a>
             </li>
-            @endif
         </ul>
     </div>
 </div>

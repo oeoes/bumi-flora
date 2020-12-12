@@ -47,6 +47,10 @@
                                 <thead style="">
                                     <tr>
                                         <th style="" data-field="type">
+                                            <div class="th-inner">No. Transaksi</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="" data-field="type">
                                             <div class="th-inner">Nama</div>
                                             <div class="fht-cell"></div>
                                         </th>
@@ -94,12 +98,17 @@
                                     <tr class=" " data-index="0" data-id="17">
                                         <td style="">
                                             <div class="text-muted text-sm">
+                                                {{ $item->transaction_number }}
+                                            </div>
+                                        </td>
+                                        <td style="">
+                                            <div class="text-muted text-sm">
                                                 {{ $item->name }}
                                             </div>
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                {{ $item->unit }}
+                                                {{ strtoupper($item->unit) }}
                                             </span>
                                         </td>
                                         <td style="">
@@ -114,7 +123,7 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->category }}
+                                                {{ strtoupper($item->category) }}
                                             </span>
                                         </td>
                                         <td style="">
@@ -124,12 +133,12 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->payment_method }}
+                                                {{ $item->method_name }}
                                             </span>
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->payment_type }}
+                                                {{ $item->type_name }}
                                             </span>
                                         </td>
                                         <td style="">

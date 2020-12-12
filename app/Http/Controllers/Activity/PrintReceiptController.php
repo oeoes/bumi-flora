@@ -8,54 +8,23 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Carbon\Carbon;
 
 class PrintReceiptController extends Controller
 {
-    public function print_receipt () {
+    public static function print_receipt ($items, $calc) {
         $logo = EscposImage::load(public_path('images/logo.png'), false);
         try {
-            $items = [
-                [
-                "name" => "Tali Pocong",
-                "satuan" => "PCS",
-                "price" => "123.000",
-                "qty" => "5",
-                "total" => "625.000",
-                "discount" => "10"
-                ],
-                [
-                "name" => "Tali Kolor",
-                "satuan" => "PCS",
-                "price" => "145.000",
-                "qty" => "7",
-                "total" => "689.000"
-                ],
-                [
-                "name" => "Tali Silaturahmi",
-                "satuan" => "PCS",
-                "price" => "145.000",
-                "qty" => "2",
-                "total" => "79.000",
-                "discount" => "30"
-                ],
-                [
-                    "name" => "Tali Ta Latief",
-                    "satuan" => "MAN",
-                    "price" => "145.000",
-                    "qty" => "2",
-                    "total" => "79.000"
-                    ]
-            ];
-            $calc = [
-                "total_price" => "1.000.000",
-                "fee" => "230.000",
-                "bill" => "1.002.3000",
-                "cash" => "1.500.000",
-                "cashback" => "500.000"
-            ];
+            // total qty seluruh item
+            $sum_qty = 0;
+            foreach ($items as $item) {
+                $sum_qty += $item['qty'];
+            }
+
+
             $connector = new WindowsPrintConnector("zahra");
 
-            /* Print a "Hello world" receipt" */
+            /* initiate printer */
             $printer = new Printer($connector);
             $printer->initialize();
 
@@ -64,21 +33,14 @@ class PrintReceiptController extends Controller
             $printer -> bitImage($logo);
             $printer -> feed();
 
-            /* Name of shop */
-            // $printer -> selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-            // $printer->setJustification(Printer::JUSTIFY_CENTER);
-            // $printer->setTextSize(2, 1);
-            // $printer -> text("BUMI FLORA 80 \n");
-            // $printer -> feed();
-
             $printer->setTextSize(1, 1);
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer -> text("JL. KH. MAULANA HASANUDIN NO. 80 CIPONDOH\nTANGERANG - BANTEN \n");
             $printer -> text("Telp: 085772386441 Fax: \n");
             $printer->feed();
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("No. : NomorUrut/KSR/Tanggal\n");
-            $printer->text("Ksr. : Pevita Pearce (waktu: 16:45:12)\n");
+            $printer->text("No. : ". $items[0][6] ." \n");
+            $printer->text("Ksr. : ". auth()->user()->name ." (waktu: ". Carbon::now()->format('H:i:s') .")\n");
             $printer -> text("------------------------------------------------\n");
             $printer->feed(); 
             
@@ -89,7 +51,7 @@ class PrintReceiptController extends Controller
             for ($i=0; $i < count($items); $i++) { 
                 
                 // cek field discoun
-                if(!array_key_exists("discount", $items[$i])) {
+                if($items[$i]['discount'] == 0) {
                     for ($j=0; $j < 48; $j++) { 
                         // item detail
                         if($j < 45) {
@@ -178,7 +140,7 @@ class PrintReceiptController extends Controller
                 }
 
                 // buat nyetak cek kolom discount
-                if(!array_key_exists("discount", $items[$i])) {
+                if($items[$i]['discount'] == 0) {
                     $printer->text($n1."\n");
                     $printer->text($n2."\n");
                 }else {
@@ -193,7 +155,7 @@ class PrintReceiptController extends Controller
                 
             }
             $printer -> text("------------------------------------------------\n");
-            $qty = "ITEM: 3; QTY: 12 "; // 18 col
+            $qty = "ITEM: ". count($items). "; QTY: ". $sum_qty ." "; // 18 col
             $fee = "Biaya Lain       =";
             $bill = "Total Akhir      =";
             $cash = "Tunai            =";

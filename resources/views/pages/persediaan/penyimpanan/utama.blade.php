@@ -90,7 +90,7 @@
                             </td>
                             <td style="">
                                 <span class="item-amount d-sm-block text-sm ">
-                                    Rp.{{ number_format($item->price * $item->amount, 2) }}
+                                    Rp.{{ number_format($item->price * $item->stock, 2) }}
                                 </span>
                             </td>
                             <td style="">
@@ -110,8 +110,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo Awal</button>
-                                        <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
-                                        <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button>
+                                        <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
+                                        <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button>  -->
                                         <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer Item</button>
                                     </div>
                                 </div>

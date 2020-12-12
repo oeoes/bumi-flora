@@ -97,7 +97,7 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm ">
-                                                Rp.{{ number_format($item->price * $item->amount, 2) }}
+                                                Rp.{{ number_format($item->price * $item->stock, 2) }}
                                             </span>
                                         </td>
                                         <td style="">
@@ -118,7 +118,7 @@
                                                 <div class="modal-body">
                                                     <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo Awal</button>
                                                     <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Masuk</button>
-                                                    <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button>
+                                                    <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button> -->
                                                     <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer Item</button>
                                                     <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
                                                 </div>
@@ -249,11 +249,14 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Ke</label>
-                                                            <input name="to" type="text" class="form-control" value="utama" readonly>
+                                                            <select name="to" class="form-control">
+                                                                <option value="utama">Penyimpanan Utama</option>
+                                                                <option value="ecommerce">Penyimpanan E-Commerce</option>
+                                                            </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Jumlah Transfer</label>
-                                                            <input type="number" min="0" class="form-control" name="amount" required>
+                                                            <input type="number" min="0" max="{{ $item->stock }}" class="form-control" name="amount" required>
                                                             <small class="text-muted"><span class="text-danger">Maksimum jumlah yang akan ditransfer tidak bolah melebihi stock tersedia.</span> <br> Stock: <span class="text-info">{{ $item->stock }}</span></small>
                                                         </div>
                                                 </div>

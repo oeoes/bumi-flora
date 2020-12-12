@@ -15,13 +15,19 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained(); // kasir id
             $table->uuid('item_id');
-            $table->string('payment_method');
-            $table->string('payment_type');
+            $table->uuid('stake_holder_id')->default('umum');
+            $table->string('transaction_number');
+            $table->enum('dept', ['ecommerce', 'utama']);
+            $table->foreignId('payment_method_id')->constrained();
+            $table->foreignId('payment_type_id')->constrained();
             $table->integer('discount');
             $table->integer('qty');
+            $table->integer('additional_fee');
+            $table->integer('tax');
             $table->time('transaction_time');
+            $table->tinyInteger('daily_complete')->default(0);
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');
