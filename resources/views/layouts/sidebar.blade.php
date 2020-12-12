@@ -51,6 +51,12 @@
                     <span class="nav-text">Omset</span>
                 </a>
             </li>
+             <li>
+                <a href="">
+                    <span class="nav-icon"><i data-feather='dollar-sign'></i></span>
+                    <span class="nav-text">Discount <small class="text-danger">(soon)</small></span>
+                </a>
+            </li>
 
             <!-- persediaan -->
             <li class="nav-header hidden-folded">
