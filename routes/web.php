@@ -16,10 +16,6 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
     Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
     
-    Route::resource('/supports', 'MasterData\SecondaryDataController')->only(['index']);
-    Route::resource('/brands', 'MasterData\BrandController')->only(['store', 'update', 'destroy']);
-    Route::resource('/units', 'MasterData\UnitController')->only(['store', 'update', 'destroy']);
-    Route::resource('/categories', 'MasterData\CategoryController')->only(['store', 'update', 'destroy']);
     Route::resource('/storages', 'Storage\StorageController');
     Route::get('/storages/dept/{dept}', 'Storage\StorageController@filter_by_dept')->name('storages.filter_by_dept');
     Route::get('/storages/item/utama', 'Storage\StorageController@storage_utama')->name('storages.utama');
@@ -44,19 +40,11 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/records/item/transaction/history/{dept}', 'Storage\RecordItemController@get_transaction_data')->name('records.get_transaction_data');
     Route::get('/records/item/transaction/filter/{dept}/{from}/{to}', 'Storage\RecordItemController@get_transaction_data_sorted')->name('records.get_transaction_data_sorted');
 
-    // activity
-    Route::resource('/orders', 'Activity\OrderController');
-    Route::get('/orders/history/list', 'Activity\OrderController@history_order')->name('orders.history_order');
-    Route::post('/orders/accept/{order}', 'Activity\OrderController@accept_item')->name('orders.accept_item');
-    Route::post('/orders/return/{order}', 'Activity\OrderController@return_item')->name('orders.return_item');
-    Route::get('/orders/cashier/page', 'Activity\OrderController@cashier_page')->name('orders.cashier_page');
-    Route::get('/orders/cashier/ecommerce', 'Activity\OrderController@cashier_ecommerce')->name('orders.cashier_ecommerce');
-
-    // print receipt
-    Route::get('/prints/receipt', 'Activity\PrintReceiptController@print_receipt')->name('prints.print_receipt');
-
-    // stake Holders
-    Route::resource('/entities', 'Relation\StakeHolderController');
+    // cashier
+    Route::get('/cashier/history', 'Activity\CashierController@cashier_history')->name('cashier.history');
+    Route::get('/cashier/history/print', 'Activity\CashierController@print_cashier_history')->name('cashier.print_history');
+    Route::get('/cashier', 'Activity\CashierController@index')->name('cashier.index');
+    Route::get('/cashier/ecommerce', 'Activity\CashierController@cashier_ecommerce')->name('cashier.cashier_ecommerce');
 
     // Access Management
     Route::get('/access', 'Admin\UserManagementController@index')->name('access.index');
@@ -70,39 +58,61 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     Route::put('/roles/{role}', 'Admin\UserManagementController@update_role')->name('roles.update');
 
-    // cashier
-    Route::get('/cashier/history', 'Activity\CashierController@cashier_history')->name('cashier.history');
 
-    // barcode
-    Route::get('/barcodes', 'Admin\BarcodeGenerator@index')->name('barcodes.index');
-    Route::post('/barcodes/generate', 'Admin\BarcodeGenerator@generate')->name('barcodes.generate');
+    Route::group(['middleware' => ['role:super_admin|root']], function () {
+        // data pendukung
+        Route::resource('/supports', 'MasterData\SecondaryDataController')->only(['index']);
+        Route::resource('/brands', 'MasterData\BrandController')->only(['store', 'update', 'destroy']);
+        Route::resource('/units', 'MasterData\UnitController')->only(['store', 'update', 'destroy']);
+        Route::resource('/categories', 'MasterData\CategoryController')->only(['store', 'update', 'destroy']);
 
-    // omset
-    Route::get('/omsets', 'Admin\OmsetController@index')->name('omsets.index');
-    Route::get('/omsets/calculate', 'Admin\OmsetController@calculate_omset')->name('omsets.calculate_omset');
-    // omset ajax export
-    Route::post('/omsets/calculate/export', 'Admin\OmsetController@export_omset')->name('omsets.export_omset');
+        // stake Holders
+        Route::resource('/entities', 'Relation\StakeHolderController');
+
+        // barcode
+        Route::get('/barcodes', 'Admin\BarcodeGenerator@index')->name('barcodes.index');
+        Route::post('/barcodes/generate', 'Admin\BarcodeGenerator@generate')->name('barcodes.generate');
+        Route::post('/barcodes/print', 'Admin\BarcodeGenerator@print_barcode')->name('barcodes.print_barcode');
+
+        // omset
+        Route::get('/omsets', 'Admin\OmsetController@index')->name('omsets.index');
+        Route::get('/omsets/calculate', 'Admin\OmsetController@calculate_omset')->name('omsets.calculate_omset');
+        // omset ajax export
+        Route::post('/omsets/calculate/export', 'Admin\OmsetController@export_omset')->name('omsets.export_omset');
+
+        // Discount
+        Route::get('/discounts/customer', 'Admin\DiscountController@discount_customer')->name('discounts.customer');
+        Route::get('/discounts/item', 'Admin\DiscountController@discount_item')->name('discounts.item');
+        Route::post('/discounts/{discount_id}/occurences', 'Admin\DiscountController@discount_occurences')->name('discounts.occurences');
+        /** discount using ajax */
+        Route::post('/discounts/customer', 'Admin\DiscountController@store_discount_customer');
+        Route::post('/discounts/item', 'Admin\DiscountController@store_discount_item');
+        Route::put('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@update_discount_customer')->name('discounts.update_discount_customer');
+        Route::put('/discounts/item/{discount_item_id}', 'Admin\DiscountController@update_discount_item')->name('discounts.update_discount_item');
+        Route::delete('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@delete_discount_customer')->name('discounts.delete_discount_customer');
+        Route::delete('/discounts/item/{discount_item_id}', 'Admin\DiscountController@delete_discount_item')->name('discounts.delete_discount_item');
+        Route::get('/discounts/customer/{stake_holder_id}', 'Admin\DiscountController@get_customer_discount');
+
+        // Item grosir
+        Route::resource('/grosirs', 'Activity\GrosirItemController');
+        Route::get('/grosirs/item/lists', 'Activity\GrosirItemController@get_grosir_data'); //ajax request
+
+        // activity
+        Route::resource('/orders', 'Activity\OrderController');
+        Route::get('/orders/history/list', 'Activity\OrderController@history_order')->name('orders.history_order');
+        Route::post('/orders/accept/{order}', 'Activity\OrderController@accept_item')->name('orders.accept_item');
+        Route::post('/orders/return/{order}', 'Activity\OrderController@return_item')->name('orders.return_item');
+    });
 
     // payments method&type
     Route::post('payments/method', 'MasterData\PaymentController@store_payment_method')->name('payments.payment-method.store');
     Route::put('payments/method/{payment_method_id}', 'MasterData\PaymentController@update_payment_method')->name('payments.payment-method.update');
+    Route::delete('payments/method/{payment_method_id}', 'MasterData\PaymentController@delete_payment_method')->name('payments.payment-method.destroy');
     Route::post('payments/type', 'MasterData\PaymentController@store_payment_type')->name('payments.payment-type.store');
     Route::put('payments/type/{payment_type_id}', 'MasterData\PaymentController@update_payment_type')->name('payments.payment-type.update');
+    Route::delete('payments/type/{payment_type_id}', 'MasterData\PaymentController@delete_payment_type')->name('payments.payment-type.destroy');
     /** get payment method using ajax */
     Route::get('/payments/{payment_method_id}', 'MasterData\PaymentController@get_payment_detail');
-
-    // Discount
-    Route::get('/discounts/customer', 'Admin\DiscountController@discount_customer')->name('discounts.customer');
-    Route::get('/discounts/item', 'Admin\DiscountController@discount_item')->name('discounts.item');
-    Route::post('/discounts/{discount_id}/occurences', 'Admin\DiscountController@discount_occurences')->name('discounts.occurences');
-    /** discount using ajax */
-    Route::post('/discounts/customer', 'Admin\DiscountController@store_discount_customer');
-    Route::post('/discounts/item', 'Admin\DiscountController@store_discount_item');
-    Route::put('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@update_discount_customer')->name('discounts.update_discount_customer');
-    Route::put('/discounts/item/{discount_item_id}', 'Admin\DiscountController@update_discount_item')->name('discounts.update_discount_item');
-    Route::delete('/discounts/customer/{discount_customer_id}', 'Admin\DiscountController@delete_discount_customer')->name('discounts.delete_discount_customer');
-    Route::delete('/discounts/item/{discount_item_id}', 'Admin\DiscountController@delete_discount_item')->name('discounts.delete_discount_item');
-    Route::get('/discounts/customer/{stake_holder_id}', 'Admin\DiscountController@get_customer_discount');
 
     // Warn Notification
     Route::resource('/notifications', 'Activity\StockWarnNotificationController');
@@ -110,10 +120,6 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     // change user credentials
     Route::post('/user/update', 'Authentication\AuthenticationController@change_user_credentials');
-
-    // Item grosir
-    Route::resource('/grosirs', 'Activity\GrosirItemController');
-    Route::get('/grosirs/item/lists', 'Activity\GrosirItemController@get_grosir_data'); //ajax request
 });
 
 Route::get('/login', 'Authentication\AuthenticationController@login_page')->name('page.login');

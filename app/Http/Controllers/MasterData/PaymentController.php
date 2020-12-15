@@ -35,6 +35,11 @@ class PaymentController extends Controller
         return back();
     }
 
+    public function delete_payment_method (PaymentMethod $payment_method_id) {
+        $payment_method_id->delete();
+        return back();
+    }
+
     public function update_payment_type (Request $request, $payment_type_id) {
         $pt = PaymentType::find($payment_type_id);
         $pt->update([
@@ -43,6 +48,10 @@ class PaymentController extends Controller
         ]);
         
         session()->flash('message', 'Yeay! Payment type berhasil diperbarui.');
+        return back();
+    }
+    public function delete_payment_type (PaymentType $payment_type_id) {
+        $payment_type_id->delete();
         return back();
     }
 

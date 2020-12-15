@@ -12,12 +12,53 @@ use App\Model\MasterData\Item;
 use App\Model\Storage\StorageRecord;
 use App\Model\Storage\Stock;
 use Carbon\Carbon;
+use App\Model\Relation\StakeHolder;
 
 // print receipt
 use App\Http\Controllers\Activity\PrintReceiptController;
+use App\Http\Controllers\Activity\PrintDailyReportReceiptController;
 
 class CashierController extends Controller
 {
+    public function __construct () {
+        $this->middleware(['role:super_admin|root|cashier']);
+    }
+
+    public function index () {
+        $items = DB::table('items')
+                ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('categories', 'categories.id', '=', 'items.category_id')
+                ->leftJoin('grosir_items', 'items.id', '=', 'grosir_items.item_id')
+                ->leftJoin('discounts as discount_categories', 'categories.id', '=', 'discount_categories.category_id')
+                ->leftJoin('discounts as discount_items', 'items.id', '=', 'discount_items.item_id')
+                ->leftJoin('discount_periodes as discount_periode_item', 'discount_items.id', '=', 'discount_periode_item.discount_id')
+                ->leftJoin('discount_periodes as discount_periode_category', 'discount_categories.id', '=', 'discount_periode_category.discount_id')
+                ->where('stocks.dept', 'utama')
+                ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discount_items.value * CAST(discount_items.status as UNSIGNED), 0) as discount_item'), DB::raw('IFNULL(discount_categories.value * CAST(discount_categories.status as UNSIGNED), 0) as discount_category'), DB::raw('items.price - (IFNULL((items.price * discount_categories.value / 100) * CAST(discount_categories.status as UNSIGNED), 0)) as price_category'), DB::raw('items.price - (IFNULL((items.price * discount_items.value / 100) * CAST(discount_items.status as UNSIGNED), 0)) as price_item'), 'discount_periode_category.occurences as category_occurences', 'discount_periode_item.occurences as item_occurences', DB::raw('IFNULL(grosir_items.minimum_item, 0) as minimum_item'), 'grosir_items.price as grosir_price')->get();
+        $customer = StakeHolder::where('type', 'customer')->distinct()->get();
+        $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
+
+        return view('pages.activity.cashier')->with(['items' => $items, 'payment_method' => $payment_method, 'customers' => $customer]);
+    }
+
+    public function cashier_ecommerce () {
+        $items = DB::table('items')
+                ->join('stocks', 'items.id', '=', 'stocks.item_id')
+                ->join('units', 'units.id', '=', 'items.unit_id')
+                ->join('categories', 'categories.id', '=', 'items.category_id')
+                ->leftJoin('discounts as discount_categories', 'categories.id', '=', 'discount_categories.category_id')
+                ->leftJoin('discounts as discount_items', 'items.id', '=', 'discount_items.item_id')
+                ->leftJoin('discount_periodes as discount_periode_item', 'discount_items.id', '=', 'discount_periode_item.discount_id')
+                ->leftJoin('discount_periodes as discount_periode_category', 'discount_categories.id', '=', 'discount_periode_category.discount_id')
+                ->where('stocks.dept', 'ecommerce')
+                ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discount_items.value * CAST(discount_items.status as UNSIGNED), 0) as discount_item'), DB::raw('IFNULL(discount_categories.value * CAST(discount_categories.status as UNSIGNED), 0) as discount_category'), DB::raw('items.price - (IFNULL((items.price * discount_categories.value / 100) * CAST(discount_categories.status as UNSIGNED), 0)) as price_category'), DB::raw('items.price - (IFNULL((items.price * discount_items.value / 100) * CAST(discount_items.status as UNSIGNED), 0)) as price_item'), 'discount_periode_category.occurences as category_occurences', 'discount_periode_item.occurences as item_occurences')->get();
+        $customer = StakeHolder::where('type', 'customer')->distinct()->get();
+        $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
+
+        return view('pages.activity.cashier-ecommerce')->with(['items' => $items, 'payment_method' => $payment_method, 'customers' => $customer]);
+    }
+
     public function check_item (Request $request) {
         $item = DB::table('items')
                 ->join('stocks', 'items.id', '=', 'stocks.item_id')
@@ -146,6 +187,136 @@ class CashierController extends Controller
                 ->where(['balances.dept' => 'utama', 'transactions.user_id' => auth()->user()->id])
                 ->select('items.*', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')->get();
 
-        return view('pages.activity.cashier-history')->with('items', $items);
+        return view('pages.activity.cashier-history')->with(['items' => $items, 'data' => self::daily_report_data()]);
+    }
+
+    public function print_cashier_history () {
+        try {
+            PrintDailyReportReceiptController::print_daily_report_receipt(self::daily_report_data());
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    public static function daily_report_data () {
+        $quantity = 0;
+        $discount = 0;
+        $tax = 0;
+        $fee = 0;
+        $total = 0;
+        $cash = 0;
+        $ewallet = 0;
+        $debit = 0;
+        $transfer = 0;
+        $credit = 0;
+
+        $items = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('transactions.transaction_number')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at', 'items.price', 'items.id as item_id', 'items.name')
+                ->get();
+
+        $cashes = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'cash'])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('payment_methods.id', 'items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'payment_methods.id', 'payment_methods.method_name')
+                ->get();
+        
+        $ewallets = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'ewallet'])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('payment_methods.id', 'items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'payment_methods.id', 'payment_methods.method_name')
+                ->get();
+
+        $debits = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'debit'])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('payment_methods.id', 'items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'payment_methods.id', 'payment_methods.method_name')
+                ->get();
+
+        $transfers = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'transfer'])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('payment_methods.id', 'items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'payment_methods.id', 'payment_methods.method_name')
+                ->get();
+
+        $credits = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'kartu kredit'])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('payment_methods.id', 'items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'payment_methods.id', 'payment_methods.method_name')
+                ->get();
+
+        $prices = DB::table('transactions')
+                ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
+                ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id])
+                ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
+                ->groupBy('items.id')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'items.id')
+                ->get();
+
+        foreach($items as $item) {
+            $quantity += $item->quantity;
+            $trx = Transaction::where('transaction_number', $item->transaction_number)->groupBy('transaction_number')->first();
+            $discount += (float) $trx->discount;
+            $tax += (float) $trx->tax;
+            $fee += (float) $trx->additional_fee;
+        }
+
+        foreach($prices as $price) {
+            $total += (float)($price->price * $price->quantity);
+        }
+
+        foreach ($cashes as $c) {
+            $cash += (float)($c->price * $c->quantity);
+        }
+
+        foreach ($ewallets as $e) {
+            $ewallet += (float)($e->price * $e->quantity);
+        }
+
+        foreach ($debits as $d) {
+            $debit += (float)($d->price * $d->quantity);
+        }
+
+        foreach ($transfers as $t) {
+            $transfer += (float)($t->price * $t->quantity);
+        }
+
+        foreach ($credits as $c) {
+            $credit += (float)($c->price * $c->quantity);
+        }
+
+        return [$quantity, $discount, $tax, $fee, $total, $cash, $ewallet, $debit, $transfer, $credit];
     }
 }

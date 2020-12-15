@@ -5,33 +5,122 @@
 
 @section('btn-custom')
 <div>
-    <button class="btn btn-sm text-muted" data-toggle="modal">
+    <!-- <a href="{{ route('cashier.print_history') }}" class="btn btn-sm text-muted">
+        <span class="d-none d-sm-inline mx-1">Cetak Laporan</span>
+        <i data-feather="printer"></i>
+    </a> -->
+    <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#cetak-laporan">
         <span class="d-none d-sm-inline mx-1">Cetak Laporan</span>
         <i data-feather="printer"></i>
     </button>
 </div>
+
+<!-- sales modal delete -->
+<div id="cetak-laporan" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <div class="modal-title text-md">Preview Transaction History</div>
+                <button class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row no-gutters">
+                    <div class="col-6">
+                        <div>LAPORAN PENJUALAN</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>PERIODE</div>
+                        <div>USER</div>
+                        <div>STORAGE</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>JML TRANSAKSI</div>
+                        <div>TOT. POTONGAN</div>
+                        <div>TOT. PAJAK</div>
+                        <div>TOT. BIAYA</div>
+                        <div>TOTAL</div>
+                        <div>BAYAR TUNAI</div>
+                        <div>BAYAR E-WALLET</div>
+                        <div>BAYAR DEBIT</div>
+                        <div>BAYAR TRANSFER</div>
+                        <div>BAYAR KREDIT</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>JAM CETAK</div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <br>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>:</div>
+                    </div>
+                    <div class="col-5">
+                        <br>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>{{\Carbon\Carbon::now()->format('Y-m-d') }} s/d {{ \Carbon\Carbon::now()->addDay()->format('Y-m-d') }}</div>
+                        <div>{{ auth()->user()->name }}</div>
+                        <div>UTAMA</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>{{ $data[0] }}</div>
+                        <div>Rp. {{ number_format($data[1]) }}</div>
+                        <div>Rp. {{ number_format($data[2]) }}</div>
+                        <div>Rp. {{ number_format($data[3]) }}</div>
+                        <div>Rp. {{ number_format(($data[4] - $data[1]) + $data[2] + $data[3]) }}</div>
+                        <div>Rp. {{ number_format($data[5]) }}</div>
+                        <div>Rp. {{ number_format($data[6]) }}</div>
+                        <div>Rp. {{ number_format($data[7]) }}</div>
+                        <div>Rp. {{ number_format($data[8]) }}</div>
+                        <div>Rp. {{ number_format($data[9]) }}</div>
+                        <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <div>{{ \Carbon\Carbon::now()->format('Y-m-d H:s:i') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4"
+                    data-dismiss="modal">Close</button>
+                <a href="{{ route('cashier.print_history') }}"
+                    class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4">Print</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
 @endsection
 
 @section('custom-js')
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/dataTables.js') }}"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#data-item').DataTable();
     });
+
 </script>
 @endsection
 
 @section('custom-css')
-    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
-    <style>
-        @media only screen and (max-width: 600px) {
-            .my-responsive {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-            }
+<link href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
+<style>
+    @media only screen and (max-width: 600px) {
+        .my-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
         }
-    </style>
+    }
+
+</style>
 @endsection
 
 @section('content')
@@ -43,7 +132,8 @@
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
+                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover"
+                                style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
                                         <th style="" data-field="type">
@@ -56,10 +146,6 @@
                                         </th>
                                         <th style="" data-field="itemtype">
                                             <div class="th-inner">Satuan</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Harga Pokok</div>
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th style="" data-field="itemtype">
@@ -113,11 +199,6 @@
                                         </td>
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
-                                                Rp.{{ number_format($item->main_cost, 2) }}
-                                            </span>
-                                        </td>
-                                        <td style="">
-                                            <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price, 2) }}
                                             </span>
                                         </td>
@@ -167,10 +248,10 @@
                 </div>
             </div>
 
-            
+
         </div>
 
-        
+
         <div class="clearfix"></div>
     </div>
 </div>

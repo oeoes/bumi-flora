@@ -19,12 +19,6 @@
         <i data-feather="upload-cloud"></i>
     </a>
 
-    <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#filter"
-        data-toggle-class="modal-open-aside">
-        <span class="d-none d-sm-inline mx-1">Filter</span>
-        <i data-feather="sliders"></i>
-    </button>
-
     <!-- modal import data item -->
     <div id="import" class="modal fade" da ta-backdrop="true" tyle="display: none;" aria-hidden="true">
         <div class="modal-dialog">
@@ -48,38 +42,6 @@
                             aria-hidden="true"></span>
                         <span id="upload-text">Upload</span>
                     </button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-    </div>
-
-    <!-- modal aside right -->
-    <div id="filter" class="modal fade modal-open-aside" da ta-backdrop="true" data-class="modal-open-aside"
-        style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-right w-xl">
-            <div class="modal-content h-100 no-radius">
-                <div class="modal-header ">
-                    <div class="modal-title text-sm">Filter Item</div>
-                    <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="p-2">
-                        <form action="{{ route('items.filter-item') }}" method="post">
-                            @csrf
-                            <div class="form-group">
-                                <label for="dept">Dept</label>
-                                <select name="dept" id="dept" class="form-control">
-                                    <option value="all">All</option>
-                                    <option value="utama">Utama</option>
-                                    <option value="gudang">Gudang</option>
-                                </select>
-                            </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary">Run</button>
-                    </form>
                 </div>
             </div>
             <!-- /.modal-content -->

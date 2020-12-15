@@ -45,10 +45,11 @@ class RecordItemController extends Controller
         
         // update stock
         if ($request->type == 'in') {
+            $no_urut = StorageRecord::where('amount_in', '!=', 'NULL')->get();
             StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
-                'transaction_no' => $request->transaction_no,
+                'transaction_no' => (count($no_urut)+1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
                 'amount_in' => $request->amount,
                 'description' => $request->description,
             ]);
@@ -56,10 +57,11 @@ class RecordItemController extends Controller
                 'amount' => $stock->amount + $request->amount
             ]);
         } else {
+            $no_urut = StorageRecord::where('amount_out', '!=', 'NULL')->get();
             StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
-                'transaction_no' => $request->transaction_no,
+                'transaction_no' => (count($no_urut)+1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
                 'amount_out' => $request->amount,
                 'description' => $request->description,
             ]);
@@ -278,11 +280,14 @@ class RecordItemController extends Controller
         $from->update(['amount' => $from->amount - $request->amount]);
         $to->update(['amount' => $to->amount + $request->amount]);
 
+        $no_urut_in = StorageRecord::where('amount_in', '!=', 'NULL')->get();
+        $no_urut_out = StorageRecord::where('amount_out', '!=', 'NULL')->get();
+
         // record item masuk
         StorageRecord::create([
             'item_id' => $request->item_id,
             'dept' => $request->to,
-            'transaction_no' => \Str::random(10),
+            'transaction_no' => (count($no_urut_in)+1) . '/MASUK/' . strtoupper($request->to) . '/' . Carbon::now()->format('Y-m-d'),
             'amount_in' => $request->amount,
             'description' => 'Transfer item dari ' . $request->from,
         ]);
@@ -291,7 +296,7 @@ class RecordItemController extends Controller
         StorageRecord::create([
             'item_id' => $request->item_id,
             'dept' => $request->from,
-            'transaction_no' => \Str::random(10),
+            'transaction_no' => (count($no_urut_in)+1) . '/KELUAR/' . strtoupper($request->from) . '/' . Carbon::now()->format('Y-m-d'),
             'amount_out' => $request->amount,
             'description' => 'Transfer item ke penyimpanan ' . $request->to,
         ]);

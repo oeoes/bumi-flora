@@ -137,12 +137,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="post" action="{{ route('discounts.occurences', ['discount_id' => $discount->discount_item_id]) }}">
+                                                <form id="discount-schedule-{{$key}}" method="post" action="{{ route('discounts.occurences', ['discount_id' => $discount->discount_item_id]) }}">
                                                     @csrf
                                                     <div class="custom-control custom-checkbox mb-2">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            value="monday" id="check-all">
-                                                        <label class="custom-control-label" for="check-all">
+                                                        <input class="custom-control-input check" type="checkbox" id="check-all-{{$key}}">
+                                                        <label class="custom-control-label" for="check-all-{{$key}}">
                                                             Pilih semua
                                                         </label>
                                                     </div>

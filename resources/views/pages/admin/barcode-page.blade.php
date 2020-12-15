@@ -44,7 +44,7 @@
                 <div class="card">
                     <div class="card-header">
                         Barcode Preview
-                        <button id="print" class="btn btn-sm btn-primary rounded-pill pr-3 pl-3" style=" position: absolute; right: 8px;"><i data-feather="printer"></i></button>
+                        <button id="print" onclick="print_barcode()" class="btn btn-sm btn-primary rounded-pill pr-3 pl-3" style=" position: absolute; right: 8px;"><i data-feather="printer"></i></button>
                     </div>
                     <div class="card-body" style="height: 300px; overflow: auto">
                         <div class="row" id="barcode_canvas" ></div>

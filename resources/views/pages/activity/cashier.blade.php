@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="jumlah">Kode item</label>
+                            <label for="item_code">Kode item</label>
                             <input id="item_code" type="text" class="form-control form-control-sm" autofocus
                                 placeholder="kode item">
                         </div>
@@ -175,11 +175,11 @@
                         </div>
 
                         <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#cancle_payment">Reset</button>
+                            data-target="#cancle_payment">Reset [ , ]</button>
                         <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#payment">Bayar</button>
+                            data-target="#payment">Bayar [ . ]</button>
                         <button class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#pending_payment">Pending</button>
+                            data-target="#pending_payment">Pending [ / ]</button>
                     </div>
                 </div>
             </div>
@@ -410,10 +410,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                    @if($item->stock > 0)
                                     <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                         '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
                                         class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                             data-feather='plus'></i></button>
+                                    @endif
                                 </td>
                                 @else
                                     <td style="">
@@ -427,10 +429,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if($item->stock > 0)
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                                 data-feather='plus'></i></button>
+                                        @endif
                                     </td>
                                 @endif
                                 
@@ -452,10 +456,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if($item->stock > 0)
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                                 data-feather='plus'></i></button>
+                                        @endif
                                     </td>
                                 @else
                                     <td style="">
@@ -469,10 +475,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if($item->stock > 0)
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                                 data-feather='plus'></i></button>
+                                        @endif
                                     </td>
                                 @endif
                             @else
@@ -493,10 +501,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if($item->stock > 0)
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                                 data-feather='plus'></i></button>
+                                        @endif
                                     </td>
                                 @else
                                     <td style="">
@@ -510,10 +520,12 @@
                                         </div>
                                     </td>
                                     <td>
+                                        @if($item->stock > 0)
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
                                                 data-feather='plus'></i></button>
+                                        @endif
                                     </td>
                                 @endif
                             @endif
