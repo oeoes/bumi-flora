@@ -16,7 +16,7 @@ use App\Model\Relation\StakeHolder;
 
 // print receipt
 use App\Http\Controllers\Activity\PrintReceiptController;
-use App\Http\Controllers\Activity\PrintDailyReportReceiptController as PDR;
+use App\Http\Controllers\Activity\PrintDailyReportReceiptController;
 
 class CashierController extends Controller
 {
@@ -190,8 +190,12 @@ class CashierController extends Controller
         return view('pages.activity.cashier-history')->with(['items' => $items, 'data' => self::daily_report_data()]);
     }
 
-    public static function print_cashier_history () {
-        PDR::print_daily_report_receipt(self::daily_report_data());
+    public function print_cashier_history () {
+        try {
+            PrintDailyReportReceiptController::print_daily_report_receipt(self::daily_report_data());
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
     }
 
     public static function daily_report_data () {

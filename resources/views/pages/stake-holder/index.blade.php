@@ -3,6 +3,16 @@
 @section('page-title', 'Entity')
 @section('page-description', 'Data entity berupa supplier, customer, dan sales.')
 
+
+@section('custom-css')
+<style>
+    .badge {
+        cursor: pointer!important
+    }
+</style>
+@endsection
+
+
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">

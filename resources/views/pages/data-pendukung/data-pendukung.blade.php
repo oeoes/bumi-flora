@@ -3,6 +3,14 @@
 @section('page-title', 'Data Pendukung')
 @section('page-description', 'Data pendukung berupa input data merek, jenis, dan satuan.')
 
+@section('custom-css')
+<style>
+    .badge {
+        cursor: pointer!important
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">

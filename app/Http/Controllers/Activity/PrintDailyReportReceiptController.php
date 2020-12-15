@@ -42,5 +42,8 @@ class PrintDailyReportReceiptController extends Controller
         $printer -> text("------------------------------------------------\n");
         $printer -> text("JAM CETAK       : ". Carbon::now()->format('Y-m-d H:i:s') ." \n");
         $printer->feed();
+        $printer -> cut();
+        /* Close printer */
+        $printer -> close();
     }
 }
