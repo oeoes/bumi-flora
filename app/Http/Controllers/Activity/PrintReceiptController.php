@@ -22,7 +22,7 @@ class PrintReceiptController extends Controller
             }
 
 
-            $connector = new WindowsPrintConnector("zahra");
+            $connector = new WindowsPrintConnector("EPSON TM-T82 Receipt");
 
             /* initiate printer */
             $printer = new Printer($connector);
