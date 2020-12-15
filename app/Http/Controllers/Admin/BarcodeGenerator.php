@@ -25,4 +25,17 @@ class BarcodeGenerator extends Controller
         $barcode_img = DNS1D::getBarcodePNG($item->barcode, 'C39');
         return response()->json(['item' => $item, 'barcode' => $barcode_img]);
     }
+
+    public function print_barcode (Request $request) {
+        $item = DB::table('items')->select('name', 'barcode', 'price')->where('id', request('item_id'))->first();
+        $barcode_img = DNS1D::getBarcodePNG($item->barcode, 'C39');
+
+        try {
+            \File::put(storage_path('/app/barcodes') . '/' . 'barcode.png', base64_decode($barcode_img));
+            return response()->json(['status' => true, 'message' => 'barcode stored']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'error: ' . $th], 400);
+        }
+        
+    }
 }

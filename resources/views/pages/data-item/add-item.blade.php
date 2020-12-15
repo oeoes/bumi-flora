@@ -20,10 +20,10 @@
 
 @section('btn-custom')
 <div>
-    <button onclick="window.history.back()" class="btn btn-sm text-muted">
+    <a href="{{ route('items.index') }}" class="btn btn-sm text-muted">
         <i data-feather="arrow-left"></i>
         <span class="d-none d-sm-inline mx-1">Back</span>
-    </button>
+    </a>
 </div>
 @endsection
 

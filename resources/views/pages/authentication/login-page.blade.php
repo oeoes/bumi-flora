@@ -77,7 +77,7 @@
                 }).then(function (response) {
                     if (response.data.status) {
                         if(response.data.role == 'user'){
-                            location.href="{{route('orders.cashier_page')}}"
+                            location.href="{{route('cashier.index')}}"
                         } else {
                             location.href="{{route('dashboard.index')}}"
                         }                            

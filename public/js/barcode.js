@@ -48,6 +48,21 @@ function generate() {
     })
 }
 
+function print_barcode() {
+    $('#print').text('Printing...')
+    axios.post('/app/barcodes/print', {
+        item_id: $('#item_id').val()
+    }).then(function (response) {
+        console.log(response.data);
+        
+    }).catch(function (error) {
+        console.log(error.response);
+        
+    }).finally(function () {
+        $('#print').text('Printing')
+    })
+}
+
 $(document).ready(function () {
     $('#generate').prop('disabled', true)
     $('#print').prop('disabled', true)

@@ -36,7 +36,9 @@ $(document).ready(() => {
         })
     })
 
-    $(document).on('click', '#check-all', function () {
+    $(document).on('click', '.check', function () {
+        let form_id = $(this).attr('id').split("-")[2]
+        
         if (this.checked) {
             $('input[name="discount_active_at[]"]').prop('checked', true)
         } else {

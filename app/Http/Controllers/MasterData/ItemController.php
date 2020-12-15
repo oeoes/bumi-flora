@@ -28,16 +28,15 @@ class ItemController extends Controller
         return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('price', function($row) {
-                    $content = 'Rp.'.number_format($row->price);
+                    $content = 'Rp.'.number_format((float) $row->price);
                     return $content;
                 })
                 ->addColumn('main_cost', function($row) {
-                    $content = 'Rp.'.number_format($row->main_cost);
+                    $content = 'Rp.'.number_format((float) $row->main_cost);
                     return $content;
                 })
                 ->addColumn('action', function($row) {
-                    $btn = '<a href="'.route('items.show', ['item' => $row->id]).'" class="btn btn-sm btn-outline-info rounded-pill">View</a>
-                            <a href="'.route('items.edit', ['item' => $row->id]).'" class="btn btn-sm btn-outline-primary rounded-pill">Edit</a>';
+                    $btn = '<a href="'.route('items.show', ['item' => $row->id]).'" class="btn btn-sm btn-outline-info rounded-pill">View Detail</a>';
     
                     return $btn;
                 })
@@ -47,7 +46,8 @@ class ItemController extends Controller
 
     public static function items_query () {
         return DB::table('items')
-                ->select('id', 'name', 'barcode', 'base_unit', 'base_unit_conversion', 'main_cost', 'price');
+                ->select('id', 'name', 'barcode', 'base_unit', 'base_unit_conversion', 'main_cost', 'price')
+                ->where('deleted_at', NULL);
     }
 
     public static function items_show_query() {
@@ -116,6 +116,11 @@ class ItemController extends Controller
     public function show($item)
     {
         return view('pages.data-item.show-item')->with('item', self::items_show_query()->where('items.id', $item)->first());
+    }
+
+    public function destroy(Item $item) {
+        $item->delete();
+        return redirect()->route('items.index');
     }
 
     /**
@@ -188,24 +193,30 @@ class ItemController extends Controller
                 $flag = false;
                 continue;
             } else {
-                $item = Item::create([
-                    'barcode' => $line[0],
-                    'name' => $line[1],
-                    'category_id' => self::findOrCreate('category', $line[2]),
-                    'unit_id' => self::findOrCreate('unit', $line[3]),
-                    'brand_id' => self::findOrCreate('brand', $line[4]),
-                    'base_unit' => $line[5],
-                    'base_unit_conversion' => $line[6],
-                    'main_cost' => $line[7],
-                    'price' => $line[8],
-                    'min_stock' => $line[9],
-                    'cabinet' => self::isNull($line[10]),
-                    'stake_holder_id' => self::isNull($line[11]),
-                    'description' => self::isNull($line[12]),
-                ]);
+                if(!Item::where('barcode', $line[0])->first()) {
+                    $item = Item::create([
+                        'barcode' => $line[0],
+                        'name' => $line[1],
+                        'category_id' => self::findOrCreate('category', $line[2]),
+                        'unit_id' => self::findOrCreate('unit', $line[3]),
+                        'brand_id' => self::findOrCreate('brand', $line[4]),
+                        'base_unit' => $line[5],
+                        'base_unit_conversion' => $line[6],
+                        'main_cost' => $line[7],
+                        'price' => $line[8],
+                        'min_stock' => $line[9],
+                        'cabinet' => self::isNull($line[10]),
+                        'stake_holder_id' => self::isNull($line[11]),
+                        'description' => self::isNull($line[12]),
+                    ]);
 
-                self::create_saldo_awal($item->id, 'utama');
+                    self::create_saldo_awal($item->id, 'utama');
+                    self::create_saldo_awal($item->id, 'gudang');   
                 self::create_saldo_awal($item->id, 'gudang');
+                    self::create_saldo_awal($item->id, 'gudang');   
+                self::create_saldo_awal($item->id, 'gudang');
+                    self::create_saldo_awal($item->id, 'gudang');   
+                }
             }
         }
         // delete right away

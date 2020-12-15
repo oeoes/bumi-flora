@@ -177,16 +177,25 @@
                     <span class="nav-icon"><i data-feather='lock'></i></span>
                     <span class="nav-text">Roles & Permission</span>
                 </a>
-            </li>         
+            </li>      
+            
+            @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'cashier']))
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
             </li>
 
             <li>
-                <a href="{{ route('orders.cashier_page') }}">
+                <a href="{{ route('cashier.index') }}">
                     <span class="nav-icon"><i data-feather='airplay'></i></span>
                     <span class="nav-text">Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('cashier.cashier_ecommerce') }}">
+                    <span class="nav-icon"><i data-feather='airplay'></i></span>
+                    <span class="nav-text">Cashier E-Commerce</span>
                 </a>
             </li>
 
@@ -196,6 +205,7 @@
                     <span class="nav-text">History Transaksi</span>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
 </div>

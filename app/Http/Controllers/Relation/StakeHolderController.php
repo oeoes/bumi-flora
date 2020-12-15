@@ -54,4 +54,9 @@ class StakeHolderController extends Controller
         session()->flash('message', 'OK! Data berhasil diperbarui.');
         return back();
     }
+
+    public function destroy(StakeHolder $entity) {
+        $entity->delete();
+        return back();
+    }
 }

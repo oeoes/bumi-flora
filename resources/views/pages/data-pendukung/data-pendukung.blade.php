@@ -44,7 +44,7 @@
                                             <label class="text-muted" for="exampleInputPassword1">Description</label>
                                             <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Add</button>
                                     </form>
                                 </div>
                                 <div class="col-md-6">
@@ -110,8 +110,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Save Changes</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -124,18 +124,22 @@
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
-                                                            <div class="modal-title text-md">Confirm Dletion</div>
+                                                            <div class="modal-title text-md">Confirm Deletion</div>
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                        <form method="post"action="{{ route('brands.destroy', ['brand' => $brand->id]) }}">
+                                                                @method('DELETE')
+                                                                @csrf
                                                             <div class="p-2">
                                                                 <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" >Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -162,7 +166,7 @@
                                             <label class="text-muted" for="exampleInputPassword1">Description</label>
                                             <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Add</button>
                                     </form>
                                 </div>
                                 <div class="col-md-6">
@@ -228,8 +232,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Save Changes</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -246,14 +250,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form method="post"action="{{ route('units.destroy', ['unit' => $unit->id]) }}">
+                                                                @method('DELETE')
+                                                                @csrf
                                                             <div class="p-2">
                                                                 <p>You're about to delete existing unit. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete unit that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" >Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -279,7 +287,7 @@
                                             <label class="text-muted" for="exampleInputPassword1">Description</label>
                                             <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Type a bit of description">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Add</button>
                                     </form>
                                 </div>
                                 <div class="col-md-6">
@@ -345,8 +353,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Save Changes</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -363,14 +371,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form method="post"action="{{ route('categories.destroy', ['category' => $category->id]) }}">
+                                                                @method('DELETE')
+                                                                @csrf
                                                             <div class="p-2">
                                                                 <p>You're about to delete existing category. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete category that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" >Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -391,7 +403,7 @@
                                             <label class="text-muted" for="exampleInputEmail1">Payment method</label>
                                             <input type="text" name="method_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of payment method">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Add</button>
                                     </form>
                                 </div>
                                 <div class="col-md-6">
@@ -444,8 +456,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Save Changes</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -453,8 +465,8 @@
                                                 </div>
                                             </div>
 
-                                            <!-- category modal delete -->
-                                            <div id="deletecategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <!-- peyment modal delete -->
+                                            <div id="deletepayment-method{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
@@ -462,14 +474,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form method="post"action="{{ route('payments.payment-method.destroy', ['payment_method_id' => $payment_method->id]) }}">
+                                                                @method('DELETE')
+                                                                @csrf
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing Payment method. Klick "Yes" to proceed.</p>
-                                                                <p class="text-danger"><b>Note:</b> Do not delete Payment method that has a relation to item data.</p>
+                                                                <p>You're about to delete existing payment method. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete payment method that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" >Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -498,7 +514,7 @@
                                             <label class="text-muted" for="exampleInputPassword1">Payment type</label>
                                             <input type="text" name="type_name" class="form-control" placeholder="Name of payment type">
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Add</button>
                                     </form>
                                 </div>
                                 <div class="col-md-6">
@@ -572,8 +588,8 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4">Save Changes</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -582,7 +598,7 @@
                                             </div>
 
                                             <!-- category modal delete -->
-                                            <div id="deletecategory{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
+                                            <div id="deletepayment-type{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
                                                         <div class="modal-header ">
@@ -590,14 +606,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form method="post"action="{{ route('payments.payment-type.destroy', ['payment_type_id' => $payment_type->id]) }}">
+                                                                @method('DELETE')
+                                                                @csrf
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing Payment type. Klick "Yes" to proceed.</p>
-                                                                <p class="text-danger"><b>Note:</b> Do not delete payment type that has a relation to item data.</p>
+                                                                <p>You're about to delete existing payment type. Klick "Yes" to proceed.</p>
+                                                                <p class="text-danger"><b>Note:</b> Do not delete peyment type that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" >Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->

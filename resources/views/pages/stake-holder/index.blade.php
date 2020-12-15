@@ -187,7 +187,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- brand modal delete -->
+                                            <!-- supplier modal delete -->
                                             <div id="deletesup{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
@@ -196,14 +196,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                        <form action="{{ route('entities.destroy', ['entity' => $supplier->id]) }}" method="post">
+                                                            @method('DELETE')
+                                                            @csrf
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
+                                                                <p>You're about to delete supplier data. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4">Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -388,14 +392,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                        <form action="{{ route('entities.destroy', ['entity' => $customer->id]) }}" method="post">
+                                                            @method('DELETE')
+                                                            @csrf
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
+                                                                <p>You're about to delete customer data. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4">Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -572,7 +580,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- brand modal delete -->
+                                            <!-- sales modal delete -->
                                             <div id="deletesales{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                                 <div class="modal-dialog ">
                                                     <div class="modal-content ">
@@ -581,14 +589,18 @@
                                                             <button class="close" data-dismiss="modal">×</button>
                                                         </div>
                                                         <div class="modal-body">
+                                                        <form action="{{ route('entities.destroy', ['entity' => $sale->id]) }}" method="post">
+                                                            @method('DELETE')
+                                                            @csrf
                                                             <div class="p-2">
-                                                                <p>You're about to delete existing brand. Klick "Yes" to proceed.</p>
+                                                                <p>You're about to delete sales data. Klick "Yes" to proceed.</p>
                                                                 <p class="text-danger"><b>Note:</b> Do not delete brand that has a relation to item data.</p>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancle</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Yes</button>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4">Yes</button>
+                                                        </form>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->

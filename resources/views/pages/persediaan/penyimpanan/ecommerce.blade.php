@@ -4,14 +4,6 @@
 @section('page-description', 'Daftar item pada penyimpanan ecommerce.')
 
 
-@section('btn-custom')
-<div>
-    <a href="{{ route('orders.cashier_ecommerce') }}" class="btn btn-sm text-muted">
-        <span class="d-none d-sm-inline mx-1">Create Transaction</span>
-        <i data-feather="shopping-cart"></i>
-    </a>
-@endsection
-
 @section('custom-js')
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script>

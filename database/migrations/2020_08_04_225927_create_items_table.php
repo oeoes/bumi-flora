@@ -25,16 +25,12 @@ class CreateItemsTable extends Migration
             $table->integer('base_unit_conversion');
             $table->string('cabinet')->nullable(); # rak
             $table->text('description')->nullable();
-            $table->string('main_cost'); # harga pokok
-            $table->integer('price'); # harga jual
+            $table->string('main_cost')->nullable(); # harga pokok
+            $table->integer('price')->nullable(); # harga jual
             $table->string('barcode')->unique();
             $table->integer('min_stock')->default(0);
             $table->timestamps();
-
-            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('stake_holder_id')->references('id')->on('stake_holders')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->softDeletes();
         });
     }
 
@@ -46,5 +42,6 @@ class CreateItemsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('items');
+        
     }
 }

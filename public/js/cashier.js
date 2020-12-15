@@ -209,7 +209,12 @@ $(document).ready(function () {
                 .then(function (response) {
                     if (response.data.status == true) {
                         let amount = response.data.data.stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
-                        push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, amount, response.data.data.price, response.data.data.original_price, response.data.data.discount, response.data.data.stock)
+                        if (response.data.data.stock > 0) {
+                            push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, amount, response.data.data.price, response.data.data.original_price, response.data.data.discount, response.data.data.stock)
+                        } else {
+                            alert('Maaf, stock item sedang kosong.')
+                            $('#item_code').select().focus();
+                        }
                     } else {
                         $('#search-item').modal('show')
                         $('#kasir-data-item_filter input').focus().val($('#item_code').val())

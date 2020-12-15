@@ -11,6 +11,8 @@ use App\Model\MasterData\Category;
 use App\Model\MasterData\Item;
 use App\Exports\StockOpnameExport;
 use Excel;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class StorageController extends Controller
 {
@@ -50,11 +52,19 @@ class StorageController extends Controller
     }
 
     public function storage_utama () {
-        return view('pages.persediaan.penyimpanan.utama')->with('items', self::items_query('utama')->get());
+        $categories = Category::all();
+        $items = self::items_query('utama')
+                ->paginate()
+                ->appends(request()->query());
+        return view('pages.persediaan.penyimpanan.utama')->with(['items' => $items, 'categories' => $categories]);
     }
 
     public function storage_gudang () {
-        return view('pages.persediaan.penyimpanan.gudang')->with('items', self::items_query('gudang')->get());
+        $categories = Category::all();
+        $items = self::items_query('gudang')
+                ->paginate()
+                ->appends(request()->query());
+        return view('pages.persediaan.penyimpanan.gudang')->with(['items' => $items, 'categories' => $categories]);
     }
 
     public function storage_ecommerce () {
@@ -89,12 +99,18 @@ class StorageController extends Controller
     }
 
     public static function items_query ($dept) {
-        return DB::table('balances')
+        return QueryBuilder::for(Balance::class)
                 ->join('items', 'items.id', '=', 'balances.item_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('stocks', 'stocks.item_id', '=', 'items.id')
                 ->where('balances.dept', $dept)->where('stocks.dept', $dept)
-                ->select('balances.id as balance_id', 'balances.amount', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'stocks.amount as stock');
+                ->select('balances.id as balance_id', 'balances.amount', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'stocks.amount as stock')
+                ->orderBy('items.name')
+                ->allowedFilters([
+                    AllowedFilter::partial('items.name'),
+                    AllowedFilter::partial('items.barcode'),
+                    AllowedFilter::exact('categories.id'),
+                ]);
     }
 }
