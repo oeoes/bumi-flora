@@ -8,6 +8,9 @@ use App\Model\Activity\StockWarnNotification;
 
 class StockWarnNotificationController extends Controller
 {
+    public function __construct() {
+        $this->middleware('role:super_admin|root')->except('notification_page', 'index');
+    }
     public function index () {
         $data = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->get();
         $messages = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->limit(6)->get();

@@ -59,7 +59,7 @@
         $('#data-item').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('items.ajax') }}",
+            ajax: "{{ route('items.ajax', ['published' => 1]) }}",
             columns: [{
                     data: 'name',
                     name: 'name'

@@ -208,9 +208,10 @@ $(document).ready(function () {
                 })
                 .then(function (response) {
                     if (response.data.status == true) {
-                        let amount = response.data.data.stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
-                        if (response.data.data.stock > 0) {
-                            push_data(response.data.data.id, response.data.data.name, response.data.data.barcode, response.data.data.unit, amount, response.data.data.price, response.data.data.original_price, response.data.data.discount, response.data.data.stock)
+                        let item = response.data.data
+                        let amount = item.stock - $('#jumlah').val() < 0 ? 0 : $('#jumlah').val()
+                        if (item.stock > 0) {
+                            push_data(item.id, item.name, item.barcode, item.unit, amount, item.price, item.original_price, item.discount, item.stock, item.minimum_item, item.grosir_price, item.original_price)
                         } else {
                             alert('Maaf, stock item sedang kosong.')
                             $('#item_code').select().focus();

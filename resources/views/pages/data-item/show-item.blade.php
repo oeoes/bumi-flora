@@ -24,6 +24,7 @@
             </div>
             <div class="col-md-6">
                 <div class="card">
+                    @if(auth()->user()->can('edit') && auth()->user()->can('delete'))
                     <div class="card-header">
                         <a href="{{ route('items.edit', ['item' => $item->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4"><i
                                 data-feather="edit-2"></i></a>
@@ -56,6 +57,7 @@
                         </div>
 
                     </div>
+                    @endif
                     <div class="card-body">
                         <div class="h2"><strong>{{ $item->name }}</strong></div>
                         <div class="h5">Rp.{{ number_format($item->price, 2) }}</div>
