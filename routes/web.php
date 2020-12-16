@@ -56,7 +56,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::resource('/stages', 'Activity\StagingItemController');
 
 
-    Route::group(['middleware' => ['role:super_admin|root']], function () {
+    Route::middleware('role:super_admin|root')->group(function () {
         // master data item
         Route::resource('/items', 'MasterData\ItemController');
         Route::get('/items/get/ajax/{published}', 'MasterData\ItemController@data_item_page')->name('items.ajax');
@@ -64,7 +64,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
         Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
         Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
 
-        
+
         // data pendukung
         Route::resource('/supports', 'MasterData\SecondaryDataController')->only(['index']);
         Route::resource('/brands', 'MasterData\BrandController')->only(['store', 'update', 'destroy']);
