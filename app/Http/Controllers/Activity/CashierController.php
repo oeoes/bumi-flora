@@ -135,6 +135,9 @@ class CashierController extends Controller
     }
 
     public function store_transaction (Request $request) {
+        // kalau key transaction_id ada valuenya brrt ini request dari update transaksi
+        $data_update = $request->transaction_id == '' ? false : true;
+
         $time = Carbon::now()->format('H:i:s');
         $payment_type = PaymentType::find($request->payment_type);
         $no_urut = Transaction::whereDate('created_at', Carbon::now()->format('Y-m-d'))->groupBy('transaction_time')->get();
@@ -149,33 +152,19 @@ class CashierController extends Controller
             $stock = Stock::where(['item_id' => $item[0], 'dept' => $request->dept])->first();
             // count price of all items
             $total_price += ($item[3] * $item[1]);
+            $parent_transaction = Transaction::find($request->transaction_id);
+            $cur_transaction = Transaction::where(['transaction_number' => $parent_transaction->transaction_number, 'item_id' => $master_item->id])->first();
 
-            Transaction::create([
-                'user_id' => auth()->user()->id,
-                'item_id' => $item[0],
-                'stake_holder_id' => $request->customer,
-                'transaction_number' => $trx_number . '/' . Carbon::now()->format('Y-m-d'),
-                'qty' => $item[1],
-                'dept' => $request->dept,
-                'payment_method_id' => $payment_type->payment_method_id,
-                'payment_type_id' => $payment_type->id,
-                'discount' => $request->discount,
-                'additional_fee' => $request->additional_fee,
-                'tax' => $request->tax,
-                'transaction_time' => $time
-            ]);
+            // update or store
+            if ($data_update) {
+                self::update_transaction_history($item, $cur_transaction->id, $request, $payment_type);
+            } else {
+                self::store_real_transaction($item, $request, $no_urut, $trx_number, $payment_type, $time);
 
-            // record item keluar
-            StorageRecord::create([
-                'item_id' => $item[0],
-                'dept' => $request->dept,
-                'transaction_no' => (count($no_urut)+1) . '/KSR/'. strtoupper($request->dept). '/' . Carbon::now()->format('Y-m-d'),
-                'amount_out' => $item[1],
-                'description' => $request->dept == 'utama' ? 'Penjualan offline' : 'Penjualan Online',
-            ]);
-            $stock->update([
-                'amount' => $stock->amount - $item[1]
-            ]);
+                $stock->update([
+                    'amount' => $stock->amount - $item[1]
+                ]);
+            }
 
             // array data receipt
             $data_item = [
@@ -191,8 +180,6 @@ class CashierController extends Controller
 
             // warning if stock less than minimum stock or even zero left
             if ($stock->amount < $master_item->min_stock && $stock->amount > 0) {
-                error_log('YEs stock berkurang');
-
                 $title = $master_item->name . ' kurang dari stock minimum.';
                 $link = route('items.show', ['item' => $master_item->id]);
                 $body = 'Jumlah item untuk ' . $master_item->name . ' kurang dari stock minimum. Segera lakukan restock sebelum kehabisan, untuk lebih detail klik tautan ini <a href="' . $link . '">detail.</a>';
@@ -218,6 +205,7 @@ class CashierController extends Controller
 
         $calc = [
             "total_price" => $total_price,
+            "customer" => $request->customer,
             "fee" => $request->additional_fee,
             "tax" => $request->tax,
             "bill" => $bill,
@@ -233,7 +221,60 @@ class CashierController extends Controller
             return response()->json(['status' => false, 'message' => $th->getMessage()], 400);
         }
 
-        return response()->json(['status' => true, 'message' => 'Transaction recorded']);
+        return response()->json(['status' => true, 'message' => 'Transaction recorded', 'is_update' => $data_update ? true : false]);
+    }
+
+    public static function update_transaction_history ($item, $trans, $request, $payment_type) {
+        $transaction = Transaction::find($trans);
+        $previous_qty = Transaction::where(['transaction_number' => $transaction->transaction_number, 'item_id' => $item[0]])->first();
+        $stock = Stock::where(['item_id' => $item[0], 'dept' => $request->dept])->first();
+        
+        $transaction->update([
+            'stake_holder_id' => $request->customer,
+            'qty' => $item[1],
+            'payment_method_id' => $payment_type->payment_method_id,
+            'payment_type_id' => $payment_type->id,
+            'discount' => $request->discount,
+            'additional_fee' => $request->additional_fee,
+            'tax' => $request->tax,
+        ]);
+        
+        // lakukan penambahan atau pengurangan stock bila qty terbaru berubah        
+        if($item[1] > $previous_qty->qty) {
+            $stock->update([
+                'amount' => $stock->amount - ((int)$item[1] - (int)$previous_qty->qty)
+            ]);
+        } else if ($item[1] < $previous_qty->qty) {
+            $stock->update([
+                'amount' => $stock->amount + ((int)$previous_qty->qty - (int)$item[1])
+            ]);
+        }
+    }
+
+    public static function store_real_transaction ($item, $request, $no_urut, $trx_number, $payment_type, $time) {
+        Transaction::create([
+            'user_id' => auth()->user()->id,
+            'item_id' => $item[0],
+            'stake_holder_id' => $request->customer,
+            'transaction_number' => $trx_number . '/' . Carbon::now()->format('Y-m-d'),
+            'qty' => $item[1],
+            'dept' => $request->dept,
+            'payment_method_id' => $payment_type->payment_method_id,
+            'payment_type_id' => $payment_type->id,
+            'discount' => $request->discount,
+            'additional_fee' => $request->additional_fee,
+            'tax' => $request->tax,
+            'transaction_time' => $time
+        ]);
+
+        // record item keluar
+        StorageRecord::create([
+            'item_id' => $item[0],
+            'dept' => $request->dept,
+            'transaction_no' => (count($no_urut) + 1) . '/KSR/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
+            'amount_out' => $item[1],
+            'description' => $request->dept == 'utama' ? 'Penjualan offline' : 'Penjualan Online',
+        ]);
     }
 
     public function cashier_history () {

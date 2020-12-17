@@ -20,7 +20,8 @@ function store_transaction(e) {
         additional_fee: $('#additional_fee').val(),
         tax: localStorage.getItem('tax'),
         dept: $('#dept').val(),
-        nominal: $('#nominal').val()
+        nominal: $('#nominal').val(),
+        transaction_id: $('#id-edit-transaction').val() ? $('#id-edit-transaction').val() : ''
     }).then(function (response) {
         if (response.data.status == true) {
             localStorage.removeItem('items')

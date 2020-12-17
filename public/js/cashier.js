@@ -65,14 +65,21 @@ function print_items() {
         )
     } else {
         for (let i = 0; i < items.length; i++) {
+            // item grosir
             if (items[i][9] > 0) {
                 $('#data-item').append(
                     `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
                 ).fadeIn(3000, 'ease')
-            } else {
-                $('#data-item').append(
-                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
+            } else { // item non grosir
+                if(trx_id) {
+                    $('#data-item').append(
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
                 ).fadeIn(3000, 'ease')
+                } else {
+                    $('#data-item').append(
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
+                ).fadeIn(3000, 'ease')
+                }
             }
 
         }
@@ -302,8 +309,7 @@ $(document).ready(function () {
             for (let i = 0; i < items.length; i++) {
                 total = total + (items[i][4] * items[i][5])
             }
-        }    
-        console.log(total);
+        }
         
 
         // define discount type

@@ -28,6 +28,9 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/records/item/transaction/online', 'Storage\RecordItemController@online_transaction_history')->name('records.online_transaction_history');
     Route::get('/records/item/transaction/offline', 'Storage\RecordItemController@offline_transaction_history')->name('records.offline_transaction_history');
     Route::get('/records/item/transaction/detail/{transaction_id}/{dept}', 'Storage\RecordItemController@detail_transaction_history')->name('records.detail_transaction_history');
+
+    // live edit transaction history using cashier page
+    Route::get('/records/item/transaction/edit/{transaction}', 'Storage\RecordItemController@live_edit_transaction')->name('records.live_edit_transaction');
     /** transfer item */
     Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_item')->name('records.transfer');
     /** get ajax request */

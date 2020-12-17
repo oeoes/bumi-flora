@@ -38,8 +38,9 @@ class PrintReceiptController extends Controller
         $printer -> text("Telp: 085772386441 Fax: \n");
         $printer->feed();
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("No. : ". $calc['transaction_number'] ." \n");
-        $printer->text("Ksr. : ". auth()->user()->name ." (waktu: ". Carbon::now()->format('H:i:s') .")\n");
+        $printer->text("No.   : ". $calc['transaction_number'] ." \n");
+        $printer->text("Ksr.  : ". auth()->user()->name . " (waktu: " . Carbon::now()->format('H:i:s') . ")\n");
+        $printer->text("Cust. : ". $calc['customer'] .")\n");
         $printer -> text("------------------------------------------------\n");
         $printer->feed(); 
         
