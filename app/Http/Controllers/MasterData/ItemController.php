@@ -23,8 +23,8 @@ class ItemController extends Controller
         return view('pages.data-item.items');
     }
 
-    public function data_item_page () {
-        $data = self::items_query();
+    public function data_item_page ($published) {
+        $data = self::items_query()->where('published', $published);
         return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('price', function($row) {

@@ -19,15 +19,19 @@ class UserManagementController extends Controller
     }
 
     public function invite_user (Request $request) {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-            'role' => $request->role
-        ]);
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => bcrypt($request->password),
+                'role' => $request->role
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Error: ' . $th->getMessage()], 400);
+        }
 
-        return back();
+        return response()->json(['status' => true, 'message' => 'Success: User added']);
     }
 
     public function create_role (Request $request) {

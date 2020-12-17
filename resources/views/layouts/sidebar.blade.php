@@ -11,7 +11,27 @@
                 </a>
             </li>
         </ul>
+
         <ul class="nav ">
+            @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'storage']))
+            <li class="nav-header hidden-folded">
+                <span class="text-muted">Staging</span>
+            </li>
+            <li>
+                <a href="{{ route('stages.create') }}">
+                    <span class="nav-icon text-danger"><i data-feather='list'></i></span>
+                    <span class="nav-text">Add Item</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('stages.index') }}">
+                    <span class="nav-icon text-warning"><i data-feather='layers'></i></span>
+                    <span class="nav-text">Pending Item</span>
+                </a>
+            </li>
+            @endif
+
+            @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -115,7 +135,11 @@
             </li>
             <li class="">
                 <a href="#" class="" data-pjax-state="anchor-empty">
-                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"></path><polyline points="2.32 6.16 12 11 21.68 6.16"></polyline><line x1="12" y1="22.76" x2="12" y2="11"></line></svg></span>
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box">
+                            <path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"></path>
+                            <polyline points="2.32 6.16 12 11 21.68 6.16"></polyline>
+                            <line x1="12" y1="22.76" x2="12" y2="11"></line>
+                        </svg></span>
                     <span class="nav-text">History Item</span>
                     <span class="nav-caret"></span>
                 </a>
@@ -148,7 +172,7 @@
                     <span class="nav-text">Stok Opname</span>
                 </a>
             </li>
-            
+
 
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
@@ -167,6 +191,7 @@
                     <span class="nav-text">History Pembelian</span>
                 </a>
             </li>
+            @endif
 
             <!-- Akses managgement -->
             <li class="nav-header hidden-folded">
@@ -177,8 +202,8 @@
                     <span class="nav-icon"><i data-feather='lock'></i></span>
                     <span class="nav-text">Roles & Permission</span>
                 </a>
-            </li>      
-            
+            </li>
+
             @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'cashier']))
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">

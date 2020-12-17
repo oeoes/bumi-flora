@@ -3,22 +3,13 @@
 @section('page-title', 'Detail Transaksi')
 @section('page-description', 'Detail histori transaksi.')
 
-@section('btn-custom')
-<div>
-    <button class="btn btn-sm text-muted" data-toggle="modal">
-        <span class="d-none d-sm-inline mx-1">Print ulang receipt</span>
-        <i data-feather="printer"></i>
-    </button>
-</div>
-@endsection
 
 @section('custom-js')
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#data-item').DataTable();
     });
-
 </script>
 @endsection
 
@@ -32,7 +23,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -75,48 +65,52 @@
                                     <td> : </td>
                                     <td>{{ !$base->customer ? 'Umum' : $base->customer }}</td>
                                 </tr>
+                                <tr>
+                                    <td><a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </table>
-                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover mt-4"
-                                style="margin-top: 0px;">
-                                <thead style="">
+                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover mt-4" style="margin-top: 0px;">
+                                <thead>
                                     <tr>
-                                        <th style="" data-field="type">
+                                        <th data-field="type">
                                             <div class="th-inner">Nama</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Satuan</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Harga Pokok</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Harga Jual</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Jenis</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Quantity</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Diskon</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Biaya Lain</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Pajak</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Action</div>
                                             <div class="fht-cell"></div>
                                         </th>
@@ -125,63 +119,61 @@
                                 <tbody>
                                     @foreach($items as $key => $item)
                                     <tr class=" " data-index="0" data-id="17">
-                                        <td style="">
+                                        <td>
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
                                             </div>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ strtoupper($item->unit) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->main_cost, 2) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price, 2) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ strtoupper($item->category) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->qty }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->discount }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->additional_fee }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->tax }}
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4" data-toggle="modal"
-                                                data-target="#edit-item{{ $key }}">Edit</button>
-                                            <button class="btn btn-outline-danger btn-sm rounded-pill pr-4 pl-4"
-                                                data-toggle="modal"
-                                                data-target="#delete-item{{ $key }}">Delete</button>
+                                            <!-- <button class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#edit-item{{ $key }}">Edit</button> -->
+                                            @can('delete')
+                                            <button class="btn btn-outline-danger btn-sm rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#delete-item{{ $key }}">Delete</button>
+                                            @endcan
                                         </td>
                                     </tr>
 
                                     <!-- item modal edit -->
-                                    <div id="edit-item{{ $key }}" class="modal fade" data-backdrop="true"
-                                        aria-hidden="true" style="display: none;">
+                                    <div id="edit-item{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog ">
                                             <div class="modal-content ">
                                                 <div class="modal-header ">
@@ -189,8 +181,7 @@
                                                     <button class="close" data-dismiss="modal">×</button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form method="post"
-                                                        action="{{ route('records.update', ['record' => $item->transaction_id]) }}">
+                                                    <form method="post" action="{{ route('records.update', ['record' => $item->transaction_id]) }}">
                                                         @method('PUT')
                                                         @csrf
                                                         <div class="form-group">
@@ -208,14 +199,11 @@
                                                         <div class="form-group">
                                                             <label>Pajak</label>
                                                             <input name="tax" type="text" class="form-control" value="{{ $item->tax }}">
-                                                        </div>                                                        
+                                                        </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button"
-                                                        class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4"
-                                                        data-dismiss="modal">Close</button>
-                                                    <button type="submit"
-                                                        class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4">Save
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4">Save
                                                         Changes</button>
                                                     </form>
                                                 </div>
@@ -225,8 +213,7 @@
                                     </div>
 
                                     <!-- item modal delete -->
-                                    <div id="delete-item{{ $key }}" class="modal fade" data-backdrop="true"
-                                        aria-hidden="true" style="display: none;">
+                                    <div id="delete-item{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog ">
                                             <div class="modal-content ">
                                                 <div class="modal-header ">
@@ -243,11 +230,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button"
-                                                            class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4"
-                                                            data-dismiss="modal">Cancle</button>
-                                                        <button type="submit"
-                                                            class="btn btn-outline-danger btn-sm rounded-pill pr-4 pl-4">Yes</button>
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4" data-dismiss="modal">Cancle</button>
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill pr-4 pl-4">Yes</button>
                                                     </div>
                                                 </form>
                                             </div>

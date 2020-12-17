@@ -399,6 +399,7 @@
                                     </div>
                                 </td>
                                 @if($item->minimum_item > 0)
+                                <!-- kalo discount item ada dan grosir ada -->
                                     <td style="">
                                         <div class="text-sm">
                                             <span class="text-success">Yes</span>
@@ -418,6 +419,7 @@
                                     @endif
                                 </td>
                                 @else
+                                <!-- kalo discount item ada tapi grosir gada -->
                                     <td style="">
                                         <div class="text-sm">
                                             <span class="text-secondary">No</span>
@@ -445,6 +447,7 @@
                                 </div>
                             </td>
                                 @if($item->minimum_item > 0)
+                                <!-- kalo discount category ada dan grosir ada -->
                                     <td style="">
                                         <div class="text-sm">
                                             <span class="text-success">Yes</span>
@@ -464,6 +467,7 @@
                                         @endif
                                     </td>
                                 @else
+                                <!-- kalo discount category ada tapi grosir gada -->
                                     <td style="">
                                         <div class="text-sm">
                                             <span class="text-secondary">No</span>
@@ -490,6 +494,7 @@
                                 </div>
                             </td>
                                 @if($item->minimum_item > 0)
+                                <!-- kalo gada discount tapi grosir ada -->
                                     <td style="">
                                         <div class="text-sm">
                                             <span class="text-success">Yes</span>
@@ -521,6 +526,7 @@
                                     </td>
                                     <td>
                                         @if($item->stock > 0)
+                                        <!-- hilangin button add kalo stock 0 -->
                                         <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
                                             class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i

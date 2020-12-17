@@ -9,12 +9,6 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/dashboard/demand', 'DashboardController@demand')->name('dashboard.demand');
     Route::get('/dashboard/cashier', 'DashboardController@cashier_performance')->name('dashboard.cashier_performance');
     Route::get('/dashboard/accumulate', 'DashboardController@accumulation')->name('dashboard.accumulation');
-
-    Route::resource('/items', 'MasterData\ItemController');
-    Route::get('/items/get/ajax', 'MasterData\ItemController@data_item_page')->name('items.ajax');
-    Route::post('/items/filter', 'MasterData\ItemController@filter_item')->name('items.filter-item');
-    Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
-    Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
     
     Route::resource('/storages', 'Storage\StorageController');
     Route::get('/storages/dept/{dept}', 'Storage\StorageController@filter_by_dept')->name('storages.filter_by_dept');
@@ -34,6 +28,9 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/records/item/transaction/online', 'Storage\RecordItemController@online_transaction_history')->name('records.online_transaction_history');
     Route::get('/records/item/transaction/offline', 'Storage\RecordItemController@offline_transaction_history')->name('records.offline_transaction_history');
     Route::get('/records/item/transaction/detail/{transaction_id}/{dept}', 'Storage\RecordItemController@detail_transaction_history')->name('records.detail_transaction_history');
+
+    // live edit transaction history using cashier page
+    Route::get('/records/item/transaction/edit/{transaction}', 'Storage\RecordItemController@live_edit_transaction')->name('records.live_edit_transaction');
     /** transfer item */
     Route::post('/records/item/transfer', 'Storage\RecordItemController@transfer_item')->name('records.transfer');
     /** get ajax request */
@@ -58,8 +55,19 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     Route::put('/roles/{role}', 'Admin\UserManagementController@update_role')->name('roles.update');
 
+    // item staging area
+    Route::resource('/stages', 'Activity\StagingItemController');
 
-    Route::group(['middleware' => ['role:super_admin|root']], function () {
+
+    Route::middleware('role:super_admin|root')->group(function () {
+        // master data item
+        Route::resource('/items', 'MasterData\ItemController');
+        Route::get('/items/get/ajax/{published}', 'MasterData\ItemController@data_item_page')->name('items.ajax');
+        Route::post('/items/filter', 'MasterData\ItemController@filter_item')->name('items.filter-item');
+        Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
+        Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
+
+
         // data pendukung
         Route::resource('/supports', 'MasterData\SecondaryDataController')->only(['index']);
         Route::resource('/brands', 'MasterData\BrandController')->only(['store', 'update', 'destroy']);
