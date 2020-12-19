@@ -68,16 +68,16 @@ function print_items() {
             // item grosir
             if (items[i][9] > 0) {
                 $('#data-item').append(
-                    `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
+                    `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="0" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
                 ).fadeIn(3000, 'ease')
             } else { // item non grosir
-                if(typeof trx_id != 'undefined') {
+                if(typeof trx_id == 'undefined') {
                     $('#data-item').append(
-                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="0" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
                 ).fadeIn(3000, 'ease')
                 } else {
                     $('#data-item').append(
-                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="0" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 30px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
                 ).fadeIn(3000, 'ease')
                 }
             }
@@ -87,28 +87,18 @@ function print_items() {
 }
 
 function print_total_price() {
-    let total = 0 + parseInt(localStorage.getItem('additional_fee')) + parseInt(localStorage.getItem('tax'))
-    let total_price = total
+    let total_price = 0 + JSON.parse(localStorage.getItem('tax')) - JSON.parse(localStorage.getItem('discount'))
     let items = JSON.parse(localStorage.getItem('items'))
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
             let pr = parseInt(items[i][4]) * parseInt(items[i][6])
-            total = total + (pr - (pr * parseInt(items[i][7]) / 100))
+            total_price = total_price + (pr - (pr * parseInt(items[i][7]) / 100))
         }
-    }
-
-    // perhitungan total price setalh dipotong discount
-    if ($('#discount_type').val() == 'nominal') {
-        total_price = total - $('#discount_value').val()
-        $('#desired_discount_value').text(parseInt($('#discount_value').val()).toLocaleString())
-    } else {
-        total_price = total - ((total * $('#discount_value').val()) / 100)
-        $('#desired_discount_value').text($('#discount_value').val() + '%')
     }
     localStorage.setItem('total_price', total_price);
 
-    $('#total_price').text(total.toLocaleString())
+    $('#total_price').text(total_price.toLocaleString())
     $('#bill').text(total_price.toLocaleString())
     $('#final_price').text(parseInt(total_price).toLocaleString())
 }
@@ -161,8 +151,8 @@ function remove_item(index) {
 $(document).ready(function () {
     // insert value ke kolom biaya lain    
     localStorage.getItem('additional_fee') == null ? localStorage.setItem('additional_fee', 0) : $('#additional_fee').val(JSON.parse(localStorage.getItem('additional_fee')))
-    // insert value ke kolom pajak
-    localStorage.getItem('tax') == null ? localStorage.setItem('tax', 0) : $('#tax').val(JSON.parse(localStorage.getItem('tax')))
+    // set tax to 0
+    localStorage.setItem('tax', 0)
 
     // print item yg ada di localstorage
     print_items()
@@ -288,14 +278,14 @@ $(document).ready(function () {
         $('#cont_discount').css('display', 'none')
     }
 
-    // perhitungan discount
-    $(document).on('keyup', '#discount_value', (function () {
+    // perhitungan discount percentage
+    $(document).on('keyup', '#discount_value_percentage', (function () {
         // reset discount customer
         $('#customer').val('umum');
         localStorage.setItem('customer_discount', 0)
         $('#discount-info').text('')
         // show/hide text for discount
-        if ($('#discount_value').val() > 0) {
+        if ($('#discount_value_percentage').val() > 0) {
             $('#cont_discount').css('display', 'block')
         } else {
             $('#cont_discount').css('display', 'none')
@@ -307,35 +297,63 @@ $(document).ready(function () {
 
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
-                total = total + (items[i][4] * items[i][5])
+                let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+                total = total + (pr - (pr * parseInt(items[i][7]) / 100))
             }
         }
+
+        // convert to nomiinal and write to discount value nominal field
+        let percentage_val = (total * $('#discount_value_percentage').val()) / 100
+        $('#discount_value_nominal').val(percentage_val < 1 ? 0 : percentage_val)
         
-
-        // define discount type
-        if ($('#discount_type').val() == 'nominal') {
-            total_price = total - $('#discount_value').val()
-            $('#desired_discount_value').text(parseInt($('#discount_value').val()).toLocaleString())
-
-            // store discount value to localStorage
-            if ($('#discount_value').val() == '') {
-                localStorage.setItem('discount', 0)
-            } else {
-                localStorage.setItem('discount', $('#discount_value').val())
-            }
-
-        } else {
-            total_price = total - ((total * $('#discount_value').val()) / 100)
-            $('#desired_discount_value').text($('#discount_value').val() + '%')
-
-            // store discount value to localStorage
-            localStorage.setItem('discount', (total * $('#discount_value').val()) / 100)
-        }
-        localStorage.setItem('total_price', total_price);
-
-        $('#final_price').text(parseInt(total_price).toLocaleString())
-        $('#bill').text(total_price.toLocaleString())
+        // count total price
+        total_price = total - ((total * $('#discount_value_percentage').val()) / 100)
+        // store to local storage
+        localStorage.setItem('discount', (total * $('#discount_value_percentage').val()) / 100)
+        // print value to screen by id desired_discount_value
+        $('#desired_discount_value').text($('#discount_value_percentage').val() + '%')
+        
+        print_total_price()
     }));
+
+    // perhitungan discount nominal
+    $(document).on('keyup', '#discount_value_nominal', (function () {
+        // reset discount customer
+        $('#customer').val('umum');
+        localStorage.setItem('customer_discount', 0)
+        $('#discount-info').text('')
+        // show/hide text for discount
+        if ($('#discount_value_nominal').val() > 0) {
+            $('#cont_discount').css('display', 'block')
+        } else {
+            $('#cont_discount').css('display', 'none')
+        }
+
+        let total = 0
+        let items = JSON.parse(localStorage.getItem('items'))
+        let total_price = 0
+
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+                total = total + (pr - (pr * parseInt(items[i][7]) / 100))
+            }
+        }
+
+        // convert to nomiinal and write to discount value nominal field
+        let nominal_val = $('#discount_value_nominal').val()
+        $('#discount_value_percentage').val(nominal_val < 1 ? 0 : (100 * nominal_val / total).toFixed(2))
+        
+        // count total price
+        total_price = total - $('#discount_value_nominal').val()
+        // store to local storage
+        localStorage.setItem('discount', $('#discount_value_nominal').val())
+        // print value to screen by id desired_discount_value
+        $('#desired_discount_value').text(parseInt($('#discount_value_nominal').val()).toLocaleString())
+
+        print_total_price()
+    }));
+
 
     // reset transaksi
     $(document).on('click', '#reset_transaction', (function () {
@@ -367,16 +385,55 @@ $(document).ready(function () {
         }
     })
 
-    // pajak
-    $(document).on('keyup', '#tax', function () {
-        let tax_val = 0
+    // pajak percentage
+    $(document).on('keyup', '#tax_percentage', function () {
         let tax = JSON.parse(localStorage.getItem('tax'))
-        let total_price = JSON.parse(localStorage.getItem('total_price'))
+        let items = JSON.parse(localStorage.getItem('items'))
+        let total_price = 0
 
-        if ($('#tax').val() > 0) {
-            tax_val = tax_val + (total_price * parseInt($('#tax').val()) / 100)
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+                total_price = total_price + (pr - (pr * parseInt(items[i][7]) / 100))
+            }
+        }
 
-            localStorage.setItem('tax', tax_val)
+        // write tax value percentage to nominal value
+        let tax_percentage_val = (total_price * parseInt($('#tax_percentage').val()) / 100)
+        $('#tax_nominal').val(tax_percentage_val)
+
+        if ($('#tax_percentage').val() > 0) {
+            localStorage.setItem('tax', tax_percentage_val)
+
+            print_total_price()
+
+        } else {
+            total_price = total_price - tax
+            localStorage.setItem('total_price', total_price)
+            localStorage.setItem('tax', 0)
+            print_total_price()
+        }
+    })
+
+    // pajak nominal
+    $(document).on('keyup', '#tax_nominal', function () {
+        let tax = JSON.parse(localStorage.getItem('tax'))
+        let items = JSON.parse(localStorage.getItem('items'))
+        let total_price = 0
+
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+                total_price = total_price + (pr - (pr * parseInt(items[i][7]) / 100))
+            }
+        }
+
+        // write tax value percentage to nominal value
+        let tax_nominal_val = (parseInt($('#tax_nominal').val()) * 100 / total_price)
+        $('#tax_percentage').val(tax_nominal_val.toFixed(2))
+
+        if ($('#tax_nominal').val() > 0) {
+            localStorage.setItem('tax', parseInt($('#tax_nominal').val()))
 
             print_total_price()
 

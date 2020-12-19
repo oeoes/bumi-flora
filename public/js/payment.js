@@ -1,6 +1,5 @@
 function store_transaction(e) {
     $(e).text('Simpan & Bayar...')
-    console.log(e);    
 
     let items = JSON.parse(localStorage.getItem('items'))
     let item_data = []

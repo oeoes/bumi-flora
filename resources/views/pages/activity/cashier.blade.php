@@ -11,8 +11,7 @@
     </button>
 
     <!-- modal aside right -->
-    <div id="pending-list" class="modal fade modal-open-aside" da
-    ta-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
+    <div id="pending-list" class="modal fade modal-open-aside" da ta-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-right w-xl">
             <div class="modal-content h-100 no-radius">
                 <div class="modal-header ">
@@ -51,10 +50,9 @@
 <script src="{{ asset('js/payment.js') }}"></script>
 <script src="{{ asset('js/pending.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#kasir-data-item').DataTable();
     });
-
 </script>
 @endsection
 
@@ -72,7 +70,6 @@
     .payment_toggle {
         display: none
     }
-
 </style>
 @endsection
 
@@ -89,14 +86,12 @@
                         <div class="col-2">
                             <div class="form-group">
                                 <label for="jumlah">Jumlah</label>
-                                <input id="jumlah" type="number" class="form-control form-control-sm"
-                                    placeholder="jumah item" value="1">
+                                <input id="jumlah" type="number" class="form-control form-control-sm" placeholder="jumah item" value="1">
                             </div>
                         </div>
                         <div class="col-4">
                             <label for="item_code">Kode item</label>
-                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus
-                                placeholder="kode item">
+                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item">
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -136,33 +131,43 @@
                                             <small id="discount-info" class="text-success"></small>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
+                                    <div class="col-3">
+                                        <!-- <div class="form-group">
                                             <label>Satuan diskon</label>
                                             <select id="discount_type" class="form-control form-control-sm">
                                                 <option value="nominal">Nominal</option>
                                                 <option value="persentase">Persentase</option>
                                             </select>
+                                        </div> -->
+                                        <div class="form-group">
+                                            <label>Discount</label>
+                                            <div class="input-group"><input id="discount_value_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="discount_value_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-group">
-                                            <label>Besaran</label>
-                                            <input min="0" id="discount_value" type="number"
-                                                class="form-control form-control-sm" value="0">
+                                            <label>Pajak</label>
+                                            <div class="input-group"><input id="tax_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="tax_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-2">
                                         <div class="form-group">
                                             <label>Biaya lain</label>
-                                            <input min="0" id="additional_fee" type="number"
-                                                class="form-control form-control-sm" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label>Pajak</label>
-                                            <div class="input-group"><input id="tax" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div>
+                                            <input min="0" id="additional_fee" type="number" class="form-control form-control-sm" value="0">
                                         </div>
                                     </div>
                                 </div>
@@ -174,12 +179,9 @@
                             <div class="h1 text-right">Rp. <span id="final_price"></span></div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#cancle_payment">Reset [ , ]</button>
-                        <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#payment">Bayar [ . ]</button>
-                        <button class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-toggle="modal"
-                            data-target="#pending_payment">Pending [ / ]</button>
+                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#cancle_payment">Reset [ , ]</button>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#payment">Bayar [ . ]</button>
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#pending_payment">Pending [ / ]</button>
                     </div>
                 </div>
             </div>
@@ -221,7 +223,7 @@
 
                         <!-- payment types -->
                         <div id="payment_types" class="form-group">
-                            
+
                         </div>
 
                     </div>
@@ -243,8 +245,7 @@
 </div>
 
 <!-- modal pending payment -->
-<div class="modal fade" id="pending_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel"
-    aria-hidden="true">
+<div class="modal fade" id="pending_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -258,18 +259,15 @@
                 <input id="pending_description" type="text" class="form-control" placeholder="Masukan keterangan">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
-                    data-dismiss="modal">Batal</button>
-                <button id="pending_transaction" type="button"
-                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
+                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
+                <button id="pending_transaction" type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- modal warning restore transaction -->
-<div class="modal fade" id="warning_pending_restore" tabindex="-1" role="dialog" aria-labelledby="paymentLabel"
-    aria-hidden="true">
+<div class="modal fade" id="warning_pending_restore" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -282,16 +280,14 @@
                 Tidak dapat mengembalikan transaksi pending, masih ada transaksi yang sedang berlangsung.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
-                    data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- modal cancle payment -->
-<div class="modal fade" id="cancle_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel"
-    aria-hidden="true">
+<div class="modal fade" id="cancle_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -304,10 +300,8 @@
                 Transaksi sekarang akan direset, yakin membuat transaksi baru?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary"
-                    data-dismiss="modal">Batal</button>
-                <button id="reset_transaction" type="button"
-                    class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
+                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
+                <button id="reset_transaction" type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
             </div>
         </div>
     </div>
@@ -367,173 +361,161 @@
                             </td>
                             <td style="">
                                 @if($item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []))
-                                    @if($item->discount_item > 0)
-                                        <div class="text-sm text-danger">
-                                            {{ $item->discount_item }}%
-                                        </div>
-                                    @else
-                                        <div class="text-sm">
-                                            -
-                                        </div>
-                                    @endif
-                                @elseif($item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []))
-                                    @if($item->discount_category > 0)
-                                        <div class="text-sm text-danger">
-                                            {{ $item->discount_category }}%
-                                        </div>
-                                    @else
-                                        <div class="text-sm">
-                                            -
-                                        </div>
-                                    @endif
+                                @if($item->discount_item > 0)
+                                <div class="text-sm text-danger">
+                                    {{ $item->discount_item }}%
+                                </div>
                                 @else
-                                    <div class="text-sm">
-                                        -
-                                    </div>
+                                <div class="text-sm">
+                                    -
+                                </div>
+                                @endif
+                                @elseif($item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []))
+                                @if($item->discount_category > 0)
+                                <div class="text-sm text-danger">
+                                    {{ $item->discount_category }}%
+                                </div>
+                                @else
+                                <div class="text-sm">
+                                    -
+                                </div>
+                                @endif
+                                @else
+                                <div class="text-sm">
+                                    -
+                                </div>
                                 @endif
                             </td>
                             @if($item->discount_item > 0)
-                                <td style="">
-                                    <div class="text-sm">
-                                        Rp.{{ number_format($item->price_item) }}
-                                    </div>
-                                </td>
-                                @if($item->minimum_item > 0)
-                                <!-- kalo discount item ada dan grosir ada -->
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-success">Yes</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
-                                        </div>
-                                    </td>
-                                    <td>
-                                    @if($item->stock > 0)
-                                    <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                        '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
-                                        class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                            data-feather='plus'></i></button>
-                                    @endif
-                                </td>
-                                @else
-                                <!-- kalo discount item ada tapi grosir gada -->
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-secondary">No</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            -
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($item->stock > 0)
-                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                            '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
-                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                                data-feather='plus'></i></button>
-                                        @endif
-                                    </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    Rp.{{ number_format($item->price_item) }}
+                                </div>
+                            </td>
+                            @if($item->minimum_item > 0)
+                            <!-- kalo discount item ada dan grosir ada -->
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-success">Yes</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                        '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
                                 @endif
-                                
+                            </td>
+                            @else
+                            <!-- kalo discount item ada tapi grosir gada -->
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-secondary">No</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    -
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []) ? $item->discount_item : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
+                                @endif
+                            </td>
+                            @endif
+
                             @elseif($item->discount_category > 0)
                             <td style="">
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->price_category) }}
                                 </div>
                             </td>
-                                @if($item->minimum_item > 0)
-                                <!-- kalo discount category ada dan grosir ada -->
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-success">Yes</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($item->stock > 0)
-                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
-                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                                data-feather='plus'></i></button>
-                                        @endif
-                                    </td>
-                                @else
-                                <!-- kalo discount category ada tapi grosir gada -->
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-secondary">No</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            -
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($item->stock > 0)
-                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
-                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                                data-feather='plus'></i></button>
-                                        @endif
-                                    </td>
+                            @if($item->minimum_item > 0)
+                            <!-- kalo discount category ada dan grosir ada -->
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-success">Yes</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
                                 @endif
+                            </td>
+                            @else
+                            <!-- kalo discount category ada tapi grosir gada -->
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-secondary">No</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    -
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences) ? unserialize($item->category_occurences) : []) ? $item->discount_category : 0 }}', '{{ $item->stock }}', 0, 0)" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
+                                @endif
+                            </td>
+                            @endif
                             @else
                             <td style="">
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->original_price) }}
                                 </div>
                             </td>
-                                @if($item->minimum_item > 0)
-                                <!-- kalo gada discount tapi grosir ada -->
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-success">Yes</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($item->stock > 0)
-                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer"
-                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                                data-feather='plus'></i></button>
-                                        @endif
-                                    </td>
-                                @else
-                                    <td style="">
-                                        <div class="text-sm">
-                                            <span class="text-secondary">No</span>
-                                        </div>
-                                    </td>
-                                    <td style="">
-                                        <div class="text-sm">
-                                            -
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($item->stock > 0)
-                                        <!-- hilangin button add kalo stock 0 -->
-                                        <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer"
-                                            class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i
-                                                data-feather='plus'></i></button>
-                                        @endif
-                                    </td>
+                            @if($item->minimum_item > 0)
+                            <!-- kalo gada discount tapi grosir ada -->
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-success">Yes</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', '{{ $item->minimum_item }}', '{{ $item->grosir_price }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
                                 @endif
+                            </td>
+                            @else
+                            <td style="">
+                                <div class="text-sm">
+                                    <span class="text-secondary">No</span>
+                                </div>
+                            </td>
+                            <td style="">
+                                <div class="text-sm">
+                                    -
+                                </div>
+                            </td>
+                            <td>
+                                @if($item->stock > 0)
+                                <!-- hilangin button add kalo stock 0 -->
+                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
+                                            '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
+                                @endif
+                            </td>
+                            @endif
                             @endif
                         </tr>
                         @endforeach

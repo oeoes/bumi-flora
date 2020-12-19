@@ -87,7 +87,7 @@ class PrintReceiptController extends Controller
                     }
 
                     // kasih space setelah samadengan
-                    if ($j > 30 && $j < (48 - strlen($items[$i]["price"]))) {
+                    if ($j > 30 && $j < (48 - strlen($items[$i]["total"]))) {
                         $n2 .= " ";
                     }
                     
@@ -132,7 +132,7 @@ class PrintReceiptController extends Controller
                     }
 
                     // kasih space setelah samadengan
-                    if ($j > 30 && $j < (48 - strlen($items[$i]["price"]))) {
+                    if ($j > 30 && $j < (48 - strlen($items[$i]["total"]))) {
                         $n3 .= " ";
                     }
                     
@@ -157,6 +157,7 @@ class PrintReceiptController extends Controller
         $printer -> text("------------------------------------------------\n");
         $qty = "ITEM: ". count($items). "; QTY: ". $sum_qty ." "; // 18 col
         $fee = "Biaya Lain       =";
+        $tax = "Pajak            =";
         $bill = "Total Akhir      =";
         $cash = "Tunai            =";
         $cashback = "Kembali          =";
@@ -184,6 +185,7 @@ class PrintReceiptController extends Controller
         }
         $printer -> text($qty . $calc["total_price"] . "\n");
         $printer -> text($fee . $calc["fee"] . "\n");
+        $printer -> text($tax . $calc["tax"] . "\n");
         $printer -> text($bill . $calc["bill"] . "\n");
         $printer->feed();
         $printer -> text($cash . $calc["cash"] . "\n");

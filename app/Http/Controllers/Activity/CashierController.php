@@ -152,11 +152,11 @@ class CashierController extends Controller
             $stock = Stock::where(['item_id' => $item[0], 'dept' => $request->dept])->first();
             // count price of all items
             $total_price += ($item[3] * $item[1]);
-            $parent_transaction = Transaction::find($request->transaction_id);
-            $cur_transaction = Transaction::where(['transaction_number' => $parent_transaction->transaction_number, 'item_id' => $master_item->id])->first();
 
             // update or store
             if ($data_update) {
+                $parent_transaction = Transaction::find($request->transaction_id);
+                $cur_transaction = Transaction::where(['transaction_number' => $parent_transaction->transaction_number, 'item_id' => $master_item->id])->first();
                 self::update_transaction_history($item, $cur_transaction->id, $request, $payment_type);
             } else {
                 self::store_real_transaction($item, $request, $no_urut, $trx_number, $payment_type, $time);
@@ -172,7 +172,7 @@ class CashierController extends Controller
                 "satuan" => $item[4],
                 "price" => $item[3],
                 "qty" => $item[1],
-                "total" =>$item[3] * $item[1],
+                "total" => $item[5] == 0 ? $item[3] * $item[1] : ($item[3] * $item[1] - ($item[3] * $item[1]) * $item[5] / 100),
                 "discount" => $item[5],
             ];
             // push ke array load data receipt
