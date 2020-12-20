@@ -50,16 +50,16 @@ function generate() {
 
 function print_barcode() {
     $('#print').text('Printing...')
-    axios.post('/app/barcodes/print', {
+    axios.post('/barcodes/print', {
         item_id: $('#item_id').val()
     }).then(function (response) {
-        console.log(response.data);
+        alert(response.data.message);
         
     }).catch(function (error) {
-        console.log(error.response);
+        alert(error.response.data.message);
         
     }).finally(function () {
-        $('#print').text('Printing')
+        $('#print').text('Print')
     })
 }
 
