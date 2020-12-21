@@ -80,7 +80,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
         // barcode
         Route::get('/barcodes', 'Admin\BarcodeGenerator@index')->name('barcodes.index');
         Route::post('/barcodes/generate', 'Admin\BarcodeGenerator@generate')->name('barcodes.generate');
-        Route::post('/barcodes/print', 'Admin\BarcodeGenerator@print_barcode')->name('barcodes.print_barcode');
+        // Route::post('/barcodes/print', 'Admin\BarcodeGenerator@print_barcode')->name('barcodes.print_barcode');
 
         // omset
         Route::get('/omsets', 'Admin\OmsetController@index')->name('omsets.index');
@@ -136,3 +136,7 @@ Route::get('/logout', 'Authentication\AuthenticationController@logout')->name('l
 
 Route::get('/cashier/check', 'Activity\CashierController@check_item');
 Route::post('/cashier/store', 'Activity\CashierController@store_transaction');
+Route::post('/barcodes/print', 'Admin\BarcodeGenerator@print_barcode')->name('barcodes.print_barcode');
+
+// zebra Printing
+Route::get('/zpl', 'Activity\PrintBarcode@zpl_printing')->name('zpl.zpl_printing');

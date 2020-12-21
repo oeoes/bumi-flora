@@ -291,7 +291,7 @@ $(document).ready(function () {
             $('#cont_discount').css('display', 'none')
         }
 
-        let total = 0
+        let total = 0 + parseInt(localStorage.getItem('additional_fee')) + parseInt(localStorage.getItem('tax'))
         let items = JSON.parse(localStorage.getItem('items'))
         let total_price = 0
 

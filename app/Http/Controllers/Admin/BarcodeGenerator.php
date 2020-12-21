@@ -28,8 +28,23 @@ class BarcodeGenerator extends Controller
     }
 
     public function print_barcode (Request $request) {
+        try {
+            PrintBarcode::print_barcode_to_papper();
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'error: ' . $th], 400);
+        }
+        return response()->json(['status' => true, 'message' => 'astagfirullah' . PrintBarcode::print_barcode_to_papper()]);
+        // $item = DB::table('items')->select('name', 'barcode', 'price')->where('id', request('item_id'))->first();
+        // $barcode_img = DNS1D::getBarcodePNG('20640629376', 'C39', 1, 56);
+
         // try {
-        //     PrintBarcode::print_barcode();
+        //     \File::put(storage_path('/app/barcodes') . '/' . 'barcode.png', base64_decode($barcode_img));
+        //     try {
+        //         PrintBarcode::print_barcode_to_papper();
+        //     } catch (\Throwable $th) {
+        //         return response()->json(['status' => false, 'message' => 'error: ' . $th], 400);
+        //     }
+        //     return response()->json(['status' => true, 'message' => 'Anjim']);
         // } catch (\Throwable $th) {
         //     echo $th->getMessage();
         // }
