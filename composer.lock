@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "737b87b288aa927e435ec2db307ece67",
+    "content-hash": "2cdab478d01bf5284f462016501e6b20",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2742,6 +2742,53 @@
             "time": "2020-08-18T17:17:46+00:00"
         },
         {
+            "name": "robgridley/zebra",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robgridley/zebra.git",
+                "reference": "c02e740388438f5c8b66e4f66936350bc4b4af37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robgridley/zebra/zipball/c02e740388438f5c8b66e4f66936350bc4b4af37",
+                "reference": "c02e740388438f5c8b66e4f66936350bc4b4af37",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.0"
+            },
+            "suggest": {
+                "ext-gd": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zebra\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Gridley",
+                    "email": "me@robgridley.com"
+                }
+            ],
+            "description": "PHP ZPL builder, image conversion and a basic client for network-connected Zebra label printers.",
+            "keywords": [
+                "image",
+                "zebra",
+                "zpl"
+            ],
+            "time": "2018-04-03T14:48:57+00:00"
+        },
+        {
             "name": "spatie/laravel-permission",
             "version": "3.17.0",
             "source": {
@@ -5331,6 +5378,7 @@
                 "faker",
                 "fixtures"
             ],
+            "abandoned": true,
             "time": "2019-12-12T13:22:17+00:00"
         },
         {
