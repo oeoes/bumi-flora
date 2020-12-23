@@ -20,8 +20,8 @@ class CreateTransactionsTable extends Migration
             $table->uuid('stake_holder_id')->default('umum');
             $table->string('transaction_number');
             $table->enum('dept', ['ecommerce', 'utama']);
-            $table->foreignId('payment_method_id')->constrained();
-            $table->foreignId('payment_type_id')->constrained();
+            $table->foreignId('payment_method_id')->nullable();
+            $table->foreignId('payment_type_id')->nullable();
             $table->integer('discount');
             $table->integer('qty');
             $table->integer('additional_fee');
@@ -31,6 +31,8 @@ class CreateTransactionsTable extends Migration
             $table->timestamps();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('payment_method_id')->references('id')->on('payment_methods')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

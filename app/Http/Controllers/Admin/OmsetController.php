@@ -29,7 +29,7 @@ class OmsetController extends Controller
                 ->join('transactions', 'items.id', '=', 'transactions.item_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->select('items.id', 'items.name', 'units.unit', 'categories.category', 'items.main_cost', 'items.price', DB::raw('sum(transactions.qty) as qty'), 'transactions.discount', DB::raw('((sum(transactions.qty) * items.price) - transactions.discount) as omset'), DB::raw('(((sum(transactions.qty) * items.price) - transactions.discount) - (sum(transactions.qty) * items.main_cost)) as profit'))
+                ->select('items.id', 'items.name', 'units.unit', 'categories.category', 'items.main_cost', 'items.price', DB::raw('sum(transactions.qty) as qty'), DB::raw('sum(transactions.discount) as discount'), DB::raw('((sum(transactions.qty) * items.price) - sum(transactions.discount)) as omset'), DB::raw('(((sum(transactions.qty) * items.price) - sum(transactions.discount)) - (sum(transactions.qty) * items.main_cost)) as profit'))
                 ->groupBy('transactions.item_id')
                 ->where('transactions.dept', $request->dept)
                 ->whereBetween('transactions.created_at', [$request->date_from, $request->date_to]);

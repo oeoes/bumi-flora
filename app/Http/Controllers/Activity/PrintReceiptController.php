@@ -170,6 +170,11 @@ class PrintReceiptController extends Controller
             $fee .= " ";
         }
 
+        // tax
+        for ($i = 18; $i < (48 - strlen($calc["tax"])); $i++) {
+            $tax .= " ";
+        }
+
         // bill
         for ($i=18; $i < (48 - strlen($calc["bill"])); $i++) { 
             $bill .= " ";

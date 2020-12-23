@@ -6,7 +6,7 @@ function store_transaction(e) {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            // item_id, qty, item_name, satuan, price, discount item
+            // item_id, qty, item_name, price, satuan, discount item
             item_data.push([items[i][0], items[i][4], items[i][1], items[i][5], items[i][3], items[i][7]])
         }
     }
@@ -41,7 +41,7 @@ function store_transaction(e) {
     }).catch(function (error) {
         console.log(error.response)      
     }).finally(function (e) {
-        // location.reload()
+        location.reload()
 
         $(e).text('Simpan & Bayar')
         $('#payment').modal('toggle')

@@ -193,7 +193,7 @@ class ItemController extends Controller
                 $flag = false;
                 continue;
             } else {
-                if(!Item::where('barcode', $line[0])->first()) {
+                if(!Item::where('barcode', $line[0])->first()) { // prevent duplicate item
                     $item = Item::create([
                         'barcode' => $line[0],
                         'name' => $line[1],

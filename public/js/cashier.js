@@ -87,20 +87,26 @@ function print_items() {
 }
 
 function print_total_price() {
-    let total_price = 0 + JSON.parse(localStorage.getItem('tax')) - JSON.parse(localStorage.getItem('discount'))
-    let items = JSON.parse(localStorage.getItem('items'))
+    let items = JSON.parse(localStorage.getItem('items'));
+    let tax = JSON.parse(localStorage.getItem('tax'));
+    let discount = JSON.parse(localStorage.getItem('discount'));
+    let additional_fee = JSON.parse(localStorage.getItem('additional_fee'));
+    let total_price = 0;
+    let total = 0;
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
             let pr = parseInt(items[i][4]) * parseInt(items[i][6])
-            total_price = total_price + (pr - (pr * parseInt(items[i][7]) / 100))
+            total += (pr - (pr * parseInt(items[i][7]) / 100))
         }
     }
+    total_price = (total + tax + additional_fee) - discount
     localStorage.setItem('total_price', total_price);
 
-    $('#total_price').text(total_price.toLocaleString())
-    $('#bill').text(total_price.toLocaleString())
-    $('#final_price').text(parseInt(total_price).toLocaleString())
+    $('#total_price').text(parseInt(total + tax).toLocaleString())
+    $('#bill').text(parseInt(total_price).toLocaleString())
+    $('#final_price').text(parseInt(total_price - additional_fee).toLocaleString())
+    $('#additional_fee_text').text(!additional_fee ? 0 : additional_fee);
 }
 
 
@@ -291,9 +297,8 @@ $(document).ready(function () {
             $('#cont_discount').css('display', 'none')
         }
 
-        let total = 0 + parseInt(localStorage.getItem('additional_fee')) + parseInt(localStorage.getItem('tax'))
+        let total = 0
         let items = JSON.parse(localStorage.getItem('items'))
-        let total_price = 0
 
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
@@ -306,10 +311,8 @@ $(document).ready(function () {
         let percentage_val = (total * $('#discount_value_percentage').val()) / 100
         $('#discount_value_nominal').val(percentage_val < 1 ? 0 : percentage_val)
         
-        // count total price
-        total_price = total - ((total * $('#discount_value_percentage').val()) / 100)
         // store to local storage
-        localStorage.setItem('discount', (total * $('#discount_value_percentage').val()) / 100)
+        localStorage.setItem('discount', Math.trunc(percentage_val))
         // print value to screen by id desired_discount_value
         $('#desired_discount_value').text($('#discount_value_percentage').val() + '%')
         
@@ -331,7 +334,6 @@ $(document).ready(function () {
 
         let total = 0
         let items = JSON.parse(localStorage.getItem('items'))
-        let total_price = 0
 
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
@@ -344,12 +346,10 @@ $(document).ready(function () {
         let nominal_val = $('#discount_value_nominal').val()
         $('#discount_value_percentage').val(nominal_val < 1 ? 0 : (100 * nominal_val / total).toFixed(2))
         
-        // count total price
-        total_price = total - $('#discount_value_nominal').val()
         // store to local storage
-        localStorage.setItem('discount', $('#discount_value_nominal').val())
+        localStorage.setItem('discount', nominal_val)
         // print value to screen by id desired_discount_value
-        $('#desired_discount_value').text(parseInt($('#discount_value_nominal').val()).toLocaleString())
+        $('#desired_discount_value').text(parseInt(nominal_val).toLocaleString())
 
         print_total_price()
     }));

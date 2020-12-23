@@ -113,10 +113,6 @@
                                                             <label>Harga Jual</label>
                                                             <input type="number" name="price" class="form-control" required>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label>Minimum Stock</label>
-                                                            <input type="number" name="min_stock" class="form-control" required>
-                                                        </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     @can('update')

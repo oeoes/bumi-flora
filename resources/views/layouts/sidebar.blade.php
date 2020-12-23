@@ -131,6 +131,11 @@
                             <span class="nav-text">E-Commerce</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cashier.cashier_ecommerce') }}">
+                            <span class="nav-text">Cashier E-Commerce</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="">
@@ -214,13 +219,6 @@
                 <a href="{{ route('cashier.index') }}">
                     <span class="nav-icon"><i data-feather='airplay'></i></span>
                     <span class="nav-text">Home</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="{{ route('cashier.cashier_ecommerce') }}">
-                    <span class="nav-icon"><i data-feather='airplay'></i></span>
-                    <span class="nav-text">Cashier E-Commerce</span>
                 </a>
             </li>
 

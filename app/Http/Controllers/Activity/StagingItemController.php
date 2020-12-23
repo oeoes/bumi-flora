@@ -63,7 +63,6 @@ class StagingItemController extends Controller
         $stage->update([
             'main_cost' => $request->main_cost,
             'price' => $request->price,
-            'min_stock' => $request->min_stock,
             'published' => 1
         ]);
         return back();

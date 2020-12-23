@@ -202,7 +202,8 @@
                 <input type="hidden" id="dept" value="utama">
             </div>
             <div class="modal-body">
-                <div class="h1 text-right mb-4">Rp. <span id="bill"></span></div>
+                <div class="h1 text-right">Rp. <span id="bill"></span></div>
+                <div class="text-right h5 mb-4 text-success">+<span id="additional_fee_text"></span> <small>(biaya lain)</small></div>
                 <div class="row">
                     <div class="col-6">
                         <label>Metode Bayar</label>

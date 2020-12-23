@@ -174,21 +174,8 @@ class RecordItemController extends Controller
     }
 
     public function online_transaction_history () {
-        $items = DB::table('transactions')
-                ->join('items', 'items.id', '=', 'transactions.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => 'ecommerce'])
-                ->latest()
-                ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
-                ->get();
 
-        return view('pages.persediaan.transaksi-online-history')->with('items', $items);
+        return view('pages.persediaan.transaksi-online-history');
     }
 
     public function get_transaction_data ($dept) {
@@ -198,8 +185,8 @@ class RecordItemController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                 ->where(['transactions.dept' => $dept])
                 ->latest()
                 ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
@@ -215,8 +202,8 @@ class RecordItemController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                 ->where(['transactions.dept' => $dept])
                 ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
                 ->latest()
@@ -229,8 +216,8 @@ class RecordItemController extends Controller
     public function detail_transaction_history ($transaction_id, $dept) {
         $transaction = Transaction::find($transaction_id);
         $base_transaction = DB::table('transactions')
-                        ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                        ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                        ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                        ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                         ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                         ->where(['transactions.id' => $transaction_id, 'transactions.dept' => $dept])
                         ->select('transactions.id', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name')
@@ -243,8 +230,8 @@ class RecordItemController extends Controller
                 ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                 ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number])
                 ->orderBy('transactions.created_at')
                 ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.additional_fee', 'transactions.tax', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')

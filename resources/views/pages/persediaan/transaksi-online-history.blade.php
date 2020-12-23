@@ -38,16 +38,6 @@
                         </td>
                         <td style="">
                             <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.method_name}
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.type_name}
-                            </span>
-                        </td>
-                        <td style="">
-                            <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.customer == null ? "Umum" : data.customer}
                             </span>
                         </td>
@@ -112,16 +102,6 @@
                                     <td style="">
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.quantity}
-                                        </span>
-                                    </td>
-                                    <td style="">
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.method_name}
-                                        </span>
-                                    </td>
-                                    <td style="">
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.type_name}
                                         </span>
                                     </td>
                                     <td style="">
@@ -199,14 +179,6 @@
                                         </th>
                                         <th style="" data-field="itemtype">
                                             <div class="th-inner">Quantity</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Payment Method</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th style="" data-field="itemtype">
-                                            <div class="th-inner">Payment Type</div>
                                             <div class="fht-cell"></div>
                                         </th>
 
