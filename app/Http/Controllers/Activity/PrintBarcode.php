@@ -9,34 +9,18 @@ use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\CapabilityProfile;
+use Illuminate\Support\Facades\Storage;
 
-// zebra libs
-use Zebra\Client;
-use Zebra\Zpl\Image;
-use Zebra\Zpl\Builder;
-use Zebra\Zpl\GdDecoder;
 
 class PrintBarcode extends Controller
 {
-    public function zpl_printing()
-    {
-        $decoder = GdDecoder::fromPath(storage_path('app/barcodes/barcode.png'));
-        $image = new Image($decoder);
-
-        $zpl = new Builder();
-        $zpl->fo(50, 50)->gf($image)->fs();
-
-        $client = new Client('127.0.0.1');
-        $client->send($zpl);
-    }
-
     public static function print_barcode_to_papper()
     {
         $profile = CapabilityProfile::load("simple");
 
-        $logo = EscposImage::load(storage_path('app/barcodes/barcode.png'), false);
+        $barcode = EscposImage::load(storage_path('app/barcodes/barcode.png'), false);
 
-        $connector = new WindowsPrintConnector("xprinter");
+        $connector = new WindowsPrintConnector("epson");
         // $connector = new FilePrintConnector("epson");
 
 
@@ -44,11 +28,19 @@ class PrintBarcode extends Controller
         $printer = new Printer($connector, $profile);
         $printer->initialize();
 
-        $printer->setTextSize(2, 2);
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->bitImage($logo);
+        // $printer->setTextSize(2, 2);
+        // $printer->setJustification(Printer::JUSTIFY_LEFT);
+        // $printer->bitImage($barcode);
 
-        $printer->feed();
+        // $printer->feed();
+
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
+        $printer->text("Height and bar width\n");
+        $printer->selectPrintMode();
+        $printer->text("Default look\n");
+        $printer->setBarcodeHeight(48);
+        $printer->setBarcodeWidth(8);
+        $printer->barcode("20640629376", Printer::BARCODE_CODE39); 
 
 
         /* Height and width */
@@ -76,10 +68,13 @@ class PrintBarcode extends Controller
         // $printer->setBarcodeHeight(40);
         // $printer->setBarcodeWidth(2);
         /* Text position */
-        $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
+        // $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
 
         $printer->cut();
         /* Close printer */
         $printer->close();
+
+        // delete file
+        Storage::delete('app/barcodes/barcode.png');
     }
 }

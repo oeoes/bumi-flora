@@ -169,13 +169,14 @@ class CashierController extends Controller
                 ]);
             }
 
+            $price = (integer) $item[3];
             // array data receipt
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => $item[3],
+                "price" => $price,
                 "qty" => $item[1],
-                "total" => $item[5] == 0 ? $item[3] * $item[1] : ($item[3] * $item[1] - ($item[3] * $item[1]) * $item[5] / 100),
+                "total" => $item[5] == 0 ? ($price * $item[1]) : ($price * $item[1] - ((($price * $item[1]) * $item[5]) / 100)),
                 "discount" => $item[5],
             ];
             // push ke array load data receipt
@@ -202,6 +203,7 @@ class CashierController extends Controller
                 ]);
             }
         }
+        return $print_items;
 
         try {
             if ($request->dept !== 'ecommerce') { // kalau bukan ecomerce baru cetak receipt
@@ -210,6 +212,7 @@ class CashierController extends Controller
                 $calc = [
                     "total_price" => $total_price,
                     "customer" => $request->customer,
+                    "overall_discount" => $request->discount,
                     "fee" => $request->additional_fee,
                     "tax" => $request->tax,
                     "bill" => $bill,

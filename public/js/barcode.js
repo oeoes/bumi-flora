@@ -50,7 +50,7 @@ function generate() {
 
 function print_barcode() {
     $('#print').text('Printing...')
-    axios.post('/barcodes/print', {
+    axios.post('/app/barcodes/print', {
         item_id: $('#item_id').val()
     }).then(function (response) {
         alert(response.data.message);
