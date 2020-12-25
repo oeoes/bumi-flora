@@ -21,21 +21,27 @@ class StockOpnameExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return DB::table('items')
+        $data = DB::table('items')
                 ->leftJoin('storage_records', 'items.id', '=', 'storage_records.item_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('balances', 'items.id', '=', 'balances.item_id')
                 ->join('stocks', 'items.id', '=', 'stocks.item_id')
-                ->select('items.name', 'items.barcode', 'units.unit', 'categories.category', 'balances.dept', 'items.cabinet', 'balances.amount as balance', DB::raw('IFNULL(sum(storage_records.amount_in), 0) as amount_in'), DB::raw('IFNULL(sum(storage_records.amount_out), 0) as amount_out'), DB::raw('((IFNULL(sum(storage_records.amount_in), 0) + balances.amount) - IFNULL(sum(storage_records.amount_out), 0)) as akhir'))
+                ->select('items.name', 'items.barcode', 'units.unit', 'categories.category', 'balances.dept', 'items.cabinet', 'balances.amount as balance', DB::raw('IFNULL(sum(storage_records.amount_in), 0) as amount_in'), DB::raw('IFNULL(sum(storage_records.amount_out), 0) as amount_out'), DB::raw('((IFNULL(sum(storage_records.amount_in), 0) + balances.amount) - IFNULL(sum(storage_records.amount_out), 0)) as buku'), DB::raw('((IFNULL(sum(storage_records.amount_in), 0) + balances.amount) - IFNULL(sum(storage_records.amount_out), 0)) as fisik'), DB::raw('((IFNULL(sum(storage_records.amount_in), 0) + balances.amount) - IFNULL(sum(storage_records.amount_out), 0)) as selisih'))
                 ->where(['items.cabinet' => $this->request->cabinet, 'categories.id' => $this->request->category, 'storage_records.dept' => $this->request->dept, 'stocks.dept' => $this->request->dept, 'balances.dept' => $this->request->dept])
                 ->whereBetween('items.created_at', [$this->request->from, $this->request->to])
                 ->groupBy('storage_records.item_id')
                 ->get();
+        
+        foreach ($data as $key => $dt) {
+            $dt->fisik = $this->request->data_input[$key];
+            $dt->selisih = $this->request->data_input[$key] - $dt->buku;
+        }
+        return $data;
     }
 
     public function headings(): array
     {
-        return ["Item", "Barcode", "Satuan", "Jenis", "Dept", "Rak", "Awal", 'Masuk', 'Keluar', 'Akhir'];
+        return ["Item", "Barcode", "Satuan", "Jenis", "Dept", "Rak", "Awal", 'Masuk', 'Keluar', 'Buku', 'Fisik', 'Selisih'];
     }
 }

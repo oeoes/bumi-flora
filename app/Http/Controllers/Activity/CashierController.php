@@ -220,10 +220,8 @@ class CashierController extends Controller
                     "cashback" => $request->payment_type != 1 ? '-' : $request->nominal - $bill,
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
-
-                return response()->json(['calc' => $calc, 'items' => $print_items], 400);
                 // print receipt
-                // PrintReceiptController::print_receipt($print_items, $calc);
+                PrintReceiptController::print_receipt($print_items, $calc);
             }
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()], 400);

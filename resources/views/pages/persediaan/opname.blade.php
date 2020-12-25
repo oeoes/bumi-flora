@@ -13,7 +13,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -28,7 +27,7 @@
         <div class="row no-gutters">
             <div class="col-md-9">
                 <div class="table-responsive">
-                    <table class="table table-theme v-middle table-hover" >
+                    <table class="table table-theme v-middle table-hover">
                         <thead>
                             <tr>
                                 <th><span class="text-muted">Item</span></th>
@@ -39,14 +38,14 @@
                                 <th><span class="text-muted">Awal</span></th>
                                 <th><span class="text-muted">Masuk</span></th>
                                 <th><span class="text-muted">Keluar</span></th>
-                                <th><span class="text-muted">Buku</span></th>
-                                <th><span class="text-muted">Fisik</span></th>
+                                <th class="text-center"><span class="text-muted">Buku</span></th>
+                                <th class="text-center"><span class="text-muted">Fisik</span></th>
                                 <th><span class="text-muted">Selisih</span></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="data-opname">
-                            
+
                         </tbody>
                     </table>
                 </div>
