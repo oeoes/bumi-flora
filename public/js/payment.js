@@ -16,10 +16,10 @@ function store_transaction(e) {
         payment_type: localStorage.getItem('payment_type'),
         discount: localStorage.getItem('discount'),
         customer: $('#customer').val(),
-        additional_fee: $('#additional_fee').val(),
-        tax: localStorage.getItem('tax'),
+        additional_fee: parseInt($('#additional_fee').val()),
+        tax: parseInt(localStorage.getItem('tax')),
         dept: $('#dept').val(),
-        nominal: $('#nominal').val(),
+        nominal: parseInt($('#nominal').val()),
         transaction_id: $('#id-edit-transaction').val() ? $('#id-edit-transaction').val() : ''
     }).then(function (response) {
         if (response.data.status == true) {

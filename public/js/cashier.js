@@ -234,7 +234,8 @@ $(document).ready(function () {
         if (items != null) {
             for (let i = 0; i < items.length; i++) {
                 if (items[i][0] == $(this).attr('id')) {
-                    items[i][7] = $(this).val() // increase or decrease qty
+                    items[i][7] = $(this).val() // increase or decrease discount
+                    items[i][5] = items[i][6] - Math.trunc(items[i][6] * items[i][7] / 100); // update price
                 }
             }
         }
@@ -273,6 +274,16 @@ $(document).ready(function () {
 
         localStorage.setItem('items', JSON.stringify(items));
 
+        // set tax and discount to 0
+        $('#discount_value_percentage').val(0);
+        $('#discount_value_nominal').val(0);
+        $('#tax_percentage').val(0);
+        $('#tax_nominal').val(0);
+        localStorage.setItem('discount', 0);
+        localStorage.setItem('tax', 0);
+        $('#cont_discount').css('display', 'none')
+
+        // print items
         print_accumulate()
         print_total_price()
     }))
@@ -400,10 +411,10 @@ $(document).ready(function () {
 
         // write tax value percentage to nominal value
         let tax_percentage_val = (total_price * parseInt($('#tax_percentage').val()) / 100)
-        $('#tax_nominal').val(tax_percentage_val)
+        $('#tax_nominal').val(Math.trunc(tax_percentage_val))
 
         if ($('#tax_percentage').val() > 0) {
-            localStorage.setItem('tax', tax_percentage_val)
+            localStorage.setItem('tax', Math.trunc(tax_percentage_val))
 
             print_total_price()
 
