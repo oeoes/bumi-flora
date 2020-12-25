@@ -21,7 +21,7 @@
         }
         ?>
         items.push(temp_items)
-        temp_items = []
+        temp_items = [];
     <?php
     }
     ?>
@@ -156,9 +156,7 @@
                             <div class="h1 text-right">Rp. <span id="final_price"></span></div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#cancle_payment">Reset [ , ]</button>
                         <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#payment">Bayar [ . ]</button>
-                        <button class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#pending_payment">Pending [ / ]</button>
                     </div>
                 </div>
             </div>
