@@ -156,6 +156,7 @@ class PrintReceiptController extends Controller
         }
         $printer -> text("------------------------------------------------\n");
         $qty = "ITEM: ". count($items). "; QTY: ". $sum_qty ." "; // 18 col
+        $discount = "Diskon           =";
         $fee = "Biaya Lain       =";
         $tax = "Pajak            =";
         $bill = "Total Akhir      =";
@@ -165,8 +166,13 @@ class PrintReceiptController extends Controller
         for ($i=18; $i < (48 - strlen($calc["total_price"]))+1; $i++) { 
             $qty .= " ";
         }
+        // discount
+        for ($i=18; $i < (48 - strlen($calc["discount"])); $i++) { 
+            $discount .= " ";
+        }
+
         // fee
-        for ($i=18; $i < (48 - strlen($calc["fee"])); $i++) { 
+        for ($i = 18; $i < (48 - strlen($calc["fee"])); $i++) {
             $fee .= " ";
         }
 
@@ -189,6 +195,7 @@ class PrintReceiptController extends Controller
             $cashback .= " ";
         }
         $printer -> text($qty . $calc["total_price"] . "\n");
+        $printer -> text($discount . $calc["discount"] . "\n");
         $printer -> text($fee . $calc["fee"] . "\n");
         $printer -> text($tax . $calc["tax"] . "\n");
         $printer -> text($bill . $calc["bill"] . "\n");

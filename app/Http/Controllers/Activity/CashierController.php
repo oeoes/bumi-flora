@@ -175,7 +175,7 @@ class CashierController extends Controller
                 "satuan" => $item[4],
                 "price" => $item[3],
                 "qty" => $item[1],
-                "total" => $item[5] == 0 ? $item[3] * $item[1] : ($item[3] * $item[1] - ($item[3] * $item[1]) * $item[5] / 100),
+                "total" => $item[3] * $item[1],
                 "discount" => $item[5],
             ];
             // push ke array load data receipt
@@ -205,11 +205,12 @@ class CashierController extends Controller
 
         try {
             if ($request->dept !== 'ecommerce') { // kalau bukan ecomerce baru cetak receipt
-                $bill = $total_price + $request->tax + $request->additional_fee;
+                $bill = $total_price + $request->tax + $request->additional_fee - $request->discount;
 
                 $calc = [
                     "total_price" => $total_price,
                     "customer" => $request->customer,
+                    "discount" => $request->discount,
                     "fee" => $request->additional_fee,
                     "tax" => $request->tax,
                     "bill" => $bill,
@@ -217,10 +218,8 @@ class CashierController extends Controller
                     "cashback" => $request->payment_type != 1 ? '-' : $request->nominal - $bill,
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
-
-                return response()->json(['calc' => $calc, 'items' => $print_items], 500);
                 // print receipt
-                // PrintReceiptController::print_receipt($print_items, $calc);
+                PrintReceiptController::print_receipt($print_items, $calc);
             }
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()], 400);
