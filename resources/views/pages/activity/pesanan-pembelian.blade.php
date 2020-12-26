@@ -5,17 +5,17 @@
 
 @section('btn-custom')
 <div>
-    <button onclick="window.history.back()" class="btn btn-sm text-muted">
+    <a href="{{ route('storages.gudang') }}" class="btn btn-sm text-muted">
         <i data-feather="arrow-left"></i>
         <span class="d-none d-sm-inline mx-1">Back</span>
-    </button>
+    </a>
 </div>
 @endsection
 
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">
-        <div class="row">            
+        <div class="row">
             <div class="col-md-6">
                 <div class="card p-4 sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
                     <form method="post" action="{{ route('orders.store') }}">
@@ -28,9 +28,9 @@
                         <div class="form-group">
                             <label class="text-muted" for="stake_holder">Supplier</label>
                             <select name="stake_holder_id" id="stake_holder" class="form-control" required>
-                            @foreach($suppliers as $supplier)
+                                @foreach($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                            @endforeach
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group">
                             <label class="text-muted" for="description">Deskripsi</label>
-                            <textarea class="form-control" name="description" id="description" cols="3" rows="5"></textarea>
+                            <textarea class="form-control" name="description" id="description" cols="3" rows="5">-</textarea>
                         </div>
                         <div class="text-muted mb-2"><small>* ) important field</small></div>
                         <button type="submit" class="btn btn-primary">Add Item</button>
@@ -53,7 +53,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <img style="max-width: 100%" src="{{ $item->image }}" alt="">
+                        <img style="max-width: 100%" src="" alt="">
                         <div class="h2"><strong>{{ $item->name }}</strong></div>
                         <div class="h5">Rp.{{ number_format($item->price, 2) }}</div>
                         <table class="table table-theme v-middle table-hover table-responsive">
@@ -63,11 +63,7 @@
                             </tr>
                             <tr>
                                 <th>Code</th>
-                                <td>{{ $item->code }}</td>
-                            </tr>
-                            <tr>
-                                <th>Type</th>
-                                <td>{{ strtoupper($item->type) }}</td>
+                                <td>{{ $item->barcode }}</td>
                             </tr>
                             <tr>
                                 <th>Category</th>
@@ -82,12 +78,8 @@
                                 <td>{{ $item->cabinet }}</td>
                             </tr>
                             <tr>
-                                <th>Sale status</th>
-                                @if($item->sale_status == 1)
-                                <td>Masih Dijual</td>
-                                @else
-                                <td>Tidak Dijual</td>
-                                @endif
+                                <th>Stock</th>
+                                <td>{{ $item->stock }}</td>
                             </tr>
                             <tr>
                                 <th>Cost</th>
@@ -108,8 +100,8 @@
                         </table>
                     </div>
                 </div>
-            </div> 
-        </div>        
+            </div>
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>

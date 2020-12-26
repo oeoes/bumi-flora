@@ -28,6 +28,7 @@ class CreateItemsTable extends Migration
             $table->string('main_cost')->nullable(); # harga pokok
             $table->integer('price')->nullable(); # harga jual
             $table->string('barcode')->unique();
+            $table->string('item_code')->nullable();
             $table->integer('min_stock')->default(0);
             $table->tinyInteger('published')->default(0);
             $table->timestamps();

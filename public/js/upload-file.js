@@ -43,6 +43,8 @@ $(document).ready(function () {
                 $('#upload-text').text('Upload')
                 $('#import').modal('toggle')
 
+                $('#upload-file').prop('disabled', false)
+
                 location.reload()
             })
         }

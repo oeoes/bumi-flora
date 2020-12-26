@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\DB;
 class GrosirItemController extends Controller
 {
     public function index () {
-        $items = Item::all();
+        $items = DB::table('items')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->select('items.*', 'units.unit')->get();
+            
         $grosir_items = DB::table('items')
                     ->join('units', 'units.id', '=', 'items.unit_id')
                     ->join('grosir_items', 'items.id', '=', 'grosir_items.item_id')

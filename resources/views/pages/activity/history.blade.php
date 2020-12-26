@@ -39,54 +39,54 @@
                 <tbody>
                     @foreach($orders as $key => $order)
                         <tr class=" " data-id="1">
-                            <td style="">
+                            <td>
                                 <div class="text-muted text-sm">
                                     <button class="btn btn-sm btn-light rounded-pill p-2 m-2" data-toggle="modal" data-target="#item{{$key}}"><i data-feather='search'></i></button>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     <button class="btn btn-sm btn-light rounded-pill p-2 m-2" data-toggle="modal" data-target="#sup-home{{$key}}"><i data-feather='search'></i></button>
                                 </span>                                
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     {{ $order->created_at }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     {{ $order->shipping_date }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     {{ $order->amount }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     <div class="btn-group">
                                         <span class="text-success">{{ $order->accepted }}</span>
                                     </div>
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
-                                    Rp.{{ number_format($order->price, 2) }}
+                                    Rp.{{ number_format($order->main_cost, 2) }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm ">
-                                    Rp.{{ number_format($order->price * $order->amount, 2) }}
+                                    Rp.{{ number_format($order->main_cost * $order->amount, 2) }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     {{ $order->description }}
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <span class="item-amount d-sm-block text-sm">
                                     @if($order->status == 0)
                                     <span class="badge badge-warning text-uppercase">Ongoing</span>
@@ -95,7 +95,7 @@
                                     @endif
                                 </span>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="item-action dropdown">
                                     <a href="#" data-toggle="dropdown" class="text-muted">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -138,7 +138,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary pr-4 pl-4" data-dismiss="modal">Close</button>
                                 </div>
                                 </div>
                             </div>
@@ -168,7 +168,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary pr-4 pl-4" data-dismiss="modal">Close</button>
                                 </div>
                                 </div>
                             </div>
@@ -195,8 +195,8 @@
                                         </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-sm rounded-pill btn-primary">Save</button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary pr-4 pl-4">Close</button>
+                                    <button type="submit" class="btn btn-sm rounded-pill btn-outline-primary pr-4 pl-4">Save</button>
                                     </form>
                                 </div>
                                 </div>

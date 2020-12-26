@@ -20,7 +20,7 @@ class CreateOrdersTable extends Migration
             $table->integer('amount');
             $table->integer('accepted')->default(0);
             $table->date('shipping_date');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
 

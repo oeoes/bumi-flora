@@ -85,6 +85,7 @@ class ItemController extends Controller
             'barcode' => $request->barcode,
             'price' => $request->price,
             'min_stock' => $request->min_stock,
+            'published' => 1
         ]);
 
         self::create_saldo_awal($item->id, 'utama');
@@ -94,15 +95,15 @@ class ItemController extends Controller
         return back();
     }
 
-    public static function create_saldo_awal ($item_id, $dept) {
+    public static function create_saldo_awal ($item_id, $dept, $amount=0) {
         Balance::create([
             'item_id' => $item_id,
-            'amount' => 0,
+            'amount' => $amount,
             'dept' => $dept,
         ]);
         Stock::create([
             'item_id' => $item_id,
-            'amount' => 0,
+            'amount' => $amount,
             'dept' => $dept,
         ]);
     }
@@ -174,8 +175,46 @@ class ItemController extends Controller
         return redirect()->route('items.index');
     }
 
-    public function export_item () {
-        return Excel::download(new MasterDataExport, 'master-data.xlsx');
+    public function export_item ($dept) {
+        return Excel::download(new MasterDataExport($dept), 'master-data.xlsx');
+    }
+
+    /**
+     * Generate barcode string value for new imported item
+     */
+    public static function generate_barcode_value ($length) {
+        $barcode = '';
+        for ($i=0; $i < $length; $i++) { 
+            $barcode .= rand(0,9);
+        }
+        return $barcode;
+    }
+
+    /**
+     * $line : row of imported csv
+     * @return void
+     */
+    public static function store_imported_item ($line, $barcode) {
+        $item = Item::create([
+            'item_code' => $line[0],
+            'barcode' => $barcode,
+            'name' => $line[2],
+            'category_id' => self::findOrCreate('category', $line[3]),
+            'unit_id' => self::findOrCreate('unit', $line[4]),
+            'brand_id' => self::findOrCreate('brand', $line[5]),
+            'base_unit' => $line[6],
+            'base_unit_conversion' => $line[7],
+            'main_cost' => $line[8],
+            'price' => $line[9],
+            'min_stock' => $line[11],
+            'cabinet' => self::isNull($line[14]),
+            'stake_holder_id' => self::isNull($line[16]),
+            'description' => self::isNull($line[17]),
+            'published' => 1
+        ]);
+
+        self::create_saldo_awal($item->id, 'utama');
+        self::create_saldo_awal($item->id, 'gudang', $line[10]);
     }
 
     public function import_item () {
@@ -193,29 +232,13 @@ class ItemController extends Controller
                 $flag = false;
                 continue;
             } else {
-                if(!Item::where('barcode', $line[0])->first()) { // prevent duplicate item
-                    $item = Item::create([
-                        'barcode' => $line[0],
-                        'name' => $line[1],
-                        'category_id' => self::findOrCreate('category', $line[2]),
-                        'unit_id' => self::findOrCreate('unit', $line[3]),
-                        'brand_id' => self::findOrCreate('brand', $line[4]),
-                        'base_unit' => $line[5],
-                        'base_unit_conversion' => $line[6],
-                        'main_cost' => $line[7],
-                        'price' => $line[8],
-                        'min_stock' => $line[9],
-                        'cabinet' => self::isNull($line[10]),
-                        'stake_holder_id' => self::isNull($line[11]),
-                        'description' => self::isNull($line[12]),
-                    ]);
-
-                    self::create_saldo_awal($item->id, 'utama');
-                    self::create_saldo_awal($item->id, 'gudang');   
-                self::create_saldo_awal($item->id, 'gudang');
-                    self::create_saldo_awal($item->id, 'gudang');   
-                self::create_saldo_awal($item->id, 'gudang');
-                    self::create_saldo_awal($item->id, 'gudang');   
+                $barcode = self::generate_barcode_value(11);
+                if(!Item::where('item_code', $line[0])->first() && !Item::where('barcode', $barcode)->first()) { // prevent duplicate item
+                    try {
+                         self::store_imported_item($line, $barcode);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => false, 'message' => 'error: '. $th->getMessage()], 400);
+                    }
                 }
             }
         }
@@ -230,7 +253,7 @@ class ItemController extends Controller
      */
     public static function findOrCreate ($entity, $key) {
         if ($entity == 'unit') {
-            $unit = Unit::where('unit', strtolower($key))->first();
+            $unit = Unit::where('unit', $key)->first();
             if ($unit) {
                 return $unit->id;
             } else {
@@ -239,7 +262,7 @@ class ItemController extends Controller
             }
         }
         else if ($entity == 'brand') {
-            $brand = Brand::where('brand', strtolower($key))->first();
+            $brand = Brand::where('brand', $key)->first();
             if($brand) {
                 return $brand->id;
             } else {
@@ -248,7 +271,7 @@ class ItemController extends Controller
             }
         }
         else {
-            $category = Category::where('category', strtolower($key))->first();
+            $category = Category::where('category', $key)->first();
             if($category) {
                 return $category->id;
             } else {

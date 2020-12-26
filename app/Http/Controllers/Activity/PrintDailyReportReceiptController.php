@@ -15,7 +15,7 @@ class PrintDailyReportReceiptController extends Controller
     public static function print_daily_report_receipt ($data) {
 
         
-        $connector = new WindowsPrintConnector("zahra");
+        $connector = new WindowsPrintConnector("epson");
 
         /* initiate printer */
         $printer = new Printer($connector);

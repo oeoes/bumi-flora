@@ -89,7 +89,7 @@ function print_items() {
 function print_total_price() {
     let items = JSON.parse(localStorage.getItem('items'));
     let tax = JSON.parse(localStorage.getItem('tax'));
-    let discount = JSON.parse(localStorage.getItem('discount'));
+    let discount = JSON.parse(localStorage.getItem('discount')) + JSON.parse(localStorage.getItem('customer_discount'));
     let additional_fee = JSON.parse(localStorage.getItem('additional_fee'));
     let total_price = 0;
     let total = 0;
@@ -279,7 +279,10 @@ $(document).ready(function () {
         $('#discount_value_nominal').val(0);
         $('#tax_percentage').val(0);
         $('#tax_nominal').val(0);
+        $('#customer').val('umum');
+        $('#discount-info').text('');
         localStorage.setItem('discount', 0);
+        localStorage.setItem('customer_discount', 0);
         localStorage.setItem('tax', 0);
         $('#cont_discount').css('display', 'none')
 
@@ -297,10 +300,6 @@ $(document).ready(function () {
 
     // perhitungan discount percentage
     $(document).on('keyup', '#discount_value_percentage', (function () {
-        // reset discount customer
-        $('#customer').val('umum');
-        localStorage.setItem('customer_discount', 0)
-        $('#discount-info').text('')
         // show/hide text for discount
         if ($('#discount_value_percentage').val() > 0) {
             $('#cont_discount').css('display', 'block')
@@ -332,10 +331,6 @@ $(document).ready(function () {
 
     // perhitungan discount nominal
     $(document).on('keyup', '#discount_value_nominal', (function () {
-        // reset discount customer
-        $('#customer').val('umum');
-        localStorage.setItem('customer_discount', 0)
-        $('#discount-info').text('')
         // show/hide text for discount
         if ($('#discount_value_nominal').val() > 0) {
             $('#cont_discount').css('display', 'block')
@@ -458,43 +453,49 @@ $(document).ready(function () {
 
     // get customer discount
     $(document).on('change', '#customer', function () {
-        let current_total_price = JSON.parse(localStorage.getItem('total_price'))
-        let current_discount = JSON.parse(localStorage.getItem('discount'))
-        let customer_discount = JSON.parse(localStorage.getItem('customer_discount'))
+        let items = JSON.parse(localStorage.getItem('items'));
+        let total = 0;
 
+        if (items != null) {
+            for (let i = 0; i < items.length; i++) {
+                let pr = parseInt(items[i][4]) * parseInt(items[i][6])
+                total += (pr - (pr * parseInt(items[i][7]) / 100))
+            }
+        }
+        
         if ($('#customer').val() != 'umum') {
             axios.get(`/app/discounts/customer/${$('#customer').val()}`)
                 .then(function (response) {
-                    let disc = response.data.status ? current_total_price * (response.data.data[0].value / 100) : ''
+                    // hitung potongannya berapa
+                    let disc = response.data.status ? Math.trunc(total * (response.data.data[0].value / 100)) : 0;
 
+                    // bila discount customer tersedia
                     if (response.data.status == true) {
                         $('#cont_discount').css('display', 'block')
 
-                        $('#discount-info').text(`Discount available: -${response.data.data[0].value}%`)
-                        localStorage.setItem('customer_discount', disc)
+                        $('#discount-info').text(`Discount available: -${response.data.data[0].value}%`);
+                        localStorage.setItem('customer_discount', disc); // simpan discount ke localStorage
 
-                        current_total_price = current_total_price - disc
-
-                        localStorage.setItem('total_price', current_total_price);
-                        localStorage.setItem('discount', (current_discount + disc));
+                        print_total_price();
 
                     } else {
-                        current_total_price = current_total_price + customer_discount
+                        localStorage.setItem('customer_discount', 0);
+                        $('#discount-info').text('');
 
-                        localStorage.setItem('total_price', current_total_price);
-                        localStorage.setItem('discount', current_discount - customer_discount)
-                        localStorage.setItem('customer_discount', 0)
-                        $('#discount-info').text('')
+                        JSON.parse(localStorage.getItem('discount')) > 0 ? '' : $('#cont_discount').css('display', 'none');
 
-                        JSON.parse(localStorage.getItem('discount')) > 0 ? '' : $('#cont_discount').css('display', 'none')
-
-                        
+                        print_total_price();
                     }
-                }).finally(function () {
-                    $('#final_price').text(parseInt(current_total_price).toLocaleString())
-                    $('#bill').text(current_total_price.toLocaleString())
-                })
+                });
         }
+        else {
+            localStorage.setItem('customer_discount', 0);
+            $('#discount-info').text('');
+
+            JSON.parse(localStorage.getItem('discount')) > 0 ? '' : $('#cont_discount').css('display', 'none');
+
+            print_total_price();
+         }
     })
 
 });

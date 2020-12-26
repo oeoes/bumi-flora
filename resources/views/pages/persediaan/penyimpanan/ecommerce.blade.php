@@ -3,6 +3,12 @@
 @section('page-title', 'Penyimpanan E-Commerce')
 @section('page-description', 'Daftar item pada penyimpanan ecommerce.')
 
+@section('btn-custom')
+<a href="{{ route('items.export-item', ['dept' => 'ecommerce']) }}" class="btn btn-sm text-muted">
+    <span class="d-none d-sm-inline mx-1">Export</span>
+    <i data-feather="upload-cloud"></i>
+</a>
+@endsection
 
 @section('custom-js')
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -14,16 +20,16 @@
 @endsection
 
 @section('custom-css')
-    <link  href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
-    <style>
-        @media only screen and (max-width: 600px) {
-            .my-responsive {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-            }
+<link href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
+<style>
+    @media only screen and (max-width: 600px) {
+        .my-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
         }
-    </style>
+    }
+</style>
 @endsection
 
 @section('content')
@@ -280,10 +286,10 @@
                 </div>
             </div>
 
-            
+
         </div>
 
-        
+
         <div class="clearfix"></div>
     </div>
 </div>

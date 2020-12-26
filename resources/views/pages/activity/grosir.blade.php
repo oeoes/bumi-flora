@@ -195,21 +195,21 @@
                                             <table id="data-item"
                                                 class="table my-responsive table-theme v-middle table-hover"
                                                 style="margin-top: 0px;">
-                                                <thead style="">
+                                                <thead>
                                                     <tr>
-                                                        <th style="" data-field="type">
+                                                        <th data-field="type">
                                                             <div class="th-inner">Nama</div>
                                                             <div class="fht-cell"></div>
                                                         </th>
-                                                        <th style="" data-field="itemtype">
+                                                        <th data-field="itemtype">
                                                             <div class="th-inner">Satuan</div>
                                                             <div class="fht-cell"></div>
                                                         </th>
-                                                        <th style="" data-field="itemtype">
+                                                        <th data-field="itemtype">
                                                             <div class="th-inner">Harga Pokok</div>
                                                             <div class="fht-cell"></div>
                                                         </th>
-                                                        <th style="" data-field="itemtype">
+                                                        <th data-field="itemtype">
                                                             <div class="th-inner">Harga Jual</div>
                                                             <div class="fht-cell"></div>
                                                         </th>
@@ -219,22 +219,22 @@
                                                 <tbody>
                                                     @foreach($items as $key => $item)
                                                     <tr class=" " data-index="0" data-id="17">
-                                                        <td style="">
+                                                        <td>
                                                             <div class="text-muted text-sm">
                                                                 {{ $item->name }}
                                                             </div>
                                                         </td>
-                                                        <td style="">
+                                                        <td>
                                                             <span class="item-amount d-sm-block text-sm">
                                                                 {{ $item->unit }}
                                                             </span>
                                                         </td>
-                                                        <td style="">
+                                                        <td>
                                                             <span class="item-amount d-sm-block text-sm">
                                                                 Rp.{{ number_format($item->main_cost, 2) }}
                                                             </span>
                                                         </td>
-                                                        <td style="">
+                                                        <td>
                                                             <span class="item-amount d-sm-block text-sm">
                                                                 Rp.{{ number_format($item->price, 2) }}
                                                             </span>

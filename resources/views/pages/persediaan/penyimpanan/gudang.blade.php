@@ -3,6 +3,12 @@
 @section('page-title', 'Penyimpanan Gudang')
 @section('page-description', 'Daftar item pada penyimpanan gudang.')
 
+@section('btn-custom')
+<a href="{{ route('items.export-item', ['dept' => 'gudang']) }}" class="btn btn-sm text-muted">
+    <span class="d-none d-sm-inline mx-1">Export</span>
+    <i data-feather="upload-cloud"></i>
+</a>
+@endsection
 
 @section('custom-css')
 <link href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
@@ -14,7 +20,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -24,8 +29,7 @@
         <div class="row">
             <div class="col-md-9">
                 <div class="table-responsive">
-                    <table id="item-gudang" class="table my-responsive table-theme v-middle table-hover"
-                        style="margin-top: 0px;">
+                    <table id="item-gudang" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                         <thead style="">
                             <tr class="bg-light">
                                 <th><span class="text-muted">No.</span></th>
@@ -102,17 +106,13 @@
                                 </td>
                                 <td style="">
                                     <div class="item-action dropdown">
-                                        <span style="cursor: pointer" class="nav-icon" data-toggle="modal"
-                                            data-target="#options{{$key}}" data-toggle-class="modal-open-aside"
-                                            data-toggle-class-target=".animate"><i
-                                                data-feather='more-vertical'></i></span>
+                                        <span style="cursor: pointer" class="nav-icon" data-toggle="modal" data-target="#options{{$key}}" data-toggle-class="modal-open-aside" data-toggle-class-target=".animate"><i data-feather='more-vertical'></i></span>
                                     </div>
                                 </td>
                             </tr>
 
                             <!-- modal options -->
-                            <div id="options{{$key}}" class="modal fade" data-backdrop="true" style="display: none;"
-                                aria-hidden="true">
+                            <div id="options{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog modal-right w-xl" data-class="fade-down">
                                     <div class="modal-content h-100 no-radius">
                                         <div class="modal-header ">
@@ -120,18 +120,14 @@
                                             <button class="close" data-dismiss="modal">×</button>
                                         </div>
                                         <div class="modal-body">
-                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal"
-                                                data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo
+                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#saldoawal{{$key}}" data-toggle-class="fade-down">Saldo
                                                 Awal</button>
-                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal"
-                                                data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan
+                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#masuk{{$key}}" data-toggle-class="fade-down">Buat Laporan
                                                 Item Masuk</button>
                                             <!-- <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#keluar{{$key}}" data-toggle-class="fade-down">Buat Laporan Item Keluar</button> -->
-                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal"
-                                                data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer
+                                            <button class="btn btn-sm btn-primary mb-1" data-toggle="modal" data-target="#transfer{{$key}}" data-toggle-class="fade-down">Transfer
                                                 Item</button>
-                                            <a href="{{ route('orders.show', ['order' => $item->id]) }}"
-                                                class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
+                                            <a href="{{ route('orders.show', ['order' => $item->id]) }}" class="btn btn-sm btn-primary mb-1">Pesanan Pembelian</a>
                                         </div>
                                     </div>
                                     <!-- /.modal-content -->
@@ -139,8 +135,7 @@
                             </div>
 
                             <!-- modal saldo awal -->
-                            <div id="saldoawal{{$key}}" class="modal fade" data-backdrop="true" style="display: none;"
-                                aria-hidden="true">
+                            <div id="saldoawal{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog animate" data-class="fade-down">
                                     <div class="modal-content ">
                                         <div class="modal-header ">
@@ -148,15 +143,12 @@
                                             <button class="close" data-dismiss="modal">×</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form
-                                                action="{{ route('storages.update', ['storage' => $item->balance_id]) }}"
-                                                method="post">
+                                            <form action="{{ route('storages.update', ['storage' => $item->balance_id]) }}" method="post">
                                                 @method('PUT')
                                                 @csrf
                                                 <div class="form-group">
                                                     <label>Jumlah saldo</label>
-                                                    <input type="number" name="amount" class="form-control"
-                                                        value="{{ $item->amount }}" min="0">
+                                                    <input type="number" name="amount" class="form-control" value="{{ $item->amount }}" min="0">
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
@@ -169,8 +161,7 @@
                             </div>
 
                             <!-- modal item masuk -->
-                            <div id="masuk{{$key}}" class="modal fade" data-backdrop="true" style="display: none;"
-                                aria-hidden="true">
+                            <div id="masuk{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog animate" data-class="fade-up">
                                     <div class="modal-content ">
                                         <div class="modal-header ">
@@ -184,18 +175,15 @@
                                                 <input type="hidden" name="type" value="in">
                                                 <div class="form-group">
                                                     <label>Masuk Ke</label>
-                                                    <input type="text" class="form-control" name="dept" readonly
-                                                        value="gudang">
+                                                    <input type="text" class="form-control" name="dept" readonly value="gudang">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Amount</label>
-                                                    <input type="number" min="0" class="form-control" name="amount"
-                                                        required>
+                                                    <input type="number" min="0" class="form-control" name="amount" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Deskripsi</label>
-                                                    <textarea class="form-control" name="description" cols="3"
-                                                        rows="3"></textarea>
+                                                    <textarea class="form-control" name="description" cols="3" rows="3"></textarea>
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
@@ -208,8 +196,7 @@
                             </div>
 
                             <!-- modal item keluar -->
-                            <div id="keluar{{$key}}" class="modal fade" data-backdrop="true" style="display: none;"
-                                aria-hidden="true">
+                            <div id="keluar{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog animate" data-class="fade-right">
                                     <div class="modal-content ">
                                         <div class="modal-header ">
@@ -223,23 +210,19 @@
                                                 <input type="hidden" name="type" value="out">
                                                 <div class="form-group">
                                                     <label>Transaction Number</label>
-                                                    <input type="text" class="form-control" name="transaction_no"
-                                                        required>
+                                                    <input type="text" class="form-control" name="transaction_no" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Keluar Dari</label>
-                                                    <input type="text" class="form-control" name="dept" readonly
-                                                        value="gudang">
+                                                    <input type="text" class="form-control" name="dept" readonly value="gudang">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Amount</label>
-                                                    <input type="number" min="0" class="form-control" name="amount"
-                                                        required>
+                                                    <input type="number" min="0" class="form-control" name="amount" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Deskripsi</label>
-                                                    <textarea class="form-control" name="description" cols="3"
-                                                        rows="3"></textarea>
+                                                    <textarea class="form-control" name="description" cols="3" rows="3"></textarea>
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
@@ -252,8 +235,7 @@
                             </div>
 
                             <!-- modal transfer item -->
-                            <div id="transfer{{$key}}" class="modal fade" data-backdrop="true" style="display: none;"
-                                aria-hidden="true">
+                            <div id="transfer{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog animate" data-class="fade-right">
                                     <div class="modal-content ">
                                         <div class="modal-header ">
@@ -266,8 +248,7 @@
                                                 <input type="hidden" name="item_id" value="{{ $item->id }}">
                                                 <div class="form-group">
                                                     <label>Dari</label>
-                                                    <input name="from" type="text" class="form-control" value="gudang"
-                                                        readonly>
+                                                    <input name="from" type="text" class="form-control" value="gudang" readonly>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Ke</label>
@@ -278,12 +259,10 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Jumlah Transfer</label>
-                                                    <input type="number" min="0" max="{{ $item->stock }}"
-                                                        class="form-control" name="amount" required>
+                                                    <input type="number" min="0" max="{{ $item->stock }}" class="form-control" name="amount" required>
                                                     <small class="text-muted"><span class="text-danger">Maksimum jumlah
                                                             yang akan ditransfer tidak bolah melebihi stock
-                                                            tersedia.</span> <br> Stock: <span
-                                                            class="text-info">{{ $item->stock }}</span></small>
+                                                            tersedia.</span> <br> Stock: <span class="text-info">{{ $item->stock }}</span></small>
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
@@ -311,8 +290,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Barcode</label>
-                                <input class="form-control" type="text" class="form-contro"
-                                    name="filter[items.barcode]">
+                                <input class="form-control" type="text" class="form-contro" name="filter[items.barcode]">
                             </div>
                             <div class="form-group">
                                 <label for="categories">Category</label>

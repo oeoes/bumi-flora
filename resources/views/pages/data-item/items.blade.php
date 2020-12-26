@@ -14,10 +14,6 @@
         <span class="d-none d-sm-inline mx-1">Import</span>
         <i data-feather="download-cloud"></i>
     </button>
-    <a href="{{ route('items.export-item') }}" class="btn btn-sm text-muted" >
-        <span class="d-none d-sm-inline mx-1">Export</span>
-        <i data-feather="upload-cloud"></i>
-    </a>
 
     <!-- modal import data item -->
     <div id="import" class="modal fade" da ta-backdrop="true" tyle="display: none;" aria-hidden="true">

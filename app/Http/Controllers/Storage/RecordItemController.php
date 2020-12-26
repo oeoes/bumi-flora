@@ -331,6 +331,9 @@ class RecordItemController extends Controller
         ]]);
     }
 
+    /**
+     * get data untuk diretrieve ke halaman edit kasir
+     */
     public static function transaction_toArray ($barcode, $dept, $quantity) {
         $item = DB::table('items')
             ->join('stocks', 'items.id', '=', 'stocks.item_id')

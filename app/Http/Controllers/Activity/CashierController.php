@@ -206,10 +206,10 @@ class CashierController extends Controller
         try {
             if ($request->dept !== 'ecommerce') { // kalau bukan ecomerce baru cetak receipt
                 $bill = $total_price + $request->tax + $request->additional_fee - $request->discount;
-
+                $cust = StakeHolder::find($request->customer);
                 $calc = [
                     "total_price" => $total_price,
-                    "customer" => $request->customer,
+                    "customer" => $cust->name,
                     "discount" => $request->discount,
                     "fee" => $request->additional_fee,
                     "tax" => $request->tax,
