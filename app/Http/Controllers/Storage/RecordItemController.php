@@ -144,6 +144,7 @@ class RecordItemController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
+                ->where(['items.deleted_at' => NULL])
                 ->select('balances.amount', 'balances.id as balance_id', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'brands.brand');
     }
 
@@ -152,7 +153,8 @@ class RecordItemController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
                 ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
-                ->where('storage_records.amount_in', '!=', 'NULL')->get();
+                ->where('storage_records.amount_in', '!=', 'NULL')
+                ->where(['items.deleted_at' => NULL])->get();
         return view('pages.persediaan.item-masuk')->with('items', $items);
     }
 
@@ -161,7 +163,8 @@ class RecordItemController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
                 ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
-                ->where('storage_records.amount_out', '!=', 'NULL')->get();
+                ->where('storage_records.amount_out', '!=', 'NULL')
+                ->where(['items.deleted_at' => NULL])->get();
 
         return view('pages.persediaan.item-keluar')->with('items', $items);
     }
@@ -308,7 +311,7 @@ class RecordItemController extends Controller
             ->leftJoin('discounts as discount_items', 'items.id', '=', 'discount_items.item_id')
             ->leftJoin('discount_periodes as discount_periode_item', 'discount_items.id', '=', 'discount_periode_item.discount_id')
             ->leftJoin('discount_periodes as discount_periode_category', 'discount_categories.id', '=', 'discount_periode_category.discount_id')
-            ->where('stocks.dept', $transaction->dept)
+            ->where(['stocks.dept' => $transaction->dept,'items.deleted_at' => NULL])
             ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discount_items.value * CAST(discount_items.status as UNSIGNED), 0) as discount_item'), DB::raw('IFNULL(discount_categories.value * CAST(discount_categories.status as UNSIGNED), 0) as discount_category'), DB::raw('items.price - (IFNULL((items.price * discount_categories.value / 100) * CAST(discount_categories.status as UNSIGNED), 0)) as price_category'), DB::raw('items.price - (IFNULL((items.price * discount_items.value / 100) * CAST(discount_items.status as UNSIGNED), 0)) as price_item'), 'discount_periode_category.occurences as category_occurences', 'discount_periode_item.occurences as item_occurences', DB::raw('IFNULL(grosir_items.minimum_item, 0) as minimum_item'), 'grosir_items.price as grosir_price')->get();
 
         foreach ($transactions as $trans) {

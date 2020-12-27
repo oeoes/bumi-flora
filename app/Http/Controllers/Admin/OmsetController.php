@@ -18,7 +18,7 @@ class OmsetController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->where('balances.dept', 'utama')
+                ->where(['balances.dept' => 'utama','items.deleted_at' => NULL])
                 ->select('items.name', 'items.id', 'items.price', 'items.main_cost', 'units.unit')->get();
 
         return view('pages.admin.omset')->with(['categories' => $categories, 'items' => $items]);
@@ -31,7 +31,7 @@ class OmsetController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->select('items.id', 'items.name', 'units.unit', 'categories.category', 'items.main_cost', 'items.price', DB::raw('sum(transactions.qty) as qty'), DB::raw('sum(transactions.discount) as discount'), DB::raw('sum(transactions.discount_item) as discount_item'), DB::raw('sum(transactions.discount_customer) as discount_customer'), DB::raw('((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) as omset'), DB::raw('(((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) - (sum(transactions.qty) * items.main_cost)) as profit'))
                 ->groupBy('transactions.item_id')
-                ->where('transactions.dept', $request->dept)
+                ->where(['transactions.dept' => $request->dept,'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
                 ->whereBetween('transactions.created_at', [$request->date_from, $request->date_to]);
         $omset = self::omset_query($query, $request)->get();
         return response()->json(['status' => true, 'data' => $omset]);

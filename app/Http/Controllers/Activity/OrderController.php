@@ -24,8 +24,9 @@ class OrderController extends Controller
                     ->join('stocks', 'items.id', '=', 'stocks.item_id')
                     ->join('stake_holders', 'orders.stake_holder_id', '=', 'stake_holders.id')
                     ->select('orders.*', 'items.name', 'items.main_cost', 'units.unit', 'stake_holders.name as supplier_name', 'stake_holders.address', 'stocks.dept')
-                    ->where('stocks.dept', 'gudang')->where('orders.status', 0)
+                    ->where(['stocks.dept' => 'gudang', 'orders.status' => 0, 'items.deleted_at' => NULL])
                     ->get();
+
         return view('pages.activity.index')->with('orders', $orders);
     }
 
@@ -66,7 +67,7 @@ class OrderController extends Controller
             ->join('categories', 'categories.id', '=', 'items.category_id')
             ->join('brands', 'brands.id', '=', 'items.brand_id')
             ->join('stocks', 'stocks.item_id', '=', 'items.id')
-            ->where(['stocks.dept' => 'gudang', 'items.id' => $id])
+            ->where(['stocks.dept' => 'gudang', 'items.id' => $id,'items.deleted_at' => NULL])
             ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'stocks.dept', 'stocks.amount as stock')
             ->first();
         $suppliers = StakeHolder::where('type', 'supplier')->get();
@@ -114,7 +115,7 @@ class OrderController extends Controller
                     ->join('stocks', 'items.id', '=', 'stocks.item_id')
                     ->join('stake_holders', 'orders.stake_holder_id', '=', 'stake_holders.id')
                     ->select('orders.*', 'items.name', 'items.main_cost', 'units.unit', 'stake_holders.name as supplier_name', 'stake_holders.address', 'stocks.dept')
-                    ->where('stocks.dept', 'gudang')->where('orders.status', 1)
+                    ->where(['stocks.dept' => 'gudang', 'orders.status' => 1,'items.deleted_at' => NULL])
                     ->get();
         return view('pages.activity.history')->with('orders', $orders);
     }

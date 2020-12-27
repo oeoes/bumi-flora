@@ -67,13 +67,14 @@ class DiscountController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->where('balances.dept', 'utama')
+                ->where(['balances.dept' => 'utama','items.deleted_at' => NULL])
                 ->select('items.name', 'items.id', 'items.price', 'items.main_cost', 'units.unit')->get();
 
         $discounts = DB::table('discounts')
                     ->leftJoin('categories', 'categories.id', '=', 'discounts.category_id')
                     ->leftJoin('items', 'items.id', '=', 'discounts.item_id')
                     ->join('discount_periodes', 'discounts.id', '=', 'discount_periodes.discount_id')
+                    ->where(['items.deleted_at' => NULL])
                     ->select('discounts.id as discount_item_id', 'discounts.promo_name', 'discounts.promo_item_type', 'discounts.promo_name', 'discounts.status', 'discounts.value', 'categories.category', 'categories.id as category_id', 'items.name', 'items.id as item_id', 'discount_periodes.occurences')->get();
 
         return view('pages.admin.discount-item')->with(['items' => $items, 'categories' => $categories, 'discounts' => $discounts]);
