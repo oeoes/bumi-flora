@@ -13,13 +13,15 @@ function push_data(id, item, barcode, unit, qty, price, original_price, discount
             if (id == items[i][0]) {
                 if (stock - qty < 0) {
                     alert('Stock tidak boleh kurang dari 0')
+                    location.reload();
                 } else {
                     items[i][4] = parseInt(items[i][4]) + 1
                     $(`#${id}`).val(items[i][4])
                     // pastikan stock tidak sampe 0 setelah pembelian
                     if (items[i][8] - $(`#${id}`).val() < 0) {
                         alert('Stock tidak boleh kurang dari 0')
-                        $(`#${id}`).val(0)
+                        items[i][4] = parseInt(items[i][4]) - 1
+                        location.reload();
                     }
                     
                     // set kondisi untuk grosir_price
@@ -239,7 +241,7 @@ $(document).ready(function () {
     }))
 
     // scan barcode on paste
-    $(document).on('keydown', '#item_code', (function () {
+    $(document).on('keyup', '#item_code', (function () {
         if ($('#item_code').val().length > 0) {
             axios.get('/cashier/check', {
                     params: {
@@ -293,7 +295,8 @@ $(document).ready(function () {
                 if (items[i][0] == $(this).attr('id')) {
                     if (items[i][8] - $(this).val() < 0) {
                         alert('Stock tidak boleh kurang dari 0')
-                        $(this).val(0)
+                        $(this).val(0);
+                        location.reload();
                     } else {
                         items[i][4] = $(this).val() // increase or decrease qty
 

@@ -123,8 +123,15 @@ class RecordItemController extends Controller
      */
     public function destroy(Transaction $record)
     {
+        $dept = $record->dept;
+
         $record->delete();
-        return back();
+
+        if($dept === 'ecommerce') {
+            return redirect()->route('records.online_transaction_history');
+        } else {
+            return redirect()->route('records.offline_transaction_history');
+        }
     }
 
     public static function items_balance_query () {
