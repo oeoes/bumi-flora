@@ -14,6 +14,8 @@
             <th>Harga Jual</th>
             <th>Kuantitas</th>
             <th>Diskon</th>
+            <th>Dis. Item</th>
+            <th>Dis. Customer</th>
             <th>Pendapatan</th>
             <th>Laba</th>
         </tr>
@@ -28,12 +30,14 @@
             <td>{{ $om->price }}</td>
             <td>{{ $om->qty }}</td>
             <td>{{ $om->discount }}</td>
+            <td>{{ $om->discount_item }}</td>
+            <td>{{ $om->discount_customer }}</td>
             <td>{{ $om->omset }}</td>
             <td>{{ $om->profit }}</td>
         </tr>
         @endforeach
         <tr>
-            <td colspan="7"><strong style="font-wigh: 600">Total</strong></td>
+            <td colspan="9"><strong style="font-wigh: 600">Total</strong></td>
             <td><strong style="font-wigh: 600">Rp.{{ number_format($total_omset, 2) }}</strong></td>
             <td><strong style="font-wigh: 600">Rp.{{ number_format($total_profit, 2) }}</strong> </td>
         </tr>

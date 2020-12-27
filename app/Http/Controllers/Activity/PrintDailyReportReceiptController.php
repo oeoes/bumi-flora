@@ -35,9 +35,9 @@ class PrintDailyReportReceiptController extends Controller
         $printer -> text("TOT. BIAYA      : ". $data[3] ."\n");
         $printer -> text("TOTAL           : ". $data[4] ."\n");
         $printer -> text("BAYAR TUNAI     : ". $data[5] ."\n");
-        $printer -> text("BAYAR E-WALLET  : ". $data[6] ."\n");
-        $printer -> text("BAYAR DEBIT     : ". $data[7] ."\n");
-        $printer -> text("BAYAR TRANSFER  : ". $data[8] ."\n");
+        $printer -> text("BAYAR DEBIT     : ". $data[6] ."\n");
+        $printer -> text("BAYAR TRANSFER  : ". $data[7] ."\n");
+        $printer -> text("BAYAR E-WALLET  : ". $data[8] ."\n");
         $printer -> text("BAYAR KREDIT    : ". $data[9] ."\n");
         $printer -> text("------------------------------------------------\n");
         $printer -> text("JAM CETAK       : ". Carbon::now()->format('Y-m-d H:i:s') ." \n");

@@ -238,9 +238,9 @@ $(document).ready(function () {
 
     }))
 
-    // scan barcode
-    $(document).on('input', '#item_code', (function () {
-        if ($('#item_code').val().length > 1) {
+    // scan barcode on paste
+    $(document).on('keydown', '#item_code', (function () {
+        if ($('#item_code').val().length > 0) {
             axios.get('/cashier/check', {
                     params: {
                         code: $('#item_code').val(),

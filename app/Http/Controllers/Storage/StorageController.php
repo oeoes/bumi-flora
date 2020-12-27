@@ -104,7 +104,7 @@ class StorageController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('stocks', 'stocks.item_id', '=', 'items.id')
-                ->where('balances.dept', $dept)->where('stocks.dept', $dept)
+                ->where(['balances.dept' => $dept,'stocks.dept' => $dept, 'items.deleted_at' => NULL])
                 ->select('balances.id as balance_id', 'balances.amount', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'stocks.amount as stock')
                 ->orderBy('items.name')
                 ->allowedFilters([

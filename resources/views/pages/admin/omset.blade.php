@@ -18,7 +18,6 @@
     .hide-el {
         display: none;
     }
-
 </style>
 @endsection
 
@@ -27,7 +26,7 @@
 <script src="{{ asset('js/axios.js') }}"></script>
 <script src="{{ asset('js/omset.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#data-item').DataTable();
     });
 </script>
@@ -86,19 +85,15 @@
                             <label>Item</label>
                             <div class="row no-gutters">
                                 <div class="col-10">
-                                    <input id="item_name" type="text" class="form-control"
-                                        style="border-radius: 4px 0 0 4px!important" placeholder="select item" readonly>
+                                    <input id="item_name" type="text" class="form-control" style="border-radius: 4px 0 0 4px!important" placeholder="select item" readonly>
                                     <input id="item_id" type="hidden" class="form-control">
                                 </div>
-                                <div class="col-2"><button class="btn btn-primary"
-                                        style="border-radius: 0 4px 4px 0!important" data-toggle="modal"
-                                        data-target="#pilih-item">Select</button></div>
+                                <div class="col-2"><button class="btn btn-primary" style="border-radius: 0 4px 4px 0!important" data-toggle="modal" data-target="#pilih-item">Select</button></div>
                             </div>
                         </div>
 
                         <!-- Modal pilih item -->
-                        <div class="modal fade" id="pilih-item" tabindex="-1" role="dialog"
-                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="pilih-item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -108,9 +103,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <table id="data-item"
-                                            class="table my-responsive table-theme v-middle table-hover"
-                                            style="margin-top: 0px;">
+                                        <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                             <thead style="">
                                                 <tr>
                                                     <th style="" data-field="type">
@@ -156,10 +149,7 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <button
-                                                            onclick="select_item('{{ $item->id }}', '{{ $item->name }}')"
-                                                            class="btn btn-sm btn-primary rounded-pill"><i
-                                                                data-feather='check'></i></button>
+                                                        <button onclick="select_item('{{ $item->id }}', '{{ $item->name }}')" class="btn btn-sm btn-primary rounded-pill"><i data-feather='check'></i></button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -175,8 +165,7 @@
                     </div>
                     <div class="col-2">
                         <div class="form-group mt-2">
-                            <button id="omset-run-sort"
-                                class="btn btn-sm btn-primary rounded-pill mt-4 pl-3 pr-3">View</button>
+                            <button id="omset-run-sort" class="btn btn-sm btn-primary rounded-pill mt-4 pl-3 pr-3">View</button>
                         </div>
                     </div>
                 </div>
@@ -191,6 +180,8 @@
                                 <th><span class="text-muted">Harga Jual</span></th>
                                 <th><span class="text-muted">Kuantitas</span></th>
                                 <th><span class="text-muted">Diskon</span></th>
+                                <th><span class="text-muted">Dis. Item</span></th>
+                                <th><span class="text-muted">Dis. Customer</span></th>
                                 <th><span class="text-muted">Pendapatan</span></th>
                                 <th><span class="text-muted">Laba</span></th>
                             </tr>

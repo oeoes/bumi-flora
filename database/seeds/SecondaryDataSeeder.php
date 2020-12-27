@@ -13,7 +13,19 @@ class SecondaryDataSeeder extends Seeder
      */
     public function run()
     {
-        $method = PaymentMethod::create(['method_name' => 'Cash']);
-        PaymentType::create(['payment_method_id' => $method->id, 'type_name' => 'Tunai']);
+        $types = [
+            ['Tunai'],
+            ['BCA', 'Mandiri', 'BRI', 'BNI'],
+            ['BCA', 'Mandiri', 'BRI', 'BNI'],
+            ['OVO', 'GoPay', 'LinkAja', 'ShopeePay']
+        ];
+        $methods = ['Cash', 'Debit', 'Transfer', 'E-wallet'];
+        foreach($methods as $key => $method) {
+            $mt = PaymentMethod::create(['method_name' => $method]);
+            foreach ($types[$key] as $type) {
+                PaymentType::create(['payment_method_id' => $mt->id, 'type_name' => $type]);
+            }
+            
+        }        
     }
 }
