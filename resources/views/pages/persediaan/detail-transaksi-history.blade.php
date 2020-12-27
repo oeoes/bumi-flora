@@ -66,6 +66,16 @@
                                     <td>{{ !$base->customer ? 'Umum' : $base->customer }}</td>
                                 </tr>
                                 <tr>
+                                    <td>Pajak</td>
+                                    <td> : </td>
+                                    <td>Rp.{{ number_format($base->tax) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Biaya lain</td>
+                                    <td> : </td>
+                                    <td>Rp.{{ number_format($base->additional_fee) }}</td>
+                                </tr>
+                                <tr>
                                     <td><a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a></td>
                                     <td></td>
                                     <td></td>
@@ -103,11 +113,11 @@
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th data-field="itemtype">
-                                            <div class="th-inner">Biaya Lain</div>
+                                            <div class="th-inner">Disc. Item</div>
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th data-field="itemtype">
-                                            <div class="th-inner">Pajak</div>
+                                            <div class="th-inner">Disc. Customer</div>
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th data-field="itemtype">
@@ -156,12 +166,12 @@
                                         </td>
                                         <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->additional_fee }}
+                                                {{ $item->discount_item }}
                                             </span>
                                         </td>
                                         <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
-                                                {{ $item->tax }}
+                                                {{ $item->discount_customer }}
                                             </span>
                                         </td>
                                         <td>
@@ -171,47 +181,6 @@
                                             @endcan
                                         </td>
                                     </tr>
-
-                                    <!-- item modal edit -->
-                                    <div id="edit-item{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
-                                        <div class="modal-dialog ">
-                                            <div class="modal-content ">
-                                                <div class="modal-header ">
-                                                    <div class="modal-title text-md">Edit Item</div>
-                                                    <button class="close" data-dismiss="modal">×</button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="post" action="{{ route('records.update', ['record' => $item->transaction_id]) }}">
-                                                        @method('PUT')
-                                                        @csrf
-                                                        <div class="form-group">
-                                                            <label>Quantity</label>
-                                                            <input name="qty" type="text" class="form-control" value="{{ $item->qty }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Discount (Rp)</label>
-                                                            <input name="discount" type="text" class="form-control" value="{{ $item->discount }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Biaya Lain</label>
-                                                            <input name="additional_fee" type="text" class="form-control" value="{{ $item->additional_fee }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Pajak</label>
-                                                            <input name="tax" type="text" class="form-control" value="{{ $item->tax }}">
-                                                        </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4">Save
-                                                        Changes</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                    </div>
-
                                     <!-- item modal delete -->
                                     <div id="delete-item{{ $key }}" class="modal fade" data-backdrop="true" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog ">

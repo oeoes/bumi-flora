@@ -40,11 +40,12 @@ $(document).ready(function () {
                 let profit = 0
 
                 response.data.data.forEach(element => {
-                    $('#data-omset').append('<tr><td>' + element.name + '</td><td>' + element.unit + '</td><td>' + element.category + '</td><td>Rp.' + parseInt(element.main_cost).toLocaleString() + '</td><td>Rp.' + parseInt(element.price).toLocaleString() + '</td><td>' + element.qty + '</td><td>Rp.' + parseInt(element.discount).toLocaleString() + '</td><td>Rp.' + parseInt(element.omset).toLocaleString() + '</td><td>Rp.' + parseInt(element.profit).toLocaleString() + '</td></tr>')
+                    $('#data-omset').append(`<tr><td>${element.name}</td><td>${element.unit}</td><td>${element.category}</td><td>Rp.${parseInt(element.main_cost).toLocaleString()}</td><td>Rp.${parseInt(element.price).toLocaleString()}</td><td>${element.qty}</td><td>Rp.${parseInt(element.discount).toLocaleString()}</td><td>Rp.${parseInt(element.omset).toLocaleString()}</td><td id="laba_${element.id}">Rp.${parseInt(element.profit).toLocaleString()}</td></tr>`)
+                    element.profit > 0 ? $(`#laba_${element.id}`).addClass('text-success') : $(`#laba_${element.id}`).addClass('text-danger');
                     omset = omset + parseInt(element.omset)
                     profit = profit + parseInt(element.profit)
                 });
-                $('#data-omset').append('<tr><td colspan="7" align="left">Total</td><td><b style="font-weight: 600">Rp.' + parseInt(omset).toLocaleString() + '</b></td><td><b style="font-weight: 600">Rp.' + parseInt(profit).toLocaleString() + '</b></td></tr>')
+                $('#data-omset').append(`<tr><td colspan="7" align="left">Total</td><td><b style="font-weight: 600">Rp.${parseInt(omset).toLocaleString()}</b></td><td><b style="font-weight: 600">Rp.${parseInt(profit).toLocaleString()}</b></td></tr>`)
                 $('#data-omset').append('<tr><td colspan="9" align="right"><span id="export-omset" class="btn btn-sm btn-outline-primary" style="cursor: pointer">Export</span></td></tr>')
             } else {
                 state = false

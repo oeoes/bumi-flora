@@ -220,7 +220,7 @@ class RecordItemController extends Controller
                         ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                         ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                         ->where(['transactions.id' => $transaction_id, 'transactions.dept' => $dept])
-                        ->select('transactions.id', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name')
+                        ->select('transactions.id', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name', 'transactions.tax', 'transactions.additional_fee')
                         ->first();
 
         $items = DB::table('transactions')
@@ -234,7 +234,7 @@ class RecordItemController extends Controller
                 ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                 ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number])
                 ->orderBy('transactions.created_at')
-                ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.additional_fee', 'transactions.tax', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')
+                ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.discount_item', 'transactions.discount_customer', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')
                 ->get();
 
         return view('pages.persediaan.detail-transaksi-history')->with(['items' => $items, 'base' => $base_transaction]);
@@ -298,7 +298,7 @@ class RecordItemController extends Controller
         // data seluruh transaksi
         $transactions = DB::table('transactions')->join('items', 'items.id', '=', 'transactions.item_id')
                     ->where('transactions.transaction_number', $transaction->transaction_number)
-                    ->select('items.barcode', 'transactions.dept', 'transactions.qty')
+                    ->select('items.barcode', 'transactions.dept', 'transactions.qty', 'transactions.discount_item', 'items.price', 'transactions.qty')
                     ->get();
 
         // item untuk di modal search item
@@ -316,6 +316,7 @@ class RecordItemController extends Controller
 
         foreach ($transactions as $trans) {
             $item = self::transaction_toArray($trans->barcode, $trans->dept, $trans->qty);
+            $item['discount'] = $trans->discount_item > 0 ? ($trans->discount_item * 100) / ($trans->qty * $trans->price) : 0;
             array_push($list_of_items, [$item['id'], $item['name'], $item['barcode'], $item['unit'], $item['qty'], $item['price'], $item['original_price'], $item['discount'], $item['stock'], $item['minimum_item'], $item['grosir_price'], $item['before_grosir_price']]);
         }
 
@@ -326,7 +327,7 @@ class RecordItemController extends Controller
             'tax' => $transaction->tax,
             'additional_fee' => $transaction->additional_fee,
             'payment_type' => $transaction->payment_type_id,
-            'discount' => $transaction->discount,
+            'discount' => $transaction->discount * count($transactions),
             'cashier_items' => $list_of_items
         ]]);
     }

@@ -53,6 +53,11 @@
     $(document).ready(function() {
         $('#kasir-data-item').DataTable();
     });
+
+    // set pajak, discount, additional_fee ke 0
+    localStorage.setItem('discount', 0);
+    localStorage.setItem('tax', 0);
+    localStorage.setItem('additional_fee', 0);
 </script>
 @endsection
 

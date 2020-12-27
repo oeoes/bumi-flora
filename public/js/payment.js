@@ -14,7 +14,8 @@ function store_transaction(e) {
     axios.post('/cashier/store', {
         items: item_data,
         payment_type: localStorage.getItem('payment_type'),
-        discount: parseInt(localStorage.getItem('discount')) + parseInt(localStorage.getItem('customer_discount')),
+        discount: parseInt(localStorage.getItem('discount')),
+        customer_discount: parseInt(localStorage.getItem('customer_discount')),
         customer: $('#customer').val(),
         additional_fee: parseInt($('#additional_fee').val()),
         tax: parseInt(localStorage.getItem('tax')),

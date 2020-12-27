@@ -23,6 +23,8 @@ class CreateTransactionsTable extends Migration
             $table->foreignId('payment_method_id')->nullable();
             $table->foreignId('payment_type_id')->nullable();
             $table->integer('discount');
+            $table->integer('discount_item')->default(0);
+            $table->integer('discount_customer')->default(0);
             $table->integer('qty');
             $table->integer('additional_fee');
             $table->integer('tax');

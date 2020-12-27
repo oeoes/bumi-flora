@@ -50,12 +50,8 @@ class CashierController extends Controller
             ->join('stocks', 'items.id', '=', 'stocks.item_id')
             ->join('units', 'units.id', '=', 'items.unit_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
-            ->leftJoin('discounts as discount_categories', 'categories.id', '=', 'discount_categories.category_id')
-            ->leftJoin('discounts as discount_items', 'items.id', '=', 'discount_items.item_id')
-            ->leftJoin('discount_periodes as discount_periode_item', 'discount_items.id', '=', 'discount_periode_item.discount_id')
-            ->leftJoin('discount_periodes as discount_periode_category', 'discount_categories.id', '=', 'discount_periode_category.discount_id')
             ->where('stocks.dept', 'ecommerce')
-            ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discount_items.value * CAST(discount_items.status as UNSIGNED), 0) as discount_item'), DB::raw('IFNULL(discount_categories.value * CAST(discount_categories.status as UNSIGNED), 0) as discount_category'), DB::raw('items.price - (IFNULL((items.price * discount_categories.value / 100) * CAST(discount_categories.status as UNSIGNED), 0)) as price_category'), DB::raw('items.price - (IFNULL((items.price * discount_items.value / 100) * CAST(discount_items.status as UNSIGNED), 0)) as price_item'), 'discount_periode_category.occurences as category_occurences', 'discount_periode_item.occurences as item_occurences')->get();
+            ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as price')->get();
         $customer = StakeHolder::where('type', 'customer')->distinct()->get();
         $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
 
@@ -234,12 +230,18 @@ class CashierController extends Controller
         $previous_qty = Transaction::where(['transaction_number' => $transaction->transaction_number, 'item_id' => $item[0]])->first();
         $stock = Stock::where(['item_id' => $item[0], 'dept' => $request->dept])->first();
 
+        // ngitung discount item
+        $default_item = Item::find($item[0]);
+        $discount_item = ($default_item->price * $item[1]) - ($item[3] * $item[1]);
+
         $transaction->update([
             'stake_holder_id' => $request->customer,
             'qty' => $item[1],
             'payment_method_id' => $payment_type->payment_method_id,
             'payment_type_id' => $payment_type->id,
-            'discount' => $request->discount,
+            'discount' => ($request->discount / count($request->items)), // discount keseluruhan dibagi banyaknya item yg dibeli
+            'discount_item' => $discount_item, // discount item
+            'discount_customer' => ($request->customer_discount / count($request->items)), // discount customer
             'additional_fee' => $request->additional_fee,
             'tax' => $request->tax,
         ]);
@@ -269,7 +271,9 @@ class CashierController extends Controller
             'dept' => $request->dept,
             'payment_method_id' => $payment_type ? $payment_type->payment_method_id : NULL,
             'payment_type_id' => $payment_type ? $payment_type->id : NULL,
-            'discount' => ($request->discount / count($request->items)) + $discount_item, // discount keseluruhan dibagi banyaknya item yg dibeli
+            'discount' => ($request->discount / count($request->items)), // discount keseluruhan dibagi banyaknya item yg dibeli
+            'discount_item' => $discount_item, // discount item
+            'discount_customer' => ($request->customer_discount / count($request->items)), // discount customer
             'additional_fee' => $request->additional_fee,
             'tax' => $request->tax,
             'transaction_time' => $time

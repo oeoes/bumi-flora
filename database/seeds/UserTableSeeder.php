@@ -1,7 +1,7 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class UserTableSeeder extends Seeder
 {
@@ -12,12 +12,14 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        $user = User::create([
             'name' => 'Admin Bumi Flora',
             'email' => 'admin@bumiflora.com',
             'phone' => '-',
             'role' => 'admin',
             'password' => bcrypt('adminbumiflora'),
         ]);
+
+        $user->syncRoles('root');
     }
 }
