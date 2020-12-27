@@ -195,9 +195,9 @@ class CashierController extends Controller
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => $item[3],
+                "price" => number_format($item[3]),
                 "qty" => $item[1],
-                "total" => $item[3] * $item[1],
+                "total" => number_format($item[3] * $item[1]),
                 "discount" => $item[5],
             ];
             // push ke array load data receipt
@@ -230,14 +230,14 @@ class CashierController extends Controller
                 $bill = $total_price + $request->tax + $request->additional_fee - $request->discount;
                 $cust = StakeHolder::find($request->customer);
                 $calc = [
-                    "total_price" => $total_price,
+                    "total_price" => number_format($total_price),
                     "customer" => $cust->name,
-                    "discount" => $request->discount,
-                    "fee" => $request->additional_fee,
-                    "tax" => $request->tax,
-                    "bill" => $bill,
-                    "cash" => $request->payment_type != 1 ? $payment_type->type_name : $request->nominal,
-                    "cashback" => $request->payment_type != 1 ? '-' : $request->nominal - $bill,
+                    "discount" => number_format($request->discount),
+                    "fee" => number_format($request->additional_fee),
+                    "tax" => number_format($request->tax),
+                    "bill" => number_format($bill),
+                    "cash" => $request->payment_type != 1 ? $payment_type->type_name : number_format($request->nominal),
+                    "cashback" => $request->payment_type != 1 ? '-' : number_format($request->nominal - $bill),
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
                 // print receipt
