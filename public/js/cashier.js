@@ -250,7 +250,9 @@ $(document).ready(function () {
                     }
                 })
                 .then(function (response) {
+                    let isScanned = false;
                     if (response.data.status == true) {
+                        isScanned = true;
                         let item = response.data.data
                         let amount = item.stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
                         if (item.stock > 0) {
@@ -261,6 +263,10 @@ $(document).ready(function () {
                         }
                     } else {
                         $('#search-item').modal('show')
+                        if (isScanned) {
+                            $('#search-item').modal('hide');
+                        }
+                        
                         $('#kasir-data-item_filter input').focus().val($('#item_code').val())
                     }
                 })
