@@ -337,7 +337,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty) * items.price) as total'), DB::raw('sum(transactions.qty) as quantity'), DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'), DB::raw('sum(transactions.tax) as tax'), DB::raw('sum(transactions.additional_fee) as additional_fee'))
+            ->select(DB::raw('(sum(transactions.qty) * items.price) as total'), DB::raw('sum(transactions.qty) as quantity'), DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'), 'transactions.tax', 'transactions.additional_fee')
             ->get();
 
         $cashes = DB::table('transactions')

@@ -72,12 +72,13 @@
                         <div>{{ auth()->user()->name }}</div>
                         <div>UTAMA</div>
                         <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <!-- [trans, pot, pajak, biaya, total, tunai, debit, transfer, ewallet, kredit] -->
                         <div>{{ $data[0] }}</div>
                         <div>Rp. {{ number_format($data[1]) }}</div>
                         <div>Rp. {{ number_format($data[2]) }}</div>
                         <div>Rp. {{ number_format($data[3]) }}</div>
-                        <div>Rp. {{ number_format($data[4] - $data[1]) }}</div>
-                        <div>Rp. {{ number_format($data[5] - $data[1]) }}</div>
+                        <div>Rp. {{ number_format(($data[4] + $data[2] + $data[3]) - $data[1]) }}</div>
+                        <div>Rp. {{ number_format(($data[5] + $data[2] + $data[3]) - $data[1]) }}</div>
                         <div>Rp. {{ number_format($data[6]) }}</div>
                         <div>Rp. {{ number_format($data[7]) }}</div>
                         <div>Rp. {{ number_format($data[8]) }}</div>
