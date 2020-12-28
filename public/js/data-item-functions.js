@@ -50,4 +50,36 @@ $(document).ready(function () {
         }
         
     })
+
+    $(document).on('click', '#download-file', function () {
+        let fileType = $('input[name="file_type"]:checked').val();
+        let reportType = $('input[name="report_type"]:checked').val();
+
+        $('#download-file').text('Downloading...');
+        axios({
+            method: 'post',
+            url: '/app/items/data/export',
+            responseType: 'arraybuffer',
+            data: {
+                fileType: fileType,
+                reportType: reportType,
+            }
+        }).then(function (response) {
+            let blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            }) 
+
+            let link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'master-data.xlsx';
+            document.body.appendChild(link);
+            link.click();
+        }).catch(function (error) {
+
+        }).finally(function () {
+            $('#download-file').text('Download');
+            $('#export').modal('hide');
+        });
+        
+    })
 })

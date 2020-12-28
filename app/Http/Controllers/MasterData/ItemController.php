@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use App\Exports\DynamicDataExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\MasterData\Item;
@@ -15,12 +16,14 @@ use Illuminate\Support\Facades\Storage;
 use App\Exports\MasterDataExport;
 use DataTables;
 use Excel;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ItemController extends Controller
 {
     public function index()
-    {   
-        return view('pages.data-item.items');
+    {
+        return view('pages.data-item.items')->with(['items' => self::filter_query(), 'categories' => Category::all()]);
     }
 
     public function data_item_page ($published) {
@@ -179,6 +182,11 @@ class ItemController extends Controller
         return Excel::download(new MasterDataExport($dept), 'master-data.xlsx');
     }
 
+    public function export_data_item (Request $request) {
+        Excel::store(new DynamicDataExport($request->reportType), 'master-data.xlsx');
+        return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();
+    }
+
     /**
      * Generate barcode string value for new imported item
      */
@@ -285,5 +293,23 @@ class ItemController extends Controller
         if($var == '')
             return NULL;
         return $var;
+    }
+
+    public static function filter_query()
+    {
+        return QueryBuilder::for(Item::class)
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->where(['deleted_at' => NULL, 'published' => 1])
+            ->select('items.id', 'items.name', 'items.barcode', 'items.item_code', 'items.base_unit', 'items.base_unit_conversion', 'items.main_cost', 'items.price', 'units.unit', 'categories.category', 'brands.brand')
+            ->orderBy('items.name')
+            ->allowedFilters([
+                AllowedFilter::partial('items.name'),
+                AllowedFilter::partial('items.barcode'),
+                AllowedFilter::exact('categories.id'),
+            ])
+            ->paginate(15)
+            ->appends(request()->query());
     }
 }
