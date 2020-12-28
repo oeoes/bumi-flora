@@ -65,13 +65,14 @@ $(document).ready(function () {
                 reportType: reportType,
             }
         }).then(function (response) {
+            let config = JSON.parse(response.config.data)
             let blob = new Blob([response.data], {
-                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                type: config.fileType === 'pdf' ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             }) 
 
             let link = document.createElement("a");
             link.href = window.URL.createObjectURL(blob);
-            link.download = 'master-data.xlsx';
+            link.download = config.fileType === 'pdf' ? 'master-data.pdf' : 'master-data.xlsx';
             document.body.appendChild(link);
             link.click();
         }).catch(function (error) {

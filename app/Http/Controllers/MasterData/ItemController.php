@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Exports\MasterDataExport;
 use DataTables;
 use Excel;
+use PDF;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -183,8 +184,66 @@ class ItemController extends Controller
     }
 
     public function export_data_item (Request $request) {
-        Excel::store(new DynamicDataExport($request->reportType), 'master-data.xlsx');
-        return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();
+        if ($request->fileType === 'pdf') {
+            $items = self::generate_query_pdf($request->reportType);
+            $pdf = PDF::loadView('pdf-template.data-item-dynamic', ['items' => $items, 'reportType' => $request->reportType])->setPaper('a4', 'landscape');
+
+            $content = $pdf->download()->getOriginalContent();
+            Storage::disk('local')->put('master-data.pdf', $content);
+
+            return response()->download(storage_path() . '/app/master-data.pdf', 'master-data.pdf', ['Content-Type' => ' application/pdf'])->deleteFileAfterSend();
+        } else {
+            Excel::store(new DynamicDataExport($request->reportType), 'master-data.xlsx');
+            return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();   
+        }
+    }
+
+    public static function generate_query_pdf ($reportType) {
+        switch ($reportType) {
+            case 'main_cost':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'price':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'default':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'complete':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+        }
     }
 
     /**
