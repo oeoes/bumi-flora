@@ -139,7 +139,7 @@ class CashierController extends Controller
 
         $time = Carbon::now()->format('H:i:s');
         $payment_type = PaymentType::find($request->payment_type);
-        $no_urut = Transaction::whereDate('created_at', Carbon::now()->format('Y-m-d'))->groupBy('transaction_time')->get();
+        $no_urut = Transaction::whereDate('created_at', Carbon::now()->format('Y-m-d'))->groupBy('transaction_time')->withTrashed()->get();
         $trx_number = (count($no_urut) + 1) . '/KSR/' . strtoupper($request->dept);
 
         // load data to transmit to printer
@@ -178,7 +178,7 @@ class CashierController extends Controller
                         'tax' => $request->tax,
                         'transaction_time' => $parent_transaction->transaction_time
                     ]);
-                    
+
                     $stock->update([
                         'amount' => $stock->amount - $item[1]
                     ]);

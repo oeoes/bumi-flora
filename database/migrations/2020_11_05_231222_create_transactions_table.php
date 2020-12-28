@@ -31,6 +31,7 @@ class CreateTransactionsTable extends Migration
             $table->time('transaction_time');
             $table->tinyInteger('daily_complete')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('payment_method_id')->references('id')->on('payment_methods')->onDelete('cascade')->onUpdate('cascade');

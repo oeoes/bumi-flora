@@ -17,9 +17,10 @@ class SecondaryDataSeeder extends Seeder
             ['Tunai'],
             ['BCA', 'Mandiri', 'BRI', 'BNI'],
             ['BCA', 'Mandiri', 'BRI', 'BNI'],
-            ['OVO', 'GoPay', 'LinkAja', 'ShopeePay']
+            ['OVO', 'GoPay', 'LinkAja', 'ShopeePay'],
+            ['Kredit']
         ];
-        $methods = ['Cash', 'Debit', 'Transfer', 'E-wallet'];
+        $methods = ['Cash', 'Debit', 'Transfer', 'E-wallet', 'Kartu Kredit'];
         foreach($methods as $key => $method) {
             $mt = PaymentMethod::create(['method_name' => $method]);
             foreach ($types[$key] as $type) {

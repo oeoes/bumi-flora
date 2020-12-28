@@ -2,6 +2,7 @@
 
 use App\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserTableSeeder extends Seeder
 {
@@ -21,5 +22,7 @@ class UserTableSeeder extends Seeder
         ]);
 
         $user->syncRoles('root');
+        $role = Role::findByName('root');
+        $role->givePermissionTo(['create', 'read', 'update', 'delete']);
     }
 }

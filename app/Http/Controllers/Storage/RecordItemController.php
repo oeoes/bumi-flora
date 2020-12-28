@@ -167,21 +167,7 @@ class RecordItemController extends Controller
     }
 
     public function offline_transaction_history () {
-        $items = DB::table('transactions')
-                ->join('items', 'items.id', '=', 'transactions.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->join('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => 'utama'])
-                ->latest()
-                ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
-                ->get();
-
-        return view('pages.persediaan.transaksi-offline-history')->with('items', $items);
+        return view('pages.persediaan.transaksi-offline-history');
     }
 
     public function online_transaction_history () {
@@ -198,7 +184,7 @@ class RecordItemController extends Controller
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
                 ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => $dept])
+                ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
                 ->latest()
                 ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
                 ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
@@ -215,7 +201,7 @@ class RecordItemController extends Controller
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
                 ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => $dept])
+                ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
                 ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
                 ->latest()
                 ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
@@ -243,7 +229,7 @@ class RecordItemController extends Controller
                 ->join('balances', 'balances.item_id', '=', 'items.id')
                 ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
                 ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number])
+                ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number, 'transactions.deleted_at' => NULL])
                 ->orderBy('transactions.created_at')
                 ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.discount_item', 'transactions.discount_customer', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')
                 ->get();

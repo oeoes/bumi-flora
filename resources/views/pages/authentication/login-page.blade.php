@@ -18,7 +18,6 @@
         .error {
             border-color: #dc3545
         }
-
     </style>
 
 </head>
@@ -43,7 +42,7 @@
                             <input id="password" type="password" class="form-control rounded-pill" required>
                         </div>
 
-                        <button id="login" class="btn btn-sm rounded-pill btn-primary mb-3 pr-3 pl-3">Masuk</button>
+                        <button id="login" class="btn btn-sm rounded-pill btn-outline-primary mb-3 pr-3 pl-3">Masuk</button>
                         @if(count($errors))
                         <div class="alert alert-danger alert-dismissible">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -64,25 +63,26 @@
     <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('js/axios.js') }}"></script>
     <script>
-        $(document).ready(function () {
-            $(document).on('submit', '#form-login', function (e) {
+        $(document).ready(function() {
+            $(document).on('submit', '#form-login', function(e) {
                 e.preventDefault()
             })
 
             // login
-            $(document).on('click', '#login', function () {
+            $(document).on('click', '#login', function() {
+                $('#login').text('Memeriksa...');
                 axios.post('/login', {
                     email: $('#email').val(),
                     password: $('#password').val()
-                }).then(function (response) {
+                }).then(function(response) {
                     if (response.data.status) {
-                        if(response.data.role == 'user'){
-                            location.href="{{route('cashier.index')}}"
+                        if (response.data.role == 'user') {
+                            location.href = "{{route('cashier.index')}}"
                         } else {
-                            location.href="{{route('dashboard.index')}}"
-                        }                            
+                            location.href = "{{route('dashboard.index')}}"
+                        }
                     }
-                }).catch(function (error) {
+                }).catch(function(error) {
                     if (!error.response.data.status) {
                         $('#email').addClass('error')
                         $('#email').addClass('animate__animated animate__headShake')
@@ -91,7 +91,8 @@
                         $('#password').addClass('animate__animated animate__headShake')
 
                     }
-                }).finally(function () {
+                }).finally(function() {
+                    $('#login').text('Masuk');
                     setTimeout(() => {
                         $('#email').removeClass('error')
                         $('#email').removeClass('animate__animated animate__headShake')
@@ -102,7 +103,6 @@
                 })
             })
         })
-
     </script>
 </body>
 
