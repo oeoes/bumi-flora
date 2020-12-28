@@ -10,6 +10,7 @@ use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
 use Carbon\Carbon;
 use App\Model\Activity\Transaction;
+use App\Model\MasterData\Item;
 use App\Model\Relation\StakeHolder;
 
 class RecordItemController extends Controller
@@ -123,11 +124,14 @@ class RecordItemController extends Controller
      */
     public function destroy(Transaction $record)
     {
-        $dept = $record->dept;
-
+        // update stock
+        $stock = Stock::where(['item_id' => $record->item_id, 'dept' => $record->dept])->first();
+        $stock->update(['amount' => $stock->amount + $record->qty]);
+        
+        // delete transaction
         $record->delete();
 
-        if($dept === 'ecommerce') {
+        if($record->dept === 'ecommerce') {
             return redirect()->route('records.online_transaction_history');
         } else {
             return redirect()->route('records.offline_transaction_history');
@@ -227,7 +231,7 @@ class RecordItemController extends Controller
                         ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
                         ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
                         ->where(['transactions.id' => $transaction_id, 'transactions.dept' => $dept])
-                        ->select('transactions.id', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name', 'transactions.tax', 'transactions.additional_fee')
+                        ->select('transactions.id', 'transactions.dept', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name', 'transactions.tax', 'transactions.additional_fee')
                         ->first();
 
         $items = DB::table('transactions')
@@ -330,12 +334,12 @@ class RecordItemController extends Controller
         $customer = StakeHolder::where('type', 'customer')->distinct()->get();
         $payment_method = DB::table('payment_methods')->select('id', 'method_name')->get();
 
-        return view('pages.activity.edit-transaksi.cashier-edit')->with(['items' => $items, 'transaction_id' => $transaction->id, 'payment_method' => $payment_method, 'customers' => $customer, 'dept' => $transaction->dept, 'cashier' => [
+        return view('pages.activity.edit-transaksi.cashier-edit')->with(['transaction' => $transaction, 'items' => $items, 'transaction_id' => $transaction->id, 'payment_method' => $payment_method, 'customers' => $customer, 'dept' => $transaction->dept, 'cashier' => [
             'tax' => $transaction->tax,
             'additional_fee' => $transaction->additional_fee,
             'payment_type' => $transaction->payment_type_id,
             'discount' => $transaction->discount * count($transactions),
-            'cashier_items' => $list_of_items
+            'cashier_items' => $list_of_items,
         ]]);
     }
 

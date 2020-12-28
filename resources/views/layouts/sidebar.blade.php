@@ -196,8 +196,7 @@
                     <span class="nav-text">History Pembelian</span>
                 </a>
             </li>
-            @endif
-
+            
             <!-- Akses managgement -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Akses Management</span>
@@ -208,6 +207,7 @@
                     <span class="nav-text">Roles & Permission</span>
                 </a>
             </li>
+            @endif
 
             @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'cashier']))
             <!-- Pembelian -->

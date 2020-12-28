@@ -3,6 +3,14 @@
 @section('page-title', 'Kasir (Edit Transaksi)')
 @section('page-description', 'Perbarui transaksi.')
 
+@section('btn-custom')
+<div>
+    <a href="{{ route('records.detail_transaction_history', ['transaction_id' => $transaction->id, 'dept' => $transaction->dept]) }}" class="btn btn-sm text-muted">
+        <i data-feather="arrow-left"></i>
+        <span class="d-none d-sm-inline mx-1">Back</span>
+    </a>
+</div>
+@endsection
 
 @section('custom-js')
 

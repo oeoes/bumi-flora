@@ -3,6 +3,14 @@
 @section('page-title', 'Detail Transaksi')
 @section('page-description', 'Detail histori transaksi.')
 
+@section('btn-custom')
+<div>
+    <a href="{{ $base->dept === 'utama' ? route('records.offline_transaction_history') : route('records.online_transaction_history') }}" class="btn btn-sm text-muted">
+        <i data-feather="arrow-left"></i>
+        <span class="d-none d-sm-inline mx-1">Back</span>
+    </a>
+</div>
+@endsection
 
 @section('custom-js')
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>

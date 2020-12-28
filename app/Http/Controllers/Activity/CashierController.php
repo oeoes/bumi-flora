@@ -156,7 +156,33 @@ class CashierController extends Controller
             if ($data_update) {
                 $parent_transaction = Transaction::find($request->transaction_id);
                 $cur_transaction = Transaction::where(['transaction_number' => $parent_transaction->transaction_number, 'item_id' => $master_item->id])->first();
-                self::update_transaction_history($item, $cur_transaction->id, $request, $payment_type);
+
+                // check if item exist in current transaction otherwise create one
+                if($cur_transaction) {
+                    self::update_transaction_history($item, $cur_transaction->id, $request, $payment_type);
+                } else {
+                    $discount_item = ($master_item->price * $item[1]) - ($item[3] * $item[1]); // $item[3] adalah price item klo ada discount
+                    Transaction::create([
+                        'user_id' => $parent_transaction->user_id,
+                        'item_id' => $item[0],
+                        'stake_holder_id' => $parent_transaction->stake_holder_id,
+                        'transaction_number' => $parent_transaction->transaction_number,
+                        'qty' => $item[1],
+                        'dept' => $parent_transaction->dept,
+                        'payment_method_id' => $payment_type ? $payment_type->payment_method_id : NULL,
+                        'payment_type_id' => $payment_type ? $payment_type->id : NULL,
+                        'discount' => ($request->discount / count($request->items)), // discount keseluruhan dibagi banyaknya item yg dibeli
+                        'discount_item' => $discount_item, // discount item
+                        'discount_customer' => ($request->customer_discount / count($request->items)), // discount customer
+                        'additional_fee' => $request->additional_fee,
+                        'tax' => $request->tax,
+                        'transaction_time' => $parent_transaction->transaction_time
+                    ]);
+                    
+                    $stock->update([
+                        'amount' => $stock->amount - $item[1]
+                    ]);
+                }
             } else {
                 self::store_real_transaction($item, $request, $no_urut, $trx_number, $payment_type, $time);
 
