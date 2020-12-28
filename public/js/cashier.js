@@ -241,7 +241,7 @@ $(document).ready(function () {
     }))
 
     // scan barcode on paste
-    $(document).on('keyup', '#item_code', (function () {
+    $(document).on('input', '#item_code', (function () {
         if ($('#item_code').val().length > 0) {
             axios.get('/cashier/check', {
                     params: {

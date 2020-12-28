@@ -4,18 +4,67 @@
 @section('page-description', 'Halaman untuk melakukan penambahan item.')
 
 @section('custom-js')
-    <script>
-        $('#generate_barcode').click(function(){
-            var result           = '';
-            var characters       = '0123456789';
+<script>
+    $(document).ready(function() {
+        $('#price-range').prop('disabled', true);
+
+
+        $('#generate_barcode').click(function() {
+            var result = '';
+            var characters = '0123456789';
             var charactersLength = characters.length;
-            for ( var i = 0; i < 11; i++ ) {
+            for (var i = 0; i < 11; i++) {
                 result += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
 
             $('#barcode').val(result);
         });
-    </script>
+
+        // make sure main cost harus ada isinya
+        $(document).on('keyup', '#main_cost', function() {
+            if ($('#main_cost').val() == '') {
+                $('#price-range').prop('disabled', true);
+            } else {
+                $('#price-range').prop('disabled', false);
+            }
+        })
+
+
+        $(document).on('input', '#price-range', function() {
+            let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-range').val()) / 100);
+            console.log(price);
+            $('#price').val(price);
+            $('#percentage-value').text($('#price-range').val())
+
+            if ($('#price-range').val() > 5) {
+                $('.percentage_range').addClass('text-success');
+            } else {
+                $('.percentage_range').removeClass('text-success');
+            }
+            if ($('#price-range').val() < 90) {
+                $('#percentage-value').css('paddingLeft', $('#price-range').val() + '%')
+            } else {
+                $('#percentage-value').css('paddingLeft', ($('#price-range').val() - 10) + '%')
+            }
+
+        })
+    })
+</script>
+@endsection
+
+@section('custom-css')
+<style>
+    .percentage-range {
+        width: 100%;
+        position: absolute;
+        right: 0;
+        bottom: 0
+    }
+
+    .stage-1 {
+        color: green;
+    }
+</style>
 @endsection
 
 @section('btn-custom')
@@ -30,12 +79,12 @@
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">
-        <div class="row">            
+        <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
                         <strong>Tambah item</strong>
-                        
+
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('items.store') }}">
@@ -98,6 +147,10 @@
                             <div class="form-group">
                                 <label class="text-muted" for="price">Harga Jual *</label>
                                 <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required>
+                                <div style="position: relative">
+                                    <input type="range" min="0" max="100" step="1" class="custom-range mt-2" id="price-range" value="0">
+                                    <div class="percentage_range"><span id="percentage-value">0</span>%</div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="min_stock">Stok Minimum *</label>
@@ -112,13 +165,13 @@
                         </form>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="col-md-6">
                 <div class="sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
                     <img style="max-width: 100%" src="{{ asset('images/add-item.svg') }}" alt="">
                 </div>
-            </div>           
-        </div>        
+            </div>
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>
