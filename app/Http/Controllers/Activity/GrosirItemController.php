@@ -11,11 +11,16 @@ use Illuminate\Support\Facades\DB;
 class GrosirItemController extends Controller
 {
     public function index () {
-        $items = Item::all();
+        $items = DB::table('items')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->where(['items.deleted_at' => NULL])
+            ->select('items.*', 'units.unit')->get();
+            
         $grosir_items = DB::table('items')
                     ->join('units', 'units.id', '=', 'items.unit_id')
                     ->join('grosir_items', 'items.id', '=', 'grosir_items.item_id')
                     ->select('grosir_items.id', 'items.name', 'units.unit', 'items.price', 'grosir_items.minimum_item', 'grosir_items.price as grosir_price')
+                    ->where(['items.deleted_at' => NULL])
                     ->get();
         return view('pages.activity.grosir')->with(['items' => $items, 'grosirs' => $grosir_items]);
     }

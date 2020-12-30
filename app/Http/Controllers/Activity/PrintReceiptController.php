@@ -38,23 +38,23 @@ class PrintReceiptController extends Controller
         $printer -> text("Telp: 085772386441 Fax: \n");
         $printer->feed();
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("No.   : ". $calc['transaction_number'] ." \n");
-        $printer->text("Ksr.  : ". auth()->user()->name . " (waktu: " . Carbon::now()->format('H:i:s') . ")\n");
-        $printer->text("Cust. : ". $calc['customer'] .")\n");
+        $printer->text(" No.   : ". $calc['transaction_number'] ." \n");
+        $printer->text(" Ksr.  : ". auth()->user()->name . " (waktu: " . Carbon::now()->format('H:i:s') . ")\n");
+        $printer->text(" Cust. : ". $calc['customer'] ."\n");
         $printer -> text("------------------------------------------------\n");
         $printer->feed(); 
         
         // print items
-        $n1 = '';
-        $n2 = '';
-        $n3 = '';
+        $n1 = ' ';
+        $n2 = ' ';
+        $n3 = ' ';
         for ($i=0; $i < count($items); $i++) { 
             
             // cek field discoun
             if($items[$i]['discount'] == 0) {
-                for ($j=0; $j < 48; $j++) { 
+                for ($j=0; $j < 47; $j++) { 
                     // item detail
-                    if($j < 45) {
+                    if($j < 44) {
                         if (isset($items[$i]["name"][$j])) {
                             $n1 .= $items[$i]["name"][$j];
                         } else {
@@ -67,35 +67,35 @@ class PrintReceiptController extends Controller
                     }
 
                     // print harga
-                    if($j < 15) {
+                    if($j < 14) {
                         $n2 .= isset($items[$i]["price"][$j]) == 1 ? $items[$i]["price"][$j] : ' ';
                     } 
                     
                     // print x sama qty
-                    if ($j >= 15 && $j < 16) {
+                    if ($j >= 14 && $j < 15) {
                         $n2 .= "x " . $items[$i]["qty"];
                     }
                     
                     // kasih space setelah qty
-                    if($j >= (16+2+strlen($items[$i]["qty"])) && $j < 30) {
+                    if($j >= (15+1+strlen($items[$i]["qty"])) && $j < 29) {
                         $n2 .= ' ';
                     }
 
                     // sama dengan setelah qty
-                    if ($j == 30) {
+                    if ($j == 29) {
                         $n2 .= "=";
                     }
 
                     // kasih space setelah samadengan
-                    if ($j > 30 && $j < (48 - strlen($items[$i]["total"]))) {
+                    if ($j > 29 && $j < (47 - strlen($items[$i]["total"]))) {
                         $n2 .= " ";
                     }
                     
                 }
             } else {
-                for ($j=0; $j < 48; $j++) { 
+                for ($j=0; $j < 47; $j++) { 
                     // item detail
-                    if($j < 45) {
+                    if($j < 44) {
                         if (isset($items[$i]["name"][$j])) {
                             $n1 .= $items[$i]["name"][$j];
                         } else {
@@ -108,31 +108,31 @@ class PrintReceiptController extends Controller
                     }
 
                     // print harga
-                    if($j < 15) {
+                    if($j < 14) {
                         $n2 .= isset($items[$i]["price"][$j]) == 1 ? $items[$i]["price"][$j] : ' ';
                     } 
                     
                     // print x sama qty
-                    if ($j >= 15 && $j < 16) {
+                    if ($j >= 14 && $j < 15) {
                         $n2 .= "x " . $items[$i]["qty"];
                     }
                     
                     // kasih space setelah qty sampe full kalo kolom 
-                    if($j >= (16+2+strlen($items[$i]["qty"])) && $j < 45) {
+                    if($j >= (15+1+strlen($items[$i]["qty"])) && $j < 44) {
                         $n2 .= ' ';
                     }
 
                     // print discount
-                    if($j <1) $n3 .= "Pot.:". $items[$i]["discount"]. "%";
-                    if($j > 1 && $j < 23) $n3 .= " ";
+                    if($j < 1) $n3 .= "Pot.:". $items[$i]["discount"]. "%";
+                    if($j > 1 && $j < 22) $n3 .= " ";
 
                     // sama dengan setelah qty
-                    if ($j == 30) {
+                    if ($j == 29) {
                         $n3 .= "=";
                     }
 
                     // kasih space setelah samadengan
-                    if ($j > 30 && $j < (48 - strlen($items[$i]["total"]))) {
+                    if ($j > 29 && $j < (47 - strlen($items[$i]["total"]))) {
                         $n3 .= " ";
                     }
                     
@@ -149,30 +149,30 @@ class PrintReceiptController extends Controller
                 $printer->text($n3."\n");
             }
             
-            $n1 = '';
-            $n2 = '';
-            $n3 = '';
+            $n1 = ' ';
+            $n2 = ' ';
+            $n3 = ' ';
             
         }
         $printer -> text("------------------------------------------------\n");
-        $qty = "ITEM: ". count($items). "; QTY: ". $sum_qty ." "; // 18 col
-        $discount = "Diskon           =";
-        $fee = "Biaya Lain       =";
-        $tax = "Pajak            =";
-        $bill = "Total Akhir      =";
-        $cash = "Tunai            =";
-        $cashback = "Kembali          =";
+        $qty = " ITEM: ". count($items). "; QTY: ". $sum_qty ." "; // 18 col
+        $discount = " Diskon           =";
+        $fee = " Biaya Lain       =";
+        $tax = " Pajak            =";
+        $bill = " Total Akhir      =";
+        $cash = " Tunai            =";
+        $cashback = " Kembali          =";
         // qty
-        for ($i=18; $i < (48 - strlen($calc["total_price"]))+1; $i++) { 
+        for ($i=18; $i < (47 - strlen($calc["total_price"]))+1; $i++) { 
             $qty .= " ";
         }
         // discount
-        for ($i=18; $i < (48 - strlen($calc["discount"])); $i++) { 
+        for ($i=18; $i < (47 - strlen($calc["discount"])); $i++) { 
             $discount .= " ";
         }
 
         // fee
-        for ($i = 18; $i < (48 - strlen($calc["fee"])); $i++) {
+        for ($i = 18; $i < (47 - strlen($calc["fee"])); $i++) {
             $fee .= " ";
         }
 
@@ -182,21 +182,21 @@ class PrintReceiptController extends Controller
         }
 
         // tax
-        for ($i = 18; $i < (48 - strlen($calc["tax"])); $i++) {
+        for ($i = 18; $i < (47 - strlen($calc["tax"])); $i++) {
             $tax .= " ";
         }
 
         // bill
-        for ($i=18; $i < (48 - strlen($calc["bill"])); $i++) { 
+        for ($i=18; $i < (47 - strlen($calc["bill"])); $i++) { 
             $bill .= " ";
         }
 
         // cash
-        for ($i=18; $i < (48 - strlen($calc["cash"])); $i++) { 
+        for ($i=18; $i < (47 - strlen($calc["cash"])); $i++) { 
             $cash .= " ";
         }
         // cashback
-        for ($i=18; $i < (48 - strlen($calc["cashback"])); $i++) { 
+        for ($i=18; $i < (47 - strlen($calc["cashback"])); $i++) { 
             $cashback .= " ";
         }
         $printer -> text($qty . $calc["total_price"] . "\n");

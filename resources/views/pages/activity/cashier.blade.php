@@ -53,6 +53,11 @@
     $(document).ready(function() {
         $('#kasir-data-item').DataTable();
     });
+
+    // set pajak, discount, additional_fee ke 0
+    localStorage.setItem('discount', 0);
+    localStorage.setItem('tax', 0);
+    localStorage.setItem('additional_fee', 0);
 </script>
 @endsection
 
@@ -86,7 +91,7 @@
                         <div class="col-2">
                             <div class="form-group">
                                 <label for="jumlah">Jumlah</label>
-                                <input id="jumlah" type="number" class="form-control form-control-sm" placeholder="jumah item" value="1">
+                                <input id="jumlah" type="number" min="1" class="form-control form-control-sm" placeholder="jumah item" value="1">
                             </div>
                         </div>
                         <div class="col-4">

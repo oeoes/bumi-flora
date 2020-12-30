@@ -65,7 +65,8 @@ Route::prefix('app')->middleware('admin')->group(function () {
         Route::get('/items/get/ajax/{published}', 'MasterData\ItemController@data_item_page')->name('items.ajax');
         Route::post('/items/filter', 'MasterData\ItemController@filter_item')->name('items.filter-item');
         Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
-        Route::get('/items/data/export', 'MasterData\ItemController@export_item')->name('items.export-item');
+        Route::post('/items/data/export', 'MasterData\ItemController@export_data_item')->name('items.export_data_item');
+        Route::get('/items/data/export/{dept}', 'MasterData\ItemController@export_item')->name('items.export-item');
 
 
         // data pendukung

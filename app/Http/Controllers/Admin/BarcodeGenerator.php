@@ -16,7 +16,7 @@ class BarcodeGenerator extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->where('balances.dept', 'utama')
+                ->where(['balances.dept' => 'utama','items.deleted_at' => NULL])
                 ->select('items.name', 'items.id', 'items.price', 'items.main_cost', 'units.unit')->get();
         return view('pages.admin.barcode-page')->with('items', $items);
     }

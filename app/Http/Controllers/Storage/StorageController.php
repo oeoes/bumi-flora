@@ -91,7 +91,7 @@ class StorageController extends Controller
                 ->join('balances', 'items.id', '=', 'balances.item_id')
                 ->join('stocks', 'items.id', '=', 'stocks.item_id')
                 ->select('items.*', DB::raw('sum(storage_records.amount_in) as amount_in'), DB::raw('sum(storage_records.amount_out) as amount_out'), 'units.unit', 'categories.category', 'balances.amount as balance', 'balances.dept', 'stocks.amount as stock')
-                ->where(['items.cabinet' => request('cabinet'), 'categories.id' => request('category'), 'storage_records.dept' => request('dept'), 'stocks.dept' => request('dept'), 'balances.dept' => request('dept')])
+                ->where(['items.cabinet' => request('cabinet'), 'categories.id' => request('category'), 'storage_records.dept' => request('dept'), 'stocks.dept' => request('dept'), 'balances.dept' => request('dept'),'items.deleted_at' => NULL])
                 ->whereBetween('items.created_at', [request('from'), request('to')])
                 ->groupBy('storage_records.item_id')
                 ->get();
@@ -104,7 +104,7 @@ class StorageController extends Controller
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('stocks', 'stocks.item_id', '=', 'items.id')
-                ->where('balances.dept', $dept)->where('stocks.dept', $dept)
+                ->where(['balances.dept' => $dept,'stocks.dept' => $dept, 'items.deleted_at' => NULL])
                 ->select('balances.id as balance_id', 'balances.amount', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'stocks.amount as stock')
                 ->orderBy('items.name')
                 ->allowedFilters([

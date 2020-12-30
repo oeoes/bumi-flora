@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MasterData;
 
+use App\Exports\DynamicDataExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\MasterData\Item;
@@ -15,12 +16,15 @@ use Illuminate\Support\Facades\Storage;
 use App\Exports\MasterDataExport;
 use DataTables;
 use Excel;
+use PDF;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ItemController extends Controller
 {
     public function index()
-    {   
-        return view('pages.data-item.items');
+    {
+        return view('pages.data-item.items')->with(['items' => self::filter_query(), 'categories' => Category::all()]);
     }
 
     public function data_item_page ($published) {
@@ -56,7 +60,7 @@ class ItemController extends Controller
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->join('brands', 'brands.id', '=', 'items.brand_id')
                 ->join('stocks', 'stocks.item_id', '=', 'items.id')
-                ->where('stocks.dept', 'utama')
+                ->where(['stocks.dept' => 'utama', 'items.deleted_at' => NULL])
                 ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'stocks.dept', 'stocks.amount as stock');
     }
 
@@ -85,6 +89,7 @@ class ItemController extends Controller
             'barcode' => $request->barcode,
             'price' => $request->price,
             'min_stock' => $request->min_stock,
+            'published' => 1
         ]);
 
         self::create_saldo_awal($item->id, 'utama');
@@ -94,15 +99,15 @@ class ItemController extends Controller
         return back();
     }
 
-    public static function create_saldo_awal ($item_id, $dept) {
+    public static function create_saldo_awal ($item_id, $dept, $amount=0) {
         Balance::create([
             'item_id' => $item_id,
-            'amount' => 0,
+            'amount' => $amount,
             'dept' => $dept,
         ]);
         Stock::create([
             'item_id' => $item_id,
-            'amount' => 0,
+            'amount' => $amount,
             'dept' => $dept,
         ]);
     }
@@ -174,8 +179,109 @@ class ItemController extends Controller
         return redirect()->route('items.index');
     }
 
-    public function export_item () {
-        return Excel::download(new MasterDataExport, 'master-data.xlsx');
+    public function export_item ($dept) {
+        return Excel::download(new MasterDataExport($dept), 'master-data.xlsx');
+    }
+
+    public function export_data_item (Request $request) {
+        if ($request->fileType === 'pdf') {
+            $items = self::generate_query_pdf($request->reportType);
+            $pdf = PDF::loadView('pdf-template.data-item-dynamic', ['items' => $items, 'reportType' => $request->reportType])->setPaper('a4', 'landscape');
+
+            $content = $pdf->download()->getOriginalContent();
+            Storage::disk('local')->put('master-data.pdf', $content);
+
+            return response()->download(storage_path() . '/app/master-data.pdf', 'master-data.pdf', ['Content-Type' => ' application/pdf'])->deleteFileAfterSend();
+        } else {
+            Excel::store(new DynamicDataExport($request->reportType), 'master-data.xlsx');
+            return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();   
+        }
+    }
+
+    public static function generate_query_pdf ($reportType) {
+        switch ($reportType) {
+            case 'main_cost':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'price':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'default':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+
+            case 'complete':
+                return DB::table('items')
+                    ->join('units', 'units.id', '=', 'items.unit_id')
+                    ->join('categories', 'categories.id', '=', 'items.category_id')
+                    ->join('brands', 'brands.id', '=', 'items.brand_id')
+                    ->join('stocks', 'stocks.item_id', '=', 'items.id')
+                    ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
+                    ->where('items.deleted_at', NULL)
+                    ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
+                break;
+        }
+    }
+
+    /**
+     * Generate barcode string value for new imported item
+     */
+    public static function generate_barcode_value ($length) {
+        $barcode = '';
+        for ($i=0; $i < $length; $i++) { 
+            $barcode .= rand(0,9);
+        }
+        return $barcode;
+    }
+
+    /**
+     * $line : row of imported csv
+     * @return void
+     */
+    public static function store_imported_item ($line, $barcode) {
+        $item = Item::create([
+            'item_code' => $line[0],
+            'barcode' => $barcode,
+            'name' => $line[2],
+            'category_id' => self::findOrCreate('category', $line[3]),
+            'unit_id' => self::findOrCreate('unit', $line[4]),
+            'brand_id' => self::findOrCreate('brand', $line[5]),
+            'base_unit' => $line[6],
+            'base_unit_conversion' => $line[7],
+            'main_cost' => $line[8],
+            'price' => $line[9],
+            'min_stock' => $line[11],
+            'cabinet' => self::isNull($line[14]),
+            'stake_holder_id' => self::isNull($line[16]),
+            'description' => self::isNull($line[17]),
+            'published' => 1
+        ]);
+
+        self::create_saldo_awal($item->id, 'utama');
+        self::create_saldo_awal($item->id, 'gudang', $line[10]);
     }
 
     public function import_item () {
@@ -193,29 +299,13 @@ class ItemController extends Controller
                 $flag = false;
                 continue;
             } else {
-                if(!Item::where('barcode', $line[0])->first()) { // prevent duplicate item
-                    $item = Item::create([
-                        'barcode' => $line[0],
-                        'name' => $line[1],
-                        'category_id' => self::findOrCreate('category', $line[2]),
-                        'unit_id' => self::findOrCreate('unit', $line[3]),
-                        'brand_id' => self::findOrCreate('brand', $line[4]),
-                        'base_unit' => $line[5],
-                        'base_unit_conversion' => $line[6],
-                        'main_cost' => $line[7],
-                        'price' => $line[8],
-                        'min_stock' => $line[9],
-                        'cabinet' => self::isNull($line[10]),
-                        'stake_holder_id' => self::isNull($line[11]),
-                        'description' => self::isNull($line[12]),
-                    ]);
-
-                    self::create_saldo_awal($item->id, 'utama');
-                    self::create_saldo_awal($item->id, 'gudang');   
-                self::create_saldo_awal($item->id, 'gudang');
-                    self::create_saldo_awal($item->id, 'gudang');   
-                self::create_saldo_awal($item->id, 'gudang');
-                    self::create_saldo_awal($item->id, 'gudang');   
+                $barcode = self::generate_barcode_value(11);
+                if(!Item::where('item_code', $line[0])->first() && !Item::where('barcode', $barcode)->first()) { // prevent duplicate item
+                    try {
+                         self::store_imported_item($line, $barcode);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => false, 'message' => 'error: '. $th->getMessage()], 400);
+                    }
                 }
             }
         }
@@ -230,7 +320,7 @@ class ItemController extends Controller
      */
     public static function findOrCreate ($entity, $key) {
         if ($entity == 'unit') {
-            $unit = Unit::where('unit', strtolower($key))->first();
+            $unit = Unit::where('unit', $key)->first();
             if ($unit) {
                 return $unit->id;
             } else {
@@ -239,7 +329,7 @@ class ItemController extends Controller
             }
         }
         else if ($entity == 'brand') {
-            $brand = Brand::where('brand', strtolower($key))->first();
+            $brand = Brand::where('brand', $key)->first();
             if($brand) {
                 return $brand->id;
             } else {
@@ -248,7 +338,7 @@ class ItemController extends Controller
             }
         }
         else {
-            $category = Category::where('category', strtolower($key))->first();
+            $category = Category::where('category', $key)->first();
             if($category) {
                 return $category->id;
             } else {
@@ -262,5 +352,23 @@ class ItemController extends Controller
         if($var == '')
             return NULL;
         return $var;
+    }
+
+    public static function filter_query()
+    {
+        return QueryBuilder::for(Item::class)
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->where(['deleted_at' => NULL, 'published' => 1])
+            ->select('items.id', 'items.name', 'items.barcode', 'items.item_code', 'items.base_unit', 'items.base_unit_conversion', 'items.main_cost', 'items.price', 'units.unit', 'categories.category', 'brands.brand')
+            ->orderBy('items.name')
+            ->allowedFilters([
+                AllowedFilter::partial('items.name'),
+                AllowedFilter::partial('items.barcode'),
+                AllowedFilter::exact('categories.id'),
+            ])
+            ->paginate(15)
+            ->appends(request()->query());
     }
 }

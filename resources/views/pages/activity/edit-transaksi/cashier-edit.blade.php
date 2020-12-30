@@ -3,8 +3,27 @@
 @section('page-title', 'Kasir (Edit Transaksi)')
 @section('page-description', 'Perbarui transaksi.')
 
+@section('btn-custom')
+<div>
+    <a href="{{ route('records.detail_transaction_history', ['transaction_id' => $transaction->id, 'dept' => $transaction->dept]) }}" class="btn btn-sm text-muted">
+        <i data-feather="arrow-left"></i>
+        <span class="d-none d-sm-inline mx-1">Back</span>
+    </a>
+</div>
+@endsection
 
 @section('custom-js')
+
+<script src="{{ asset('js/dataTables.js') }}"></script>
+<script src="{{ asset('js/axios.js') }}"></script>
+<script src="{{ asset('js/cashier.js') }}"></script>
+<script src="{{ asset('js/payment.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#kasir-data-item').DataTable();
+    });
+</script>
+
 <script>
     // initiate previous data
     let items = []
@@ -31,15 +50,15 @@
     localStorage.setItem('additional_fee', JSON.stringify(parseInt('{{ $cashier["additional_fee"] }}')));
     localStorage.setItem('payment_type', JSON.stringify(parseInt('{{ $cashier["payment_type"] }}')));
     localStorage.setItem('discount', JSON.stringify(parseInt('{{ $cashier["discount"] }}')));
-</script>
-<script src="{{ asset('js/dataTables.js') }}"></script>
-<script src="{{ asset('js/axios.js') }}"></script>
-<script src="{{ asset('js/cashier.js') }}"></script>
-<script src="{{ asset('js/payment.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('#kasir-data-item').DataTable();
-    });
+
+    cashier_retrieve_data();
+
+    // show/hide text for discount
+    if (localStorage.getItem('discount') > 0) {
+        $('#cont_discount').css('display', 'block!important')
+    } else {
+        $('#cont_discount').css('display', 'none!important')
+    }
 </script>
 @endsection
 
@@ -118,33 +137,43 @@
                                             <small id="discount-info" class="text-success"></small>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
+                                    <div class="col-3">
+                                        <!-- <div class="form-group">
                                             <label>Satuan diskon</label>
                                             <select id="discount_type" class="form-control form-control-sm">
                                                 <option value="nominal">Nominal</option>
                                                 <option value="persentase">Persentase</option>
                                             </select>
+                                        </div> -->
+                                        <div class="form-group">
+                                            <label>Discount</label>
+                                            <div class="input-group"><input id="discount_value_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="discount_value_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-group">
-                                            <label>Besaran</label>
-                                            <input min="0" id="discount_value" type="number" class="form-control form-control-sm" value="0">
+                                            <label>Pajak</label>
+                                            <div class="input-group"><input id="tax_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="tax_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-2">
                                         <div class="form-group">
                                             <label>Biaya lain</label>
                                             <input min="0" id="additional_fee" type="number" class="form-control form-control-sm" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label>Pajak</label>
-                                            <div class="input-group"><input id="tax" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
-                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +185,7 @@
                             <div class="h1 text-right">Rp. <span id="final_price"></span></div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#payment">Bayar [ . ]</button>
+                        <button class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#payment">Perbarui [ . ]</button>
                     </div>
                 </div>
             </div>
@@ -179,7 +208,8 @@
                 <input type="hidden" id="id-edit-transaction" value="{{ $transaction_id }}">
             </div>
             <div class="modal-body">
-                <div class="h1 text-right mb-4">Rp. <span id="bill"></span></div>
+                <div class="h1 text-right">Rp. <span id="bill"></span></div>
+                <div class="text-right h5 mb-4 text-success">+<span id="additional_fee_text"></span> <small>(biaya lain)</small></div>
                 <div class="row">
                     <div class="col-6">
                         <label>Metode Bayar</label>
@@ -221,68 +251,6 @@
     </div>
 </div>
 
-<!-- modal pending payment -->
-<div class="modal fade" id="pending_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="paymentLabel">Pending transaksi</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Transaksi akan dipending?
-                <input id="pending_description" type="text" class="form-control" placeholder="Masukan keterangan">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
-                <button id="pending_transaction" type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- modal warning restore transaction -->
-<div class="modal fade" id="warning_pending_restore" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-warning" id="paymentLabel">Warning!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Tidak dapat mengembalikan transaksi pending, masih ada transaksi yang sedang berlangsung.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- modal cancle payment -->
-<div class="modal fade" id="cancle_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="paymentLabel">Batalkan transaksi</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Transaksi sekarang akan direset, yakin membuat transaksi baru?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-secondary" data-dismiss="modal">Batal</button>
-                <button id="reset_transaction" type="button" class="btn btn-sm rounded-pill pr-4 pl-4 btn-outline-primary">Ya</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- modal search item -->
 <div id="search-item" class="modal fade" data-backdrop="true" aria-modal="true">

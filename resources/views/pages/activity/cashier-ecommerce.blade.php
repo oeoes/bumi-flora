@@ -3,45 +3,6 @@
 @section('page-title', 'Kasir Storage E-commerce')
 @section('page-description', 'Payment corner for online marketplace.')
 
-@section('btn-custom')
-<div>
-    <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#pending-list" data-toggle-class="modal-open-aside">
-        <span class="d-none d-sm-inline mx-1">Daftar Pending</span>
-        <i data-feather="shopping-cart"></i>
-    </button>
-
-    <!-- modal aside right -->
-    <div id="pending-list" class="modal fade modal-open-aside" da ta-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-right w-xl">
-            <div class="modal-content h-100 no-radius">
-                <div class="modal-header ">
-                    <div class="modal-title text-sm">Daftar pending</div>
-                    <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="p-2">
-                        <table class="table my-responsive table-theme v-middle table-hover">
-                            <thead>
-                                <tr>
-                                    <th><span class="text-muted">Keterangan</span></th>
-                                    <th><span class="text-muted">Restore</span></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="pending_transaction_list">
-                                <!-- generated data item -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-    </div>
-</div>
-@endsection
 
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
@@ -54,6 +15,12 @@
     $(document).ready(function() {
         $('#kasir-data-item').DataTable();
     });
+
+    // set pajak, discount, additional_fee ke 0
+    localStorage.setItem('discount', 0);
+    localStorage.setItem('tax', 0);
+    localStorage.setItem('additional_fee', 0);
+    localStorage.setItem('items', JSON.stringify([]));
 </script>
 @endsection
 
@@ -91,7 +58,7 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <label for="jumlah">Kode item</label>
+                            <label for="item_code">Kode item</label>
                             <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item">
                         </div>
                     </div>
@@ -132,33 +99,43 @@
                                             <small id="discount-info" class="text-success"></small>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
+                                    <div class="col-3">
+                                        <!-- <div class="form-group">
                                             <label>Satuan diskon</label>
                                             <select id="discount_type" class="form-control form-control-sm">
                                                 <option value="nominal">Nominal</option>
                                                 <option value="persentase">Persentase</option>
                                             </select>
+                                        </div> -->
+                                        <div class="form-group">
+                                            <label>Discount</label>
+                                            <div class="input-group"><input id="discount_value_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="discount_value_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-group">
-                                            <label>Besaran</label>
-                                            <input min="0" id="discount_value" type="number" class="form-control form-control-sm" value="0">
+                                            <label>Pajak</label>
+                                            <div class="input-group"><input id="tax_percentage" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%.</span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group"><input id="tax_nominal" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
+                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">Rp</span> </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-2">
                                         <div class="form-group">
                                             <label>Biaya lain</label>
                                             <input min="0" id="additional_fee" type="number" class="form-control form-control-sm" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label>Pajak</label>
-                                            <div class="input-group"><input id="tax" type="number" min="0" class="form-control" aria-describedby="inputGroupPrepend" value="0">
-                                                <div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -313,98 +290,42 @@
                             <th><span class="text-muted">Barcode</span></th>
                             <th><span class="text-muted">Satuan</span></th>
                             <th><span class="text-muted">Stock</span></th>
-                            <th><span class="text-muted">Harga Asli</span></th>
-                            <th><span class="text-muted">Disc.</span></th>
-                            <th><span class="text-muted">Harga Promo</span></th>
+                            <th><span class="text-muted">Harga</span></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($items as $key => $item)
                         <tr>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->name }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->barcode }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->unit }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->stock }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
-                                    Rp.{{ number_format($item->original_price) }}
-                                </div>
-                            </td>
-                            <td style="">
-                                @if($item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences)))
-                                @if($item->discount_item > 0)
-                                <div class="text-sm text-danger">
-                                    {{ $item->discount_item }}%
-                                </div>
-                                @else
-                                <div class="text-sm">
-                                    -
-                                </div>
-                                @endif
-                                @elseif($item->discount_category > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->category_occurences)))
-                                @if($item->discount_category > 0)
-                                <div class="text-sm text-danger">
-                                    {{ $item->discount_category }}%
-                                </div>
-                                @else
-                                <div class="text-sm">
-                                    -
-                                </div>
-                                @endif
-                                @else
-                                <div class="text-sm">
-                                    -
-                                </div>
-                                @endif
-                            </td>
-                            @if($item->discount_item > 0)
-                            <td style="">
-                                <div class="text-sm">
-                                    Rp.{{ number_format($item->price_item) }}
+                                    Rp.{{ number_format($item->price) }}
                                 </div>
                             </td>
                             <td>
                                 <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_item }}', '{{ $item->original_price }}', '{{ $item->discount_item }}', '{{ $item->stock }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
+                                    '{{ $item->unit }}', '{{ $item->price }}', '{{ $item->price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
                             </td>
-                            @elseif($item->discount_category > 0)
-                            <td style="">
-                                <div class="text-sm">
-                                    Rp.{{ number_format($item->price_category) }}
-                                </div>
-                            </td>
-                            <td>
-                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->price_category }}', '{{ $item->original_price }}', '{{ $item->discount_category }}', '{{ $item->stock }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
-                            </td>
-                            @else
-                            <td style="">
-                                <div class="text-sm">
-                                    Rp.{{ number_format($item->original_price) }}
-                                </div>
-                            </td>
-                            <td>
-                                <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
-                                    '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}')" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
-                            </td>
-                            @endif
                         </tr>
                         @endforeach
                     </tbody>

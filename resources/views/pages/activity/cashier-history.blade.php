@@ -38,9 +38,9 @@
                         <div>TOT. BIAYA</div>
                         <div>TOTAL</div>
                         <div>BAYAR TUNAI</div>
-                        <div>BAYAR E-WALLET</div>
                         <div>BAYAR DEBIT</div>
                         <div>BAYAR TRANSFER</div>
+                        <div>BAYAR E-WALLET</div>
                         <div>BAYAR KREDIT</div>
                         <hr style="width: 100%; border-style: dashed; border-color: black">
                         <div>JAM CETAK</div>
@@ -72,12 +72,13 @@
                         <div>{{ auth()->user()->name }}</div>
                         <div>UTAMA</div>
                         <hr style="width: 100%; border-style: dashed; border-color: black">
+                        <!-- [trans, pot, pajak, biaya, total, tunai, debit, transfer, ewallet, kredit] -->
                         <div>{{ $data[0] }}</div>
                         <div>Rp. {{ number_format($data[1]) }}</div>
                         <div>Rp. {{ number_format($data[2]) }}</div>
                         <div>Rp. {{ number_format($data[3]) }}</div>
-                        <div>Rp. {{ number_format(($data[4] - $data[1]) + $data[2] + $data[3]) }}</div>
-                        <div>Rp. {{ number_format($data[5]) }}</div>
+                        <div>Rp. {{ number_format(($data[4] + $data[2] + $data[3]) - $data[1]) }}</div>
+                        <div>Rp. {{ number_format(($data[5] + $data[2] + $data[3]) - $data[1]) }}</div>
                         <div>Rp. {{ number_format($data[6]) }}</div>
                         <div>Rp. {{ number_format($data[7]) }}</div>
                         <div>Rp. {{ number_format($data[8]) }}</div>
@@ -88,10 +89,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4"
-                    data-dismiss="modal">Close</button>
-                <a href="{{ route('cashier.print_history') }}"
-                    class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4">Print</a>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill pr-4 pl-4" data-dismiss="modal">Close</button>
+                <a href="{{ route('cashier.print_history') }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4">Print</a>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -102,10 +101,9 @@
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#data-item').DataTable();
     });
-
 </script>
 @endsection
 
@@ -119,7 +117,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -132,8 +129,7 @@
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover"
-                                style="margin-top: 0px;">
+                            <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
                                         <th style="" data-field="type">
