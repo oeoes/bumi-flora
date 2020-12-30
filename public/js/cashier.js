@@ -241,8 +241,13 @@ $(document).ready(function () {
     }))
 
     // scan barcode on paste
-    $(document).on('input', '#item_code', (function () {
-        if ($('#item_code').val().length > 0) {
+    $(document).on('input', '#item_code', (function (e) {
+        if (isNaN($('#item_code').val())) {
+            $('#search-item').modal('show')
+            $('#kasir-data-item_filter input').focus().val($('#item_code').val())
+        }
+
+        if (typeof parseInt($('#item_code').val()) === 'number' && ($('#item_code').val().length == 4 || $('#item_code').val().length == 11)) {
             axios.get('/cashier/check', {
                     params: {
                         code: $('#item_code').val(),
@@ -250,9 +255,7 @@ $(document).ready(function () {
                     }
                 })
                 .then(function (response) {
-                    let isScanned = false;
                     if (response.data.status == true) {
-                        isScanned = true;
                         let item = response.data.data
                         let amount = item.stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
                         if (item.stock > 0) {
@@ -263,9 +266,6 @@ $(document).ready(function () {
                         }
                     } else {
                         $('#search-item').modal('show')
-                        if (isScanned) {
-                            $('#search-item').modal('hide');
-                        }
                         
                         $('#kasir-data-item_filter input').focus().val($('#item_code').val())
                     }
