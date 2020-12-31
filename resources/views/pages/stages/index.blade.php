@@ -7,10 +7,32 @@
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#item-staging').DataTable();
     });
 
+    $('#generate_barcode').click(function() {
+        var result = '';
+        var characters = '0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < 10; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        $('#barcode').val(result);
+    });
+
+    // price diisi
+    $(document).on('keyup', '#price', function() {
+        let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
+        $('#price-percentage').val(percentage);
+    });
+
+    // percentage price diisi
+    $(document).on('keyup', '#price-percentage', function() {
+        let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
+        $('#price').val(price);
+    });
 </script>
 @endsection
 
@@ -24,7 +46,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -37,8 +58,7 @@
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table id="item-staging" class="table my-responsive table-theme v-middle table-hover"
-                                style="margin-top: 0px;">
+                            <table id="item-staging" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead style="">
                                     <tr>
                                         <th style="">
@@ -86,15 +106,13 @@
                                         <td>{{ $item->base_unit }}</td>
                                         <td>{{ $item->base_unit_conversion }}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4"
-                                                data-toggle="modal" data-target="#complete-item{{ $key }}">Complete
+                                            <button class="btn btn-sm btn-outline-primary rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#complete-item{{ $key }}">Complete
                                                 Item</button>
                                         </td>
                                     </tr>
 
                                     <!-- modal complete item -->
-                                    <div id="complete-item{{$key}}" class="modal fade" data-backdrop="true"
-                                        style="display: none;" aria-hidden="true">
+                                    <div id="complete-item{{$key}}" class="modal fade" data-backdrop="true" style="display: none;" aria-hidden="true">
                                         <div class="modal-dialog animate" data-class="fade-down">
                                             <div class="modal-content ">
                                                 <div class="modal-header ">
@@ -106,12 +124,28 @@
                                                         @method('PUT')
                                                         @csrf
                                                         <div class="form-group">
-                                                            <label>Harga Pokok</label>
-                                                            <input type="number" name="main_cost" class="form-control" required>
+                                                            <label class="text-muted" for="main_cost">Harga Pokok *</label>
+                                                            <input type="text" name="main_cost" class="form-control" id="main_cost" placeholder="Harga pokok" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Harga Jual</label>
-                                                            <input type="number" name="price" class="form-control" required>
+                                                            <label class="text-muted" for="price">Harga Jual *</label>
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- <div style="position: relative">
+                                    <input type="range" min="0" max="10000" step="1" class="custom-range mt-2" id="price-range" value="0">
+                                    <div class="percentage_range"><span id="percentage-value">0</span>%</div>
+                                </div> -->
                                                         </div>
                                                 </div>
                                                 <div class="modal-footer">

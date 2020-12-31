@@ -3,6 +3,49 @@
 @section('page-title', 'Edit Item')
 @section('page-description', 'Halaman untuk melakukan pembaruan item.')
 
+@section('custom-js')
+<script>
+    $(document).ready(function() {
+        // $('#price-range').prop('disabled', true);
+
+
+        $('#generate_barcode').click(function() {
+            var result = '';
+            var characters = '0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 10; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
+            $('#barcode').val(result);
+        });
+
+        // price diisi
+        $(document).on('keyup', '#price', function() {
+            let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
+            $('#price-percentage').val(percentage);
+        });
+
+        // percentage price diisi
+        $(document).on('keyup', '#price-percentage', function() {
+            let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
+            $('#price').val(price);
+        });
+
+        // make sure main cost harus ada isinya
+        $(document).on('keyup', '#main_cost', function() {
+            if ($('#main_cost').val() == '') {
+                $('#price').prop('readonly', true);
+                $('#price-percentage').prop('readonly', true);
+            } else {
+                $('#price').prop('readonly', false);
+                $('#price-perecentage').prop('readonly', false);
+            }
+        })
+    })
+</script>
+@endsection
+
 @section('btn-custom')
 <div>
     <a href="{{ route('items.index') }}" class="btn btn-md text-muted">
@@ -15,7 +58,7 @@
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">
-        <div class="row">            
+        <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -23,7 +66,7 @@
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('items.update', ['item' => $item->id]) }}">
-                        @method('PUT')
+                            @method('PUT')
                             @csrf
                             <div class="form-group">
                                 <label class="text-muted" for="name">Nama *</label>
@@ -75,7 +118,23 @@
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="price">Harga Jual *</label>
-                                <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required value="{{ $item->price }}">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required value="{{ $item->price }}">
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="price-percentage" placeholder="Persentase" value="{{ (($item->price - $item->main_cost) / $item->main_cost) * 100 }}">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div style="position: relative">
+                                    <input type="range" min="0" max="10000" step="1" class="custom-range mt-2" id="price-range" value="0">
+                                    <div class="percentage_range"><span id="percentage-value">0</span>%</div>
+                                </div> -->
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="min_stock">Stok Minimum *</label>
@@ -90,13 +149,13 @@
                         </form>
                     </div>
                 </div>
-            </div>   
+            </div>
             <div class="col-md-6">
                 <div class="sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
                     <img style="max-width: 100%" src="{{ asset('images/edit-item.svg') }}" alt="">
                 </div>
-            </div>         
-        </div>        
+            </div>
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>
