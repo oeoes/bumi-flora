@@ -240,7 +240,7 @@ class CashierController extends Controller
                     "cashback" => $request->payment_type != 1 ? '-' : number_format($request->nominal - $bill),
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
-                dd($calc);
+                dd($print_items);
                 // print receipt
                 PrintReceiptController::print_receipt($print_items, $calc);
             }
