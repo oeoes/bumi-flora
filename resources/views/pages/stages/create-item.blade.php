@@ -4,18 +4,41 @@
 @section('page-description', 'Add item to staging area.')
 
 @section('custom-js')
-    <script>
-        $('#generate_barcode').click(function(){
-            var result           = '';
-            var characters       = '0123456789';
-            var charactersLength = characters.length;
-            for ( var i = 0; i < 11; i++ ) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
+<script>
+    $('#generate_barcode').click(function() {
+        var result = '';
+        var characters = '0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < 10; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
 
-            $('#barcode').val(result);
-        });
-    </script>
+        $('#barcode').val(result);
+    });
+
+    // price diisi
+    $(document).on('keyup', '#price', function() {
+        let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
+        $('#price-percentage').val(percentage);
+    });
+
+    // percentage price diisi
+    $(document).on('keyup', '#price-percentage', function() {
+        let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
+        $('#price').val(price);
+    });
+
+    // make sure main cost harus ada isinya
+    $(document).on('keyup', '#main_cost', function() {
+        if ($('#main_cost').val() == '') {
+            $('#price').prop('readonly', true);
+            $('#price-percentage').prop('readonly', true);
+        } else {
+            $('#price').prop('readonly', false);
+            $('#price-perecentage').prop('readonly', false);
+        }
+    })
+</script>
 @endsection
 
 @section('btn-custom')
@@ -30,12 +53,12 @@
 @section('content')
 <div class="page-content page-container" id="page-content">
     <div class="padding">
-        <div class="row">            
+        <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
                         <strong>Tambah item</strong>
-                        
+
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('stages.store') }}">
@@ -104,13 +127,13 @@
                         </form>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="col-md-6">
                 <div class="sticky" style="z-index: 1; visibility: visible; transform: none; opacity: 1; transition: ease 1s ease 0s;">
                     <img style="max-width: 100%" src="{{ asset('images/add-item.svg') }}" alt="">
                 </div>
-            </div>           
-        </div>        
+            </div>
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>

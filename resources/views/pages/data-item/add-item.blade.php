@@ -13,19 +13,33 @@
             var result = '';
             var characters = '0123456789';
             var charactersLength = characters.length;
-            for (var i = 0; i < 11; i++) {
+            for (var i = 0; i < 10; i++) {
                 result += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
 
             $('#barcode').val(result);
         });
 
+        // price diisi
+        $(document).on('keyup', '#price', function() {
+            let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
+            $('#price-percentage').val(percentage);
+        });
+
+        // percentage price diisi
+        $(document).on('keyup', '#price-percentage', function() {
+            let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
+            $('#price').val(price);
+        });
+
         // make sure main cost harus ada isinya
         $(document).on('keyup', '#main_cost', function() {
             if ($('#main_cost').val() == '') {
-                $('#price-range').prop('disabled', true);
+                $('#price').prop('readonly', true);
+                $('#price-percentage').prop('readonly', true);
             } else {
-                $('#price-range').prop('disabled', false);
+                $('#price').prop('readonly', false);
+                $('#price-perecentage').prop('readonly', false);
             }
         })
 
@@ -146,11 +160,23 @@
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="price">Harga Jual *</label>
-                                <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required>
-                                <div style="position: relative">
-                                    <input type="range" min="0" max="100" step="1" class="custom-range mt-2" id="price-range" value="0">
-                                    <div class="percentage_range"><span id="percentage-value">0</span>%</div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <input type="text" name="price" class="form-control" id="price" placeholder="Harga jual" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- <div style="position: relative">
+                                    <input type="range" min="0" max="10000" step="1" class="custom-range mt-2" id="price-range" value="0">
+                                    <div class="percentage_range"><span id="percentage-value">0</span>%</div>
+                                </div> -->
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="min_stock">Stok Minimum *</label>

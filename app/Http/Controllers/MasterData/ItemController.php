@@ -299,7 +299,7 @@ class ItemController extends Controller
                 $flag = false;
                 continue;
             } else {
-                $barcode = self::generate_barcode_value(11);
+                $barcode = self::generate_barcode_value(10);
                 if(!Item::where('item_code', $line[0])->first() && !Item::where('barcode', $barcode)->first()) { // prevent duplicate item
                     try {
                          self::store_imported_item($line, $barcode);

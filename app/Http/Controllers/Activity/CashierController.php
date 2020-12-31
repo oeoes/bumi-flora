@@ -232,7 +232,7 @@ class CashierController extends Controller
                 $calc = [
                     "total_price" => number_format($total_price),
                     "customer" => $cust->name,
-                    "discount" => number_format($request->discount),
+                    "discount" => number_format($request->discount + $request->customer_discount),
                     "fee" => number_format($request->additional_fee),
                     "tax" => number_format($request->tax),
                     "bill" => number_format($bill),
