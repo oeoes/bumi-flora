@@ -103,7 +103,7 @@ class PrintReceiptController extends Controller
                         }
                     } else {
                         $n1 .= $items[$i]["satuan"];
-                        $n3 .= floor($items[$i]["total"]);
+                        $n3 .= $items[$i]["total"];
                         break;
                     }
 
