@@ -13,7 +13,7 @@
         </ul>
 
         <ul class="nav ">
-            @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'storage']))
+            @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Staging</span>
             </li>
@@ -29,9 +29,7 @@
                     <span class="nav-text">Pending Item</span>
                 </a>
             </li>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
+            
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -207,9 +205,7 @@
                     <span class="nav-text">Roles & Permission</span>
                 </a>
             </li>
-            @endif
-
-            @if(auth()->user()->hasAnyRole(['root', 'super_admin', 'cashier']))
+            
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>

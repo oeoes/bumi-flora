@@ -13,7 +13,7 @@ class AccessManagementSeeder extends Seeder
      */
     public function run()
     {
-        $roles = ['root', 'super_admin', 'storage', 'cashier'];
+        $roles = ['root', 'super_admin', 'offline_storage', 'online_storage', 'cashier'];
         $permissions = ['create', 'read', 'update', 'delete'];
 
         foreach($roles as $role) {

@@ -14,6 +14,7 @@ use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\MasterDataExport;
+use Carbon\Carbon;
 use DataTables;
 use Excel;
 use PDF;
@@ -27,41 +28,44 @@ class ItemController extends Controller
         return view('pages.data-item.items')->with(['items' => self::filter_query(), 'categories' => Category::all()]);
     }
 
-    public function data_item_page ($published) {
+    public function data_item_page($published)
+    {
         $data = self::items_query()->where('published', $published);
         return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('price', function($row) {
-                    $content = 'Rp.'.number_format((float) $row->price);
-                    return $content;
-                })
-                ->addColumn('main_cost', function($row) {
-                    $content = 'Rp.'.number_format((float) $row->main_cost);
-                    return $content;
-                })
-                ->addColumn('action', function($row) {
-                    $btn = '<a href="'.route('items.show', ['item' => $row->id]).'" class="btn btn-sm btn-outline-info rounded-pill">View Detail</a>';
-    
-                    return $btn;
-                })
-                ->rawColumns(['action', 'main_cost', 'price'])
-                ->make(true);
+            ->addIndexColumn()
+            ->addColumn('price', function ($row) {
+                $content = 'Rp.' . number_format((float) $row->price);
+                return $content;
+            })
+            ->addColumn('main_cost', function ($row) {
+                $content = 'Rp.' . number_format((float) $row->main_cost);
+                return $content;
+            })
+            ->addColumn('action', function ($row) {
+                $btn = '<a href="' . route('items.show', ['item' => $row->id]) . '" class="btn btn-sm btn-outline-info rounded-pill">View Detail</a>';
+
+                return $btn;
+            })
+            ->rawColumns(['action', 'main_cost', 'price'])
+            ->make(true);
     }
 
-    public static function items_query () {
+    public static function items_query()
+    {
         return DB::table('items')
-                ->select('id', 'name', 'barcode', 'base_unit', 'base_unit_conversion', 'main_cost', 'price')
-                ->where('deleted_at', NULL);
+            ->select('id', 'name', 'barcode', 'base_unit', 'base_unit_conversion', 'main_cost', 'price')
+            ->where('deleted_at', NULL);
     }
 
-    public static function items_show_query() {
+    public static function items_show_query()
+    {
         return DB::table('items')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('stocks', 'stocks.item_id', '=', 'items.id')
-                ->where(['stocks.dept' => 'utama', 'items.deleted_at' => NULL])
-                ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'stocks.dept', 'stocks.amount as stock');
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->join('stocks', 'stocks.item_id', '=', 'items.id')
+            ->where(['stocks.dept' => 'utama', 'items.deleted_at' => NULL])
+            ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'brands.brand', 'categories.category', 'stocks.dept', 'stocks.amount as stock');
     }
 
     public function create()
@@ -94,12 +98,13 @@ class ItemController extends Controller
 
         self::create_saldo_awal($item->id, 'utama');
         self::create_saldo_awal($item->id, 'gudang');
-        
+
         session()->flash('message', 'Yeay! Item berhasil ditambahkan.');
         return back();
     }
 
-    public static function create_saldo_awal ($item_id, $dept, $amount=0) {
+    public static function create_saldo_awal($item_id, $dept, $amount)
+    {
         Balance::create([
             'item_id' => $item_id,
             'amount' => $amount,
@@ -110,6 +115,15 @@ class ItemController extends Controller
             'amount' => $amount,
             'dept' => $dept,
         ]);
+    }
+
+    public static function update_saldo_awal($item_id, $dept, $amount = 0)
+    {
+        $balance = Balance::where(['item_id' => $item_id, 'dept' => $dept])->first();
+        $stock = Stock::where(['item_id' => $item_id, 'dept' => $dept])->first();
+
+        $balance->update(['amount' => $amount]);
+        $stock->update(['amount' => $amount]);
     }
 
     /**
@@ -123,7 +137,8 @@ class ItemController extends Controller
         return view('pages.data-item.show-item')->with('item', self::items_show_query()->where('items.id', $item)->first());
     }
 
-    public function destroy(Item $item) {
+    public function destroy(Item $item)
+    {
         $item->delete();
         return redirect()->route('items.index');
     }
@@ -143,14 +158,16 @@ class ItemController extends Controller
         return view('pages.data-item.edit-item')->with(['item' => $item, 'units' => $units, 'categories' => $categories, 'brands' => $brands]);
     }
 
-    public function filter_item (Request $request) {
+    public function filter_item(Request $request)
+    {
         $items = self::items_query();
         $query = self::add_query_on_filter($items, $request);
 
         return view('pages.data-item.items')->with('items', $query->get());
     }
 
-    public static function add_query_on_filter ($query, $request) {
+    public static function add_query_on_filter($query, $request)
+    {
         if ($request->dept != 'all') {
             $query = $query->where('balances.dept', $request->dept);
         }
@@ -158,7 +175,8 @@ class ItemController extends Controller
         return $query;
     }
 
-    public function update(Request $request, Item $item) {
+    public function update(Request $request, Item $item)
+    {
         $item->update([
             'name' => $request->name,
             'unit_id' => $request->unit,
@@ -179,11 +197,13 @@ class ItemController extends Controller
         return redirect()->route('items.index');
     }
 
-    public function export_item ($dept) {
+    public function export_item($dept)
+    {
         return Excel::download(new MasterDataExport($dept), 'master-data.xlsx');
     }
 
-    public function export_data_item (Request $request) {
+    public function export_data_item(Request $request)
+    {
         if ($request->fileType === 'pdf') {
             $items = self::generate_query_pdf($request->reportType);
             $pdf = PDF::loadView('pdf-template.data-item-dynamic', ['items' => $items, 'reportType' => $request->reportType])->setPaper('a4', 'landscape');
@@ -194,11 +214,12 @@ class ItemController extends Controller
             return response()->download(storage_path() . '/app/master-data.pdf', 'master-data.pdf', ['Content-Type' => ' application/pdf'])->deleteFileAfterSend();
         } else {
             Excel::store(new DynamicDataExport($request->reportType), 'master-data.xlsx');
-            return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();   
+            return response()->download(storage_path() . '/app/master-data.xlsx', 'master-data.xlsx', ['Content-Type' => ' application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])->deleteFileAfterSend();
         }
     }
 
-    public static function generate_query_pdf ($reportType) {
+    public static function generate_query_pdf($reportType)
+    {
         switch ($reportType) {
             case 'main_cost':
                 return DB::table('items')
@@ -249,10 +270,11 @@ class ItemController extends Controller
     /**
      * Generate barcode string value for new imported item
      */
-    public static function generate_barcode_value ($length) {
+    public static function generate_barcode_value($length)
+    {
         $barcode = '';
-        for ($i=0; $i < $length; $i++) { 
-            $barcode .= rand(0,9);
+        for ($i = 0; $i < $length; $i++) {
+            $barcode .= rand(0, 9);
         }
         return $barcode;
     }
@@ -261,7 +283,8 @@ class ItemController extends Controller
      * $line : row of imported csv
      * @return void
      */
-    public static function store_imported_item ($line, $barcode) {
+    public static function store_imported_item($line, $barcode, $dept)
+    {
         $item = Item::create([
             'item_code' => $line[0],
             'barcode' => $barcode,
@@ -280,45 +303,69 @@ class ItemController extends Controller
             'published' => 1
         ]);
 
-        self::create_saldo_awal($item->id, 'utama');
-        self::create_saldo_awal($item->id, 'gudang', $line[10]);
+        $utama = $dept == 'utama' ? $line[10] : 0;
+        $gudang = $dept == 'gudang' ? $line[10] : 0;
+        self::create_saldo_awal($item->id, 'utama', $utama);
+        self::create_saldo_awal($item->id, 'gudang', $gudang);
     }
 
-    public function import_item () {
+    public function import_item()
+    {
         $file = request()->file('file');
         $extension = $file->getClientOriginalExtension();
 
         // save file
-        request()->file('file')->storeAs('/product_files', 'import_item_data'.'.'.strtolower($extension));
+        request()->file('file')->storeAs('/product_files', 'import_item_data' . '.' . strtolower($extension));
 
-        $csv_file = fopen(storage_path('app/product_files/import_item_data.csv'),"r");
-        
+        $csv_file = fopen(storage_path('app/product_files/import_item_data.csv'), "r");
+
         $flag = true;
         while (($line = fgetcsv($csv_file)) !== FALSE) {
-            if($flag) {
+            if ($flag) {
                 $flag = false;
                 continue;
             } else {
                 $barcode = self::generate_barcode_value(10);
-                if(!Item::where('item_code', $line[0])->first() && !Item::where('barcode', $barcode)->first()) { // prevent duplicate item
-                    try {
-                         self::store_imported_item($line, $barcode);
-                    } catch (\Throwable $th) {
-                        return response()->json(['status' => false, 'message' => 'error: '. $th->getMessage()], 400);
+                // kalau field barcode => $line[1] ada isinya, itu artinya gaperlu generate barcode lagi.
+                // diasumsikan ini file import hasil export dari app ini, jadi field itemcode sama dengan barcode
+                if ($line[1]) {
+                    $item = Item::where('barcode', $line[1])->first();
+
+                    if (!$item) {
+                        self::store_imported_item($line, $line[1], request('dept'));
+                    } else {
+                        self::update_saldo_awal($item->id, request('dept'), $line[10]);
+                    }
+                } else {
+                    $item = Item::where('item_code', $line[0])->first();
+                    // cek apakah itemcode di db tidak ada, maka buat baru dengan barcode baru
+                    if (!$item) { // prevent duplicate item
+                        try {
+                            self::store_imported_item($line, $barcode, request('dept'));
+                        } catch (\Throwable $th) {
+                            return response()->json(['status' => false, 'message' => 'error: ' . $th->getMessage()], 400);
+                        }
+                    } else {
+                        try {
+                            self::update_saldo_awal($item->id, request('dept'), $line[10]);
+                        } catch (\Throwable $th) {
+                            return response()->json(['status' => false, 'message' => 'error: ' . $th->getMessage()], 400);
+                        }
                     }
                 }
             }
         }
         // delete right away
         Storage::delete('product_files/import_item_data.csv');
-        
+
         return response()->json(['status' => true, 'message' => 'File uploaded successfully']);
     }
 
     /**
      * $entity = [unit, brand, category]
      */
-    public static function findOrCreate ($entity, $key) {
+    public static function findOrCreate($entity, $key)
+    {
         if ($entity == 'unit') {
             $unit = Unit::where('unit', $key)->first();
             if ($unit) {
@@ -327,19 +374,17 @@ class ItemController extends Controller
                 $new_unit = Unit::create(['unit' => $key, 'description' => $key]);
                 return $new_unit->id;
             }
-        }
-        else if ($entity == 'brand') {
+        } else if ($entity == 'brand') {
             $brand = Brand::where('brand', $key)->first();
-            if($brand) {
+            if ($brand) {
                 return $brand->id;
             } else {
                 $new_brand = Brand::create(['brand' => $key, 'description' => $key]);
                 return $new_brand->id;
             }
-        }
-        else {
+        } else {
             $category = Category::where('category', $key)->first();
-            if($category) {
+            if ($category) {
                 return $category->id;
             } else {
                 $new_category = Category::create(['category' => $key, 'description' => $key]);
@@ -348,8 +393,9 @@ class ItemController extends Controller
         }
     }
 
-    public static function isNull($var) {
-        if($var == '')
+    public static function isNull($var)
+    {
+        if ($var == '')
             return NULL;
         return $var;
     }
@@ -370,5 +416,11 @@ class ItemController extends Controller
             ])
             ->paginate(15)
             ->appends(request()->query());
+    }
+
+    public function reset_data_item()
+    {
+        DB::table('items')->update(['deleted_at' => Carbon::now()]);
+        return back();
     }
 }

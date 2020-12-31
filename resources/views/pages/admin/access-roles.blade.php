@@ -80,7 +80,7 @@
                                                 <input id="user-phone" type="text" class="form-control form-control-sm" required>
                                             </div>
                                             <div class="form-group">
-                                                <label>Phone</label>
+                                                <label>Jenis User</label>
                                                 <select id="user-role" class="form-control">
                                                     <option value="admin">Administrator</option>
                                                     <option value="user">Common User</option>

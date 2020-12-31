@@ -46,6 +46,7 @@
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
+<script src="{{ asset('js/libs/on-scan.min.js') }}"></script>
 <script src="{{ asset('js/cashier.js') }}"></script>
 <script src="{{ asset('js/payment.js') }}"></script>
 <script src="{{ asset('js/pending.js') }}"></script>

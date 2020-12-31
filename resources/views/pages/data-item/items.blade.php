@@ -24,6 +24,11 @@
         <i data-feather="sliders"></i>
     </button>
 
+    <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#reset" data-toggle-class="modal-open-aside">
+        <span class="d-none d-sm-inline mx-1">Reset Data</span>
+        <i data-feather="trash"></i>
+    </button>
+
     <!-- modal import data item -->
     <div id="import" class="modal fade" da ta-backdrop="true" tyle="display: none;" aria-hidden="true">
         <div class="modal-dialog">
@@ -38,6 +43,13 @@
                             <label for="dept">Pilih file</label>
                             <input id="import_file_field" type="file" class="form-control form-control-sm">
                             <small id="error-type" class="text-danger"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="dept">Import ke</label>
+                            <select id="dept" class="form-control">
+                                <option value="utama">Peyimpanan Utama</option>
+                                <option value="gudang">Peyimpanan Gudang</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -173,6 +185,31 @@
             <!-- /.modal-content -->
         </div>
     </div>
+
+    <!-- modal reset data item -->
+    <div id="reset" class="modal fade" da ta-backdrop="true" tyle="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content h-100 no-radius">
+                <div class="modal-header ">
+                    <div class="modal-title text-warning">Warning!!</div>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-2">
+                        Reset data will erase all of your existing data items. Click "<b>Yes</b>" to proceed.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill pl-3 pr-3" data-dismiss="modal">Cancle</button>
+                    <form action="{{ route('items.reset_data_item') }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pl-3 pr-3">Yes</button>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -247,7 +284,7 @@
                             <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead>
                                     <tr>
-                                        
+
                                         <th>
                                             <div class="th-inner">Kode item</div>
                                             <div class="fht-cell"></div>
@@ -260,7 +297,7 @@
                                             <div class="th-inner">Nama</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        
+
                                         <th>
                                             <div class="th-inner">Satuan</div>
                                             <div class="fht-cell"></div>

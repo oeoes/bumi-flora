@@ -19,7 +19,8 @@ $(document).ready(function () {
         let file = $('#import_file_field')[0].files
         let size = file[0].size / 1000000
         
-        upload.append('file', file[0])
+        upload.append('file', file[0]);
+        upload.append('dept', $('#dept').val());
 
         if (size > 2) {
             $('#error-type').text('File size is too large (max: 2Mb)').show()
@@ -35,7 +36,7 @@ $(document).ready(function () {
                     'ContentType': 'multipart/form-data'
                 }
             }).then(function (response) {
-                console.log(response);
+                alert('Berhasil.')
             }).catch(function (error) {
 
             }).finally(function () {
