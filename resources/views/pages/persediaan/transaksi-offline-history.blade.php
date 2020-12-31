@@ -25,38 +25,38 @@
                     response.data.data.forEach(data => {
                         $('#online-data').append(`
                     <tr class=" " data-index="0" data-id="17">
-                        <td style="">
+                        <td>
                             <div class="text-muted text-sm">
                                 <a
                                     href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
                             </div>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.quantity}
                             </span>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.method_name}
                             </span>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.type_name}
                             </span>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.customer == null ? "Umum" : data.customer}
                             </span>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.created_at}
                             </span>
                         </td>
-                        <td style="">
+                        <td>
                             <span class="item-amount d-none d-sm-block text-sm ">
                                 ${data.transaction_time}
                             </span>
@@ -103,38 +103,38 @@
                         response.data.data.forEach(data => {
                             $('#online-data').append(`
                                 <tr class=" " data-index="0" data-id="17">
-                                    <td style="">
+                                    <td>
                                         <div class="text-muted text-sm">
                                             <a
                                                 href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
                                         </div>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.quantity}
                                         </span>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.method_name}
                                         </span>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.type_name}
                                         </span>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.customer == null ? "Umum" : data.customer}
                                         </span>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.created_at}
                                         </span>
                                     </td>
-                                    <td style="">
+                                    <td>
                                         <span class="item-amount d-none d-sm-block text-sm ">
                                             ${data.transaction_time}
                                         </span>
@@ -191,35 +191,35 @@
                         <div class="fixed-table-body">
                             <table class="table my-responsive table-theme v-middle table-hover"
                                 style="margin-top: 0px;">
-                                <thead style="">
+                                <thead>
                                     <tr>
-                                        <th style="" data-field="type">
+                                        <th data-field="type">
                                             <div class="th-inner">No. Transaksi</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Quantity</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Payment Method</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Payment Type</div>
                                             <div class="fht-cell"></div>
                                         </th>
 
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Customer</div>
                                             <div class="fht-cell"></div>
                                         </th>
 
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Date</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Time</div>
                                             <div class="fht-cell"></div>
                                         </th>

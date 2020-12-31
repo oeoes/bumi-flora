@@ -101,10 +101,6 @@
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th data-field="itemtype">
-                                            <div class="th-inner">Harga Pokok</div>
-                                            <div class="fht-cell"></div>
-                                        </th>
-                                        <th data-field="itemtype">
                                             <div class="th-inner">Harga Jual</div>
                                             <div class="fht-cell"></div>
                                         </th>
@@ -145,11 +141,6 @@
                                         <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ strtoupper($item->unit) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="item-amount d-sm-block text-sm">
-                                                Rp.{{ number_format($item->main_cost, 2) }}
                                             </span>
                                         </td>
                                         <td>
