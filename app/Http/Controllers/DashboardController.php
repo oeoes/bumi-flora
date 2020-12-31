@@ -57,8 +57,8 @@ class DashboardController extends Controller
     public function accumulation()
     {
         $transactions = DB::table('transactions')
-            ->groupBy('transaction_time')
-            ->select('transaction_time')
+            ->groupBy('transaction_number')
+            ->select('transaction_number')
             ->where(['transactions.deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
             
         $omset = DB::table('items')

@@ -42,7 +42,7 @@ function store_transaction(e) {
     }).catch(function (error) {
         console.log(error.response)      
     }).finally(function (e) {
-        // location.reload()
+        location.reload()
 
         $(e).text('Simpan & Bayar')
         $('#payment').modal('toggle')

@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class PrintReceiptController extends Controller
 {
     public static function print_receipt ($items, $calc) {
-        $logo = EscposImage::load(public_path('images/logo.png'), false);
+        $logo = EscposImage::load(storage_path('app/images/logo.png'), false);
         // total qty seluruh item
         $sum_qty = 0;
         foreach ($items as $item) {

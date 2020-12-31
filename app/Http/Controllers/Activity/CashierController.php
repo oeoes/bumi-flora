@@ -22,7 +22,7 @@ class CashierController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['role:super_admin|root|cashier']);
+        $this->middleware(['role:super_admin|root|cashier|online_storage']);
     }
 
     public function index()

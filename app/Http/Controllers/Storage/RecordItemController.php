@@ -181,6 +181,7 @@ class RecordItemController extends Controller
     public function get_transaction_data ($dept) {
         $items = DB::table('transactions')
                 ->join('items', 'items.id', '=', 'transactions.item_id')
+                ->join('users', 'users.id', '=', 'transactions.user_id')
                 ->join('units', 'units.id', '=', 'items.unit_id')
                 ->join('categories', 'categories.id', '=', 'items.category_id')
                 ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
@@ -190,7 +191,7 @@ class RecordItemController extends Controller
                 ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
                 ->latest()
                 ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
+                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
                 ->get();
         return response()->json(['status' => count($items) ? true : false, 'data' => $items]);
     }

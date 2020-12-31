@@ -51,7 +51,9 @@
                                         <th><span class="text-muted">Satuan</span></th>
                                         <th><span class="text-muted">Min. Stock</span></th>
                                         <th><span class="text-muted">Stock</span></th>
+                                        @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
                                         <th><span class="text-muted">Harga Pokok</span></th>
+                                        @endif
                                         <th><span class="text-muted">Harga Jual</span></th>
                                         <th><span class="text-muted">Saldo Awal</span></th>
                                         <th><span class="text-muted">Total</span></th>
@@ -86,11 +88,13 @@
                                                 {{ $item->stock }}
                                             </span>
                                         </td>
+                                        @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->main_cost, 2) }}
                                             </span>
                                         </td>
+                                        @endif
                                         <td style="">
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price, 2) }}

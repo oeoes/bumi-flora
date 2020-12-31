@@ -8,17 +8,17 @@
 <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         let dept = 'utama'
         $('#view-transaction').prop('disabled', true)
 
         // view data transaction
         axios.get(`/app/records/item/transaction/history/${dept}`)
-            .then(function (response) {
+            .then(function(response) {
                 if (!response.data.status) {
                     $('#online-data').append(`
                     <tr class=" " data-index="0" data-id="17">
-                        <td colspan="7" align="center">Data transaksi tidak ditemukan</td></tr
+                        <td colspan="8" align="center">Data transaksi tidak ditemukan</td></tr
                     </tr>
                 `)
                 } else {
@@ -61,6 +61,11 @@
                                 ${data.transaction_time}
                             </span>
                         </td>
+                        <td>
+                            <span class="item-amount d-none d-sm-block text-sm ">
+                                ${data.cashier}
+                            </span>
+                        </td>
                     </tr>
                     `)
                     })
@@ -68,7 +73,7 @@
 
             })
 
-        $(document).on('change', '#from', function () {
+        $(document).on('change', '#from', function() {
             if (!$('#to').val()) {
                 $('#view-transaction').prop('disabled', true)
             } else {
@@ -76,7 +81,7 @@
             }
         })
 
-        $(document).on('change', '#to', function () {
+        $(document).on('change', '#to', function() {
             if (!$('#from').val()) {
                 $('#view-transaction').prop('disabled', true)
             } else {
@@ -85,18 +90,18 @@
         })
 
 
-        $(document).on('click', '#view-transaction', function () {
+        $(document).on('click', '#view-transaction', function() {
             $('#online-data').children().remove()
 
             axios.get(
                     `/app/records/item/transaction/filter/${dept}/${$('#from').val()}/${$('#to').val()}`
                 )
-                .then(function (response) {
+                .then(function(response) {
 
                     if (!response.data.status) {
                         $('#online-data').append(`
                             <tr class=" " data-index="0" data-id="17">
-                                <td colspan="7" align="center">Data transaksi tidak ditemukan</td>
+                                <td colspan="8" align="center">Data transaksi tidak ditemukan</td>
                             </tr </tr> 
                         `)
                     } else {
@@ -139,6 +144,11 @@
                                             ${data.transaction_time}
                                         </span>
                                     </td>
+                                    <td>
+                                        <span class="item-amount d-none d-sm-block text-sm ">
+                                            ${data.cashier}
+                                        </span>
+                                    </td>
                                 </tr>
                             `)
                         })
@@ -146,7 +156,6 @@
                 })
         })
     });
-
 </script>
 @endsection
 
@@ -159,7 +168,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -179,8 +187,7 @@
                         <input id="to" type="date" class="form-control">
                     </div>
                     <div class="col-md-3">
-                        <button id="view-transaction"
-                            class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4 mt-4">View</button>
+                        <button id="view-transaction" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4 mt-4">View</button>
                     </div>
                 </div>
             </div>
@@ -189,8 +196,7 @@
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table class="table my-responsive table-theme v-middle table-hover"
-                                style="margin-top: 0px;">
+                            <table class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead>
                                     <tr>
                                         <th data-field="type">
@@ -221,6 +227,10 @@
                                         </th>
                                         <th data-field="itemtype">
                                             <div class="th-inner">Time</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th data-field="itemtype">
+                                            <div class="th-inner">Kasir</div>
                                             <div class="fht-cell"></div>
                                         </th>
                                     </tr>
