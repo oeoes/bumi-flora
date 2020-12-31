@@ -24,7 +24,7 @@ class MasterDataExport implements FromCollection, WithHeadings
             ->join('brands', 'brands.id', '=', 'items.brand_id')
             ->join('stocks', 'stocks.item_id', '=', 'items.id')
             ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
-            ->where('stocks.dept', $this->dept)
+            ->where(['stocks.dept' => $this->dept, 'items.deleted_at' => NULL, 'items.published' => 1])
             ->select('items.barcode as item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.base_unit', 'items.base_unit_conversion', 'items.main_cost', 'items.price', DB::raw('IFNULL(stocks.amount, 0) as stock'), 'items.min_stock', 'categories.id as item_type', 'items.base_unit_conversion as using_serial', 'items.cabinet', 'stocks.dept', 'stake_holders.name', 'items.description')
             ->get();
     }
