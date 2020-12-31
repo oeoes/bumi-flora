@@ -96,8 +96,8 @@ class ItemController extends Controller
             'published' => 1
         ]);
 
-        self::create_saldo_awal($item->id, 'utama');
-        self::create_saldo_awal($item->id, 'gudang');
+        self::create_saldo_awal($item->id, 'utama', 0);
+        self::create_saldo_awal($item->id, 'gudang', 0);
 
         session()->flash('message', 'Yeay! Item berhasil ditambahkan.');
         return back();
