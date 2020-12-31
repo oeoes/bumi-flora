@@ -196,7 +196,7 @@ class CashierController extends Controller
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => number_format($item[3]),
+                "price" => number_format(($item[3] * 100) / (100 - $item[5])),
                 "qty" => $item[1],
                 "total" => number_format($item[3] * $item[1]),
                 "discount" => $item[5],
