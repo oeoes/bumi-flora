@@ -195,7 +195,7 @@ class CashierController extends Controller
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => number_format($item[3]),
+                "price" => number_format(($item[3] * 100) / (100 - $item[5])),
                 "qty" => $item[1],
                 "total" => number_format($item[3] * $item[1]),
                 "discount" => $item[5],
@@ -240,7 +240,6 @@ class CashierController extends Controller
                     "cashback" => $request->payment_type != 1 ? '-' : number_format($request->nominal - $bill),
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
-                dd($print_items);
                 // print receipt
                 PrintReceiptController::print_receipt($print_items, $calc);
             }
