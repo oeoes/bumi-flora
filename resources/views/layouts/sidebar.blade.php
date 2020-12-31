@@ -1,20 +1,20 @@
 <div class="flex scrollable hover">
     <div class="nav-active-text-primary" data-nav>
-        <ul class="nav bg">
-            <li class="nav-header hidden-folded">
-                <span class="text-muted">Main</span>
-            </li>
-            <li>
-                <a href="{{ route('dashboard.index') }}">
-                    <span class="nav-icon text-primary"><i data-feather='home'></i></span>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </li>
-        </ul>
-
         <ul class="nav ">
-        <!-- menu superadmin -->
+            <!-- menu superadmin -->
             @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
+            <ul class="nav bg">
+                <li class="nav-header hidden-folded">
+                    <span class="text-muted">Main</span>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.index') }}">
+                        <span class="nav-icon text-primary"><i data-feather='home'></i></span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+            
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Staging</span>
             </li>
@@ -30,7 +30,7 @@
                     <span class="nav-text">Pending Item</span>
                 </a>
             </li>
-            
+
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Master Data</span>
             </li>
@@ -195,7 +195,7 @@
                     <span class="nav-text">History Pembelian</span>
                 </a>
             </li>
-            
+
             <!-- Akses managgement -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Akses Management</span>
@@ -206,7 +206,7 @@
                     <span class="nav-text">Roles & Permission</span>
                 </a>
             </li>
-            
+
             <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
@@ -230,7 +230,7 @@
 
             <!-- menu kasir -->
             @if(auth()->user()->hasAnyRole(['cashier']))
-                <!-- Pembelian -->
+            <!-- Pembelian -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Kasir</span>
             </li>
@@ -313,7 +313,7 @@
                     <span class="nav-text">Pending Item</span>
                 </a>
             </li>
-            
+
             <!-- persediaan -->
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Persediaan</span>
