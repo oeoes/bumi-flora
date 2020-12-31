@@ -207,7 +207,7 @@ class ItemController extends Controller
                     ->join('brands', 'brands.id', '=', 'items.brand_id')
                     ->join('stocks', 'stocks.item_id', '=', 'items.id')
                     ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
-                    ->where('items.deleted_at', NULL)
+                    ->where(['items.deleted_at' => NULL, 'items.published' => 1])
                     ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
                 break;
 
@@ -218,7 +218,7 @@ class ItemController extends Controller
                     ->join('brands', 'brands.id', '=', 'items.brand_id')
                     ->join('stocks', 'stocks.item_id', '=', 'items.id')
                     ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
-                    ->where('items.deleted_at', NULL)
+                    ->where(['items.deleted_at' => NULL, 'items.published' => 1])
                     ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
                 break;
 
@@ -229,7 +229,7 @@ class ItemController extends Controller
                     ->join('brands', 'brands.id', '=', 'items.brand_id')
                     ->join('stocks', 'stocks.item_id', '=', 'items.id')
                     ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
-                    ->where('items.deleted_at', NULL)
+                    ->where(['items.deleted_at' => NULL, 'items.published' => 1])
                     ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
                 break;
 
@@ -240,7 +240,7 @@ class ItemController extends Controller
                     ->join('brands', 'brands.id', '=', 'items.brand_id')
                     ->join('stocks', 'stocks.item_id', '=', 'items.id')
                     ->leftJoin('stake_holders', 'stake_holders.id', '=', 'items.stake_holder_id')
-                    ->where('items.deleted_at', NULL)
+                    ->where(['items.deleted_at' => NULL, 'items.published' => 1])
                     ->select('items.item_code', 'items.barcode', 'items.name as item', 'categories.category', 'units.unit', 'brands.brand', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion')->distinct()->get();
                 break;
         }

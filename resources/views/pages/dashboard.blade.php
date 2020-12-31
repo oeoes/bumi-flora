@@ -50,21 +50,21 @@
         chart.update();
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         /** first time load graphic **/
         axios.get('/app/dashboard/demand')
-            .then(function (response) {
+            .then(function(response) {
 
                 response.data.data.forEach(element => {
                     addData(myChart, element.name, parseInt(element.quantity), false)
 
                 });
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log(error);
             })
-            .finally(function () {})
+            .finally(function() {})
         /** end first time load graphic **/
 
         var ctx = document.getElementById('myChart').getContext('2d');
@@ -108,27 +108,32 @@
             let name = []
             let quantity = []
             axios.get('/app/dashboard/demand')
-                .then(function (response) {
+                .then(function(response) {
                     response.data.data.forEach(element => {
                         name.push(element.name)
                         quantity.push(element.quantity)
                     });
                     addData(myChart, name, quantity, true)
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 })
-                .finally(function () {})
+                .finally(function() {})
 
             // summary
             axios.get('/app/dashboard/accumulate')
-                .then(function (response) {
+                .then(function(response) {
                     $('#total_transaction').text(response.data.data[0].length)
                     if (response.data.data[1][0].outcome == null) {
                         $('#total_omset').text('0')
                     } else {
-                        $('#total_omset').text(parseInt(response.data.data[1][0].outcome)
-                            .toLocaleString())
+                        let omset_arr = response.data.data[1].map(function(oms) {
+                            return oms.outcome;
+                        });
+                        let omset = omset_arr.reduce(function(prevVal, currVal) {
+                            return parseInt(prevVal) + parseInt(currVal);
+                        });
+                        $('#total_omset').text(omset).toLocaleString()
                     }
                 })
         }, 5000);
@@ -139,7 +144,7 @@
                     cashier: $('#cashier').val()
                 }
             })
-            .then(function (response) {
+            .then(function(response) {
                 $('#cashier_transaction').text(response.data.data[0].length)
                 if (response.data.data[1][0].outcome == null) {
                     $('#cashier_omset').text('0')
@@ -148,24 +153,30 @@
                 }
             })
         axios.get('/app/dashboard/accumulate')
-            .then(function (response) {
+            .then(function(response) {
                 $('#total_transaction').text(response.data.data[0].length)
                 if (response.data.data[1][0].outcome == null) {
                     $('#total_omset').text('0')
                 } else {
-                    $('#total_omset').text(parseInt(response.data.data[1][0].outcome).toLocaleString())
+                    let omset_arr = response.data.data[1].map(function(oms) {
+                        return oms.outcome;
+                    });
+                    let omset = omset_arr.reduce(function(prevVal, currVal) {
+                        return parseInt(prevVal) + parseInt(currVal);
+                    });
+                    $('#total_omset').text(omset).toLocaleString()
                 }
             })
         /** end first time load */
 
 
-        $(document).on('change', '#cashier', function () {
+        $(document).on('change', '#cashier', function() {
             axios.get('/app/dashboard/cashier', {
                     params: {
                         cashier: $('#cashier').val()
                     }
                 })
-                .then(function (response) {
+                .then(function(response) {
                     $('#cashier_transaction').text(response.data.data[0].length)
                     if (response.data.data[1][0].outcome == null) {
                         $('#cashier_omset').text('0')
@@ -174,20 +185,18 @@
                             .toLocaleString())
                     }
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 })
-                .finally(function () {
+                .finally(function() {
 
                 });
         });
     });
-
 </script>
 <!-- scroll reveal -->
 <script>
     ScrollReveal().reveal('.card');
-
 </script>
 @endsection
 
@@ -201,7 +210,6 @@
             overflow-x: auto;
         }
     }
-
 </style>
 @endsection
 
@@ -243,8 +251,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <small class="text-muted">Total pendapatan</small>
-                                <div class="text-highlight mt-2 font-weight-500 text-success">+ Rp. <span
-                                        id="total_omset"></span>
+                                <div class="text-highlight mt-2 font-weight-500 text-success">+ Rp. <span id="total_omset"></span>
                                 </div>
                             </div>
                         </div>
