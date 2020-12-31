@@ -22,9 +22,21 @@ class AuthenticationController extends Controller
             return response()->json(['status' => false, 'message' => 'Invalid Credentials'], 401);
         }
         else {
-            if(auth()->user()->role == 'user')
-                return response()->json(['status' => true, 'role' => 'user'], 200);
-            return response()->json(['status' => true, 'role' => 'admin'], 200);
+            if(auth()->user()->hasAnyRole(['root', 'super_admin'])) {
+                return response()->json(['status' => true, 'role' => 'admin'], 200);
+            } 
+            else if (auth()->user()->hasAnyRole(['cashier'])) {
+                return response()->json(['status' => true, 'role' => 'cashier'], 200);
+            } 
+            else if (auth()->user()->hasAnyRole(['offline_storage'])) {
+                return response()->json(['status' => true, 'role' => 'offline_storage'], 200);
+            } 
+            else if (auth()->user()->hasAnyRole(['online_storage'])) {
+                return response()->json(['status' => true, 'role' => 'online_storage'], 200);
+            }
+            else {
+                return response()->json(['status' => false, 'role' => 'guest'], 401);
+            }
         }
     }
 

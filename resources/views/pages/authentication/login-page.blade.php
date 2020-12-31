@@ -76,10 +76,16 @@
                     password: $('#password').val()
                 }).then(function(response) {
                     if (response.data.status) {
-                        if (response.data.role == 'user') {
-                            location.href = "{{route('cashier.index')}}"
-                        } else {
+                        if (response.data.role === 'admin') {
                             location.href = "{{route('dashboard.index')}}"
+                        } else if (response.data.role === 'cashier') {
+                            location.href = "{{route('cashier.index')}}"
+                        } else if (response.data.role === 'offline_storage') {
+                            location.href = "{{route('stages.create')}}"
+                        } else if (response.data.role === 'online_storage') {
+                            location.href = "{{route('storages.ecommerce')}}"
+                        } else {
+                            alert('Sorry, we could not find entered account.');
                         }
                     }
                 }).catch(function(error) {
