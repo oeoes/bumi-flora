@@ -225,7 +225,6 @@ class CashierController extends Controller
                 ]);
             }
         }
-        return $print_items;
 
         try {
             if ($request->dept !== 'ecommerce') { // kalau bukan ecomerce baru cetak receipt
@@ -233,7 +232,7 @@ class CashierController extends Controller
                 $cust = StakeHolder::find($request->customer);
                 $calc = [
                     "total_price" => number_format($total_price),
-                    "customer" => $cust->name,
+                    "customer" => $cust ? $cust->name : 'Umum',
                     "discount" => number_format($request->discount),
                     "fee" => number_format($request->additional_fee),
                     "tax" => number_format($request->tax),
