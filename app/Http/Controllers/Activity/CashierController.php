@@ -227,7 +227,7 @@ class CashierController extends Controller
 
         try {
             if ($request->dept !== 'ecommerce') { // kalau bukan ecomerce baru cetak receipt
-                $bill = $total_price + $request->tax + $request->additional_fee - $request->discount;
+                $bill = $total_price + $request->tax + $request->additional_fee - ($request->discount + $request->customer_discount);
                 $cust = StakeHolder::find($request->customer);
                 $calc = [
                     "total_price" => number_format($total_price),
@@ -240,6 +240,7 @@ class CashierController extends Controller
                     "cashback" => $request->payment_type != 1 ? '-' : number_format($request->nominal - $bill),
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
+                dd($calc);
                 // print receipt
                 PrintReceiptController::print_receipt($print_items, $calc);
             }
