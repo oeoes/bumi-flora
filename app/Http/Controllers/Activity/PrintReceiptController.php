@@ -210,6 +210,7 @@ class PrintReceiptController extends Controller
         $printer->text("[Perhatian]\nBarang yang telah dibeli tidak dapat \n dikembalikan kecuali ada perjanjian.\n");
         $printer->feed();
         $printer -> cut();
+        $printer -> pulse();
         /* Close printer */
         $printer -> close();
     }
