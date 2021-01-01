@@ -420,7 +420,7 @@ class ItemController extends Controller
 
     public function reset_data_item()
     {
-        DB::table('items')->update(['deleted_at' => Carbon::now()]);
+        DB::table('items')->update(['deleted_at' => Carbon::now(), 'barcode' => NULL]);
         return back();
     }
 }
