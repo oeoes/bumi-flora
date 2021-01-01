@@ -17,11 +17,12 @@
         "laravel/framework": "7.28.4",
         "laravel/tinker": "^2.0",
         "maatwebsite/excel": "^3.1",
-        "mike42/escpos-php": "^3.0", 
+        "mike42/escpos-php": "^3.0",
         "milon/barcode": "^7.0",
         "robgridley/zebra": "^2.0",
         "spatie/laravel-permission": "^3.17",
         "spatie/laravel-query-builder": "^3.3",
+        "spatie/laravel-responsecache": "^6.6",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
