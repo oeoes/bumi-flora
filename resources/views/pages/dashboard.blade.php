@@ -302,44 +302,64 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card p-3">
                     <div class="card-header">
-                        <small class="text-muted">Total Asset : </small> <small class="text-info">GUDANG</small>
+                        Item : <small><a href="{{ route('storages.gudang') }}" class="text-warning">GUDANG</a></small>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <small class="text-muted mb-2">Total Item</small>
-                                <div class="h5">23453</div>
+                                <div class="h5">{{ $gudang[0]->total_item }}</div>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted mb-2">Estimasi Pendapatan</small>
-                                <div class="h5">Rp.23,234,567</div>
+                                <small class="text-muted mb-2">Asset</small>
+                                <div class="h6">Rp.{{ number_format((float) $gudang[0]->asset, 2) }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card p-3">
                     <div class="card-header">
-                        <small class="text-muted">Total Asset : </small> <small class="text-success">UTAMA</small>
+                        Item : <small><a href="{{ route('storages.utama') }}" class="text-info">UTAMA</a></small>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <small class="text-muted mb-2">Total Item</small>
-                                <div class="h5">23453</div>
+                                <div class="h5">{{ $utama[0]->total_item }}</div>
                             </div>
                             <div class="col-md-6">
-                                <small class="text-muted mb-2">Estimasi Pendapatan</small>
-                                <div class="h5">Rp.23,234,567</div>
+                                <small class="text-muted mb-2">Asset</small>
+                                <div class="h6">Rp.{{ number_format((float) $utama[0]->asset, 2) }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <div class="card-header">
+                        Item : <small><a href="{{ route('storages.ecommerce') }}" class="text-success">ONLINE</a></small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Total Item</small>
+                                <div class="h5">{{ $ecommerce[0]->total_item }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Asset</small>
+                                <div class="h6">Rp.{{ number_format((float) $ecommerce[0]->asset, 2) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="row">
             <div class="col-md-12">

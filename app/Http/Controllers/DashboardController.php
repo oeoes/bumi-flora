@@ -8,8 +8,19 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    public static function asset_item ($dept) {
+        return DB::table('items')
+            ->join('stocks', 'items.id', '=', 'stocks.item_id')
+            ->where(['stocks.dept' => $dept, 'items.deleted_at' => NULL])
+            ->select(DB::raw('sum(stocks.amount) as total_item'), DB::raw('sum(stocks.amount * items.price) as asset'))
+            ->get();
+    }
     public function index()
     {
+        $gudang = self::asset_item('gudang');
+        $utama = self::asset_item('utama');
+        $ecommerce = self::asset_item('ecommerce');
+
         $employee = DB::table('model_has_roles')
             ->join('users', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
@@ -24,7 +35,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(items.price * transactions.qty) as outcome')
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
 
-        return view('pages.dashboard', ['employee' => $employee, 'transactions' => $transactions, 'omset' => $omset]);
+        return view('pages.dashboard', ['employee' => $employee, 'transactions' => $transactions, 'omset' => $omset, 'gudang' => $gudang, 'utama' => $utama, 'ecommerce' => $ecommerce]);
     }
 
     public function demand()
@@ -60,7 +71,7 @@ class DashboardController extends Controller
             ->groupBy('transaction_number')
             ->select('transaction_number')
             ->where(['transactions.deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
-            
+
         $omset = DB::table('items')
             ->join('transactions', 'items.id', '=', 'transactions.item_id')
             ->join('units', 'units.id', '=', 'items.unit_id')
