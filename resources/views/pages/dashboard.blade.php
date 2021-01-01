@@ -164,7 +164,7 @@
                     let omset = omset_arr.reduce(function(prevVal, currVal) {
                         return parseInt(prevVal) + parseInt(currVal);
                     });
-                    $('#total_omset').text(omset).toLocaleString()
+                    $('#total_omset').text(omset.toLocaleString())
                 }
             })
         /** end first time load */
@@ -296,6 +296,46 @@
                                         style="width: 25%" data-original-title="25%"></div>
                                 </div>
                             </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <div class="card-header">
+                        <small class="text-muted">Total Asset : </small> <small class="text-info">GUDANG</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Total Item</small>
+                                <div class="h5">23453</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Estimasi Pendapatan</small>
+                                <div class="h5">Rp.23,234,567</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <div class="card-header">
+                        <small class="text-muted">Total Asset : </small> <small class="text-success">UTAMA</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Total Item</small>
+                                <div class="h5">23453</div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted mb-2">Estimasi Pendapatan</small>
+                                <div class="h5">Rp.23,234,567</div>
+                            </div>
                         </div>
                     </div>
                 </div>

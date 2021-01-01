@@ -44,14 +44,14 @@ class RecordItemController extends Controller
     public function store(Request $request)
     {
         $stock = Stock::where(['item_id' => $request->item_id, 'dept' => $request->dept])->first();
-        
+
         // update stock
         if ($request->type == 'in') {
             $no_urut = StorageRecord::where('amount_in', '!=', 'NULL')->get();
             StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
-                'transaction_no' => (count($no_urut)+1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
+                'transaction_no' => (count($no_urut) + 1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
                 'amount_in' => $request->amount,
                 'description' => $request->description,
             ]);
@@ -63,7 +63,7 @@ class RecordItemController extends Controller
             StorageRecord::create([
                 'item_id' => $request->item_id,
                 'dept' => $request->dept,
-                'transaction_no' => (count($no_urut)+1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
+                'transaction_no' => (count($no_urut) + 1) . '/MASUK/' . strtoupper($request->dept) . '/' . Carbon::now()->format('Y-m-d'),
                 'amount_out' => $request->amount,
                 'description' => $request->description,
             ]);
@@ -91,7 +91,7 @@ class RecordItemController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-    */
+     */
     public function edit($id)
     {
         //
@@ -127,121 +127,139 @@ class RecordItemController extends Controller
         // update stock
         $stock = Stock::where(['item_id' => $record->item_id, 'dept' => $record->dept])->first();
         $stock->update(['amount' => $stock->amount + $record->qty]);
-        
+
         // delete transaction
         $record->delete();
 
-        if($record->dept === 'ecommerce') {
+        if ($record->dept === 'ecommerce') {
             return redirect()->route('records.online_transaction_history');
         } else {
             return redirect()->route('records.offline_transaction_history');
         }
     }
 
-    public static function items_balance_query () {
+    public static function items_balance_query()
+    {
         return DB::table('balances')
-                ->join('items', 'items.id', '=', 'balances.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->where(['items.deleted_at' => NULL])
-                ->select('balances.amount', 'balances.id as balance_id', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'brands.brand');
+            ->join('items', 'items.id', '=', 'balances.item_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->where(['items.deleted_at' => NULL])
+            ->select('balances.amount', 'balances.id as balance_id', 'balances.dept', 'items.*', 'units.unit', 'categories.category', 'brands.brand');
     }
 
-    public function item_masuk () {
+    public function item_masuk()
+    {
         $items = DB::table('items')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
-                ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
-                ->where('storage_records.amount_in', '!=', 'NULL')
-                ->where(['items.deleted_at' => NULL])->get();
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
+            ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
+            ->where('storage_records.amount_in', '!=', 'NULL')
+            ->where(['items.deleted_at' => NULL])->get();
         return view('pages.persediaan.item-masuk')->with('items', $items);
     }
 
-    public function item_keluar () {
+    public function item_keluar()
+    {
         $items = DB::table('items')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
-                ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
-                ->where('storage_records.amount_out', '!=', 'NULL')
-                ->where(['items.deleted_at' => NULL])->get();
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('storage_records', 'items.id', '=', 'storage_records.item_id')
+            ->select('storage_records.*', 'items.name', 'items.price', 'units.unit')
+            ->where('storage_records.amount_out', '!=', 'NULL')
+            ->where(['items.deleted_at' => NULL])->get();
 
         return view('pages.persediaan.item-keluar')->with('items', $items);
     }
 
-    public function offline_transaction_history () {
+    public function offline_transaction_history()
+    {
         return view('pages.persediaan.transaksi-offline-history');
     }
 
-    public function online_transaction_history () {
+    public function online_transaction_history()
+    {
 
         return view('pages.persediaan.transaksi-online-history');
     }
 
-    public function get_transaction_data ($dept) {
+    public function get_transaction_data($dept)
+    {
         $items = DB::table('transactions')
-                ->join('items', 'items.id', '=', 'transactions.item_id')
-                ->join('users', 'users.id', '=', 'transactions.user_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
-                ->latest()
-                ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
-                ->get();
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('users', 'users.id', '=', 'transactions.user_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
+            ->get();
         return response()->json(['status' => count($items) ? true : false, 'data' => $items]);
     }
 
-    public function get_transaction_data_sorted ($dept, $from, $to) {
+    public function get_transaction_data_sorted($dept, $from, $to)
+    {
         $items = DB::table('transactions')
-                ->join('items', 'items.id', '=', 'transactions.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
-                ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
-                ->latest()
-                ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-                ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
-                ->get();
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
+            ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
+            ->get();
         return response()->json(['status' => count($items) ? true : false, 'data' => $items]);
     }
 
-    public function detail_transaction_history ($transaction_id, $dept) {
+    public function detail_transaction_history($transaction_id, $dept)
+    {
         $transaction = Transaction::find($transaction_id);
         $base_transaction = DB::table('transactions')
-                        ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                        ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                        ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                        ->where(['transactions.id' => $transaction_id, 'transactions.dept' => $dept])
-                        ->select('transactions.id', 'transactions.dept', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name', 'transactions.tax', 'transactions.additional_fee')
-                        ->first();
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->where(['transactions.id' => $transaction_id, 'transactions.dept' => $dept])
+            ->select('transactions.id', 'transactions.dept', 'transactions.transaction_number', 'transactions.created_at', 'transactions.transaction_time', 'stake_holders.name as customer', 'payment_types.type_name', 'payment_methods.method_name', 'transactions.tax', 'transactions.additional_fee')
+            ->first();
 
         $items = DB::table('transactions')
-                ->join('items', 'items.id', '=', 'transactions.item_id')
-                ->join('units', 'units.id', '=', 'items.unit_id')
-                ->join('categories', 'categories.id', '=', 'items.category_id')
-                ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-                ->join('brands', 'brands.id', '=', 'items.brand_id')
-                ->join('balances', 'balances.item_id', '=', 'items.id')
-                ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-                ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-                ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number, 'transactions.deleted_at' => NULL])
-                ->orderBy('transactions.created_at')
-                ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.discount_item', 'transactions.discount_customer', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')
-                ->get();
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->join('balances', 'balances.item_id', '=', 'items.id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number, 'transactions.deleted_at' => NULL])
+            ->orderBy('transactions.created_at')
+            ->select('items.id as item_id', 'items.name', 'items.main_cost', 'items.price', 'stake_holders.name as customer', 'transactions.id as transaction_id', 'transactions.transaction_number', 'transactions.qty', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.discount', 'transactions.discount_item', 'transactions.discount_customer', 'transactions.transaction_time', 'transactions.created_at', 'units.unit', 'categories.category', 'brands.brand')
+            ->get();
 
-        return view('pages.persediaan.detail-transaksi-history')->with(['items' => $items, 'base' => $base_transaction]);
+        $total = DB::table('transactions')
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('balances', 'balances.item_id', '=', 'items.id')
+            ->groupBy('transactions.transaction_number')
+            ->where(['balances.dept' => $dept, 'transactions.transaction_number' => $transaction->transaction_number, 'transactions.deleted_at' => NULL])
+            ->orderBy('transactions.created_at')
+            ->select(DB::raw('sum(transactions.qty * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as total'))
+            ->get();
+
+        return view('pages.persediaan.detail-transaksi-history')->with(['items' => $items, 'base' => $base_transaction, 'total' => $total]);
     }
 
-    public function transfer_item (Request $request) {
+    public function transfer_item(Request $request)
+    {
         // perlakuan untuk penyimpanan ecommerce
         if ($request->to == 'ecommerce') {
             $stock_item = Stock::where(['item_id' => $request->item_id, 'dept' => $request->to])->first();
@@ -264,7 +282,7 @@ class RecordItemController extends Controller
         $to = Stock::where(['item_id' => $request->item_id, 'dept' => $request->to])->first();
 
         // cek kalo saldo setelah dikurangi tidak kurang dari 0
-        if ( $from->amount - $request->amount < 0) return back();
+        if ($from->amount - $request->amount < 0) return back();
 
 
         $from->update(['amount' => $from->amount - $request->amount]);
@@ -277,7 +295,7 @@ class RecordItemController extends Controller
         StorageRecord::create([
             'item_id' => $request->item_id,
             'dept' => $request->to,
-            'transaction_no' => (count($no_urut_in)+1) . '/MASUK/' . strtoupper($request->to) . '/' . Carbon::now()->format('Y-m-d'),
+            'transaction_no' => (count($no_urut_in) + 1) . '/MASUK/' . strtoupper($request->to) . '/' . Carbon::now()->format('Y-m-d'),
             'amount_in' => $request->amount,
             'description' => 'Transfer item dari ' . $request->from,
         ]);
@@ -286,21 +304,22 @@ class RecordItemController extends Controller
         StorageRecord::create([
             'item_id' => $request->item_id,
             'dept' => $request->from,
-            'transaction_no' => (count($no_urut_out)+1) . '/KELUAR/' . strtoupper($request->from) . '/' . Carbon::now()->format('Y-m-d'),
+            'transaction_no' => (count($no_urut_out) + 1) . '/KELUAR/' . strtoupper($request->from) . '/' . Carbon::now()->format('Y-m-d'),
             'amount_out' => $request->amount,
             'description' => 'Transfer item ke penyimpanan ' . $request->to,
         ]);
-        
+
         return back();
     }
 
-    public function live_edit_transaction (Transaction $transaction) {
+    public function live_edit_transaction(Transaction $transaction)
+    {
         $list_of_items = [];
         // data seluruh transaksi
         $transactions = DB::table('transactions')->join('items', 'items.id', '=', 'transactions.item_id')
-                    ->where('transactions.transaction_number', $transaction->transaction_number)
-                    ->select('items.barcode', 'transactions.dept', 'transactions.qty', 'transactions.discount_item', 'items.price', 'transactions.qty')
-                    ->get();
+            ->where('transactions.transaction_number', $transaction->transaction_number)
+            ->select('items.barcode', 'transactions.dept', 'transactions.qty', 'transactions.discount_item', 'items.price', 'transactions.qty')
+            ->get();
 
         // item untuk di modal search item
         $items = DB::table('items')
@@ -312,7 +331,7 @@ class RecordItemController extends Controller
             ->leftJoin('discounts as discount_items', 'items.id', '=', 'discount_items.item_id')
             ->leftJoin('discount_periodes as discount_periode_item', 'discount_items.id', '=', 'discount_periode_item.discount_id')
             ->leftJoin('discount_periodes as discount_periode_category', 'discount_categories.id', '=', 'discount_periode_category.discount_id')
-            ->where(['stocks.dept' => $transaction->dept,'items.deleted_at' => NULL])
+            ->where(['stocks.dept' => $transaction->dept, 'items.deleted_at' => NULL])
             ->select('items.id', 'stocks.amount as stock', 'items.name', 'items.barcode', 'units.unit', 'items.price as original_price', DB::raw('IFNULL(discount_items.value * CAST(discount_items.status as UNSIGNED), 0) as discount_item'), DB::raw('IFNULL(discount_categories.value * CAST(discount_categories.status as UNSIGNED), 0) as discount_category'), DB::raw('items.price - (IFNULL((items.price * discount_categories.value / 100) * CAST(discount_categories.status as UNSIGNED), 0)) as price_category'), DB::raw('items.price - (IFNULL((items.price * discount_items.value / 100) * CAST(discount_items.status as UNSIGNED), 0)) as price_item'), 'discount_periode_category.occurences as category_occurences', 'discount_periode_item.occurences as item_occurences', DB::raw('IFNULL(grosir_items.minimum_item, 0) as minimum_item'), 'grosir_items.price as grosir_price')->get();
 
         foreach ($transactions as $trans) {
@@ -336,7 +355,8 @@ class RecordItemController extends Controller
     /**
      * get data untuk diretrieve ke halaman edit kasir
      */
-    public static function transaction_toArray ($barcode, $dept, $quantity) {
+    public static function transaction_toArray($barcode, $dept, $quantity)
+    {
         $item = DB::table('items')
             ->join('stocks', 'items.id', '=', 'stocks.item_id')
             ->join('units', 'units.id', '=', 'items.unit_id')
