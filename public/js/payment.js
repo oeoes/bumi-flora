@@ -2,7 +2,7 @@ function store_transaction(e) {
     $(e).text('Simpan & Bayar...')
 
     let items = JSON.parse(localStorage.getItem('items'))
-    let item_data = []
+    let item_data = [];
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {

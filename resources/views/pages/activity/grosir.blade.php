@@ -211,12 +211,12 @@
                                                         </td>
                                                         <td>
                                                             <span class="item-amount d-sm-block text-sm">
-                                                                Rp.{{ number_format($item->main_cost, 2) }}
+                                                                Rp.{{ number_format((float)$item->main_cost, 2) }}
                                                             </span>
                                                         </td>
                                                         <td>
                                                             <span class="item-amount d-sm-block text-sm">
-                                                                Rp.{{ number_format($item->price, 2) }}
+                                                                Rp.{{ number_format((float)$item->price, 2) }}
                                                             </span>
                                                         </td>
                                                         <td>
