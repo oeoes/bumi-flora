@@ -6,8 +6,20 @@ function store_transaction(e) {
 
     if (items != null) {
         for (let i = 0; i < items.length; i++) {
-            // item_id, qty, item_name, price, satuan, discount item
-            item_data.push([items[i][0], items[i][4], items[i][1], items[i][7] > 0 ? items[i][5] : items[i][6], items[i][3], items[i][7]])
+            let price = 0;
+            // kalau grosir dan discount ketriger
+            if ((items[i][9] > 0 && items[i][4] >= items[i][9]) && items[i][7] > 0) {
+                // harga grosir di potong discount
+                price = parseInt(items[i][10]) - ((parseInt(items[i][10]) * parseInt(items[i][7])) / 100);
+            } else if (items[i][7] > 0) {
+                price = items[i][5];
+            } else if (items[i][9] > 0 && items[i][4] >= items[i][9]) {
+                price = items[i][10];
+            } else {
+                price = items[i][6];
+            }
+            // item_id, qty, item_name, price, satuan, discount item, grosiitem
+            item_data.push([items[i][0], items[i][4], items[i][1], price, items[i][3], items[i][7], items[i][9]])
         }
     }
 

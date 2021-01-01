@@ -66,7 +66,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
         Route::post('/items/filter', 'MasterData\ItemController@filter_item')->name('items.filter-item');
         Route::post('/items/import', 'MasterData\ItemController@import_item')->name('items.import-item');
         Route::post('/items/data/export', 'MasterData\ItemController@export_data_item')->name('items.export_data_item');
-        Route::get('/items/data/export/{dept}', 'MasterData\ItemController@reset_data_item')->name('items.export-item');
+        Route::get('/items/data/export/{dept}', 'MasterData\ItemController@export_item')->name('items.export-item');
         Route::post('/items/data/reset', 'MasterData\ItemController@reset_data_item')->name('items.reset_data_item');
 
 

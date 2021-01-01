@@ -191,12 +191,11 @@ class CashierController extends Controller
                 ]);
             }
 
-            $price = (integer) $item[3];
             // array data receipt
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => number_format(($item[3] * 100) / (100 - $item[5])),
+                "price" => $item[6] > 0 && $item[1] >= $item[6] ? $item[3] : number_format(($item[3] * 100) / (100 - $item[5])),
                 "qty" => $item[1],
                 "total" => number_format($item[3] * $item[1]),
                 "discount" => $item[5],
