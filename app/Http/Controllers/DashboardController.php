@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
         $transactions = DB::table('transactions')
             ->groupBy('transaction_time')
-            ->select('transaction_time')->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
+            ->select('transaction_time')->where('deleted_at', NULL)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
         $omset = DB::table('transactions')
             ->join('items', 'items.id', '=', 'transactions.item_id')
             ->selectRaw('sum(items.price * transactions.qty) as outcome')

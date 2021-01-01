@@ -161,7 +161,10 @@
                 <div class="card-body">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="user-tab" data-toggle="pill" href="#user" role="tab" aria-controls="user" aria-selected="true">User</a>
+                            <a class="nav-link active" id="access-tab" data-toggle="pill" href="#access" role="tab" aria-controls="access" aria-selected="true">Access</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="user-tab" data-toggle="pill" href="#user" role="tab" aria-controls="user" aria-selected="true">User</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="role-tab" data-toggle="pill" href="#role" role="tab" aria-controls="role" aria-selected="false">Roles</a>
@@ -171,15 +174,13 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                        <div class="tab-pane fade show active" id="access" role="tabpanel" aria-labelledby="access-tab">
                             <div class="table-responsive table-borderless table-hover">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Nama</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Phone</th>
                                             <th scope="col">Role</th>
                                             <th scope="col">Assign Role</th>
                                         </tr>
@@ -189,15 +190,15 @@
                                         <tr>
                                             <td>{{ $key+1 }}</td>
                                             <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone }}</td>
                                             <td>
                                                 {{ $user->getRoleNames()->first() }}
                                             </td>
-                                            <td><button class="btn btn-sm btn-outline-success rounded-pill mb-1" data-toggle="modal" data-target="#assign-role{{ $key }}"><i class="fas fa-fw fa-user-plus"></i>Assign</button></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-success rounded-pill mb-1 pr-3 pl-3" data-toggle="modal" data-target="#assign-role{{ $key }}"><i data-feather="user-plus"></i></button>
+                                            </td>
 
                                             <!-- Assign Role -->
-                                            <div class="modal fade" id="assign-role{{$key}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="assign-role{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -227,7 +228,59 @@
                                                 </div>
                                             </div>
                                             <!-- Assign Role -->
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show" id="user" role="tabpanel" aria-labelledby="user-tab">
+                            <div class="table-responsive table-borderless table-hover">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nama</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Phone</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($users as $key => $user)
+                                        <tr>
+                                            <td>{{ $key+1 }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->phone }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-danger rounded-pill mb-1 pr-3 pl-3" data-toggle="modal" data-target="#delete-user{{ $key }}"><i data-feather="trash"></i></button>
+                                            </td>
 
+                                            <!-- Delete user -->
+                                            <div class="modal fade" id="delete-user{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Hapus User</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('access.destroy', ['id' => $user->id]) }}" method="POST">
+                                                                @method('DELETE')
+                                                                @csrf
+                                                                Hapus akun user pada sistem bumiflora80.
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input type="submit" class="btn btn-sm btn-outline-primary rounded-pill pl-4 pr-4" value="Hapus">
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Delete role -->
                                         </tr>
                                         @endforeach
                                     </tbody>

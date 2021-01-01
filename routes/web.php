@@ -22,6 +22,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::post('/storages/item/opname/export', 'Storage\StorageController@export_opname')->name('storages.export_opname');
 
     Route::resource('/records', 'Storage\RecordItemController');
+    Route::delete('/records/transaction/delete/{id}', 'Storage\RecordItemController@delete_transaction')->name('records.delete_transaction');
     Route::get('/records/item/masuk', 'Storage\RecordItemController@item_masuk')->name('records.masuk');
     Route::get('/records/item/keluar', 'Storage\RecordItemController@item_keluar')->name('records.keluar');
     /** transaction history */
@@ -45,6 +46,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     // Access Management
     Route::get('/access', 'Admin\UserManagementController@index')->name('access.index');
+    Route::delete('/access/{id}', 'Admin\UserManagementController@destroy')->name('access.destroy');
     Route::post('/access/user', 'Admin\UserManagementController@invite_user')->name('access.invite_user');
     Route::post('/access/role', 'Admin\UserManagementController@create_role')->name('access.create_role');
     Route::post('/access/permission', 'Admin\UserManagementController@add_permission')->name('access.add_permission');

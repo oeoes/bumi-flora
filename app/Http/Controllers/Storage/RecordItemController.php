@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Storage;
 
 use App\Http\Controllers\Controller;
+use App\Model\Activity\StockWarnNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Model\Storage\StorageRecord;
@@ -260,6 +261,8 @@ class RecordItemController extends Controller
 
     public function transfer_item(Request $request)
     {
+        $master_item = Item::find($request->item_id);
+
         // perlakuan untuk penyimpanan ecommerce
         if ($request->to == 'ecommerce') {
             $stock_item = Stock::where(['item_id' => $request->item_id, 'dept' => $request->to])->first();
@@ -287,6 +290,27 @@ class RecordItemController extends Controller
 
         $from->update(['amount' => $from->amount - $request->amount]);
         $to->update(['amount' => $to->amount + $request->amount]);
+
+        // warning if stock less than minimum stock or even zero left
+        if ($from->amount < $master_item->min_stock && $from->amount > 0) {
+            $title = $master_item->name . ' kurang dari stock minimum. [GUDANG]';
+            $link = route('items.show', ['item' => $master_item->id]);
+            $body = 'Jumlah item untuk ' . $master_item->name . ' kurang dari stock minimum. Segera lakukan restock sebelum kehabisan, untuk lebih detail klik tautan ini <a href="' . $link . '">detail.</a>';
+            StockWarnNotification::create([
+                'title' => $title,
+                'body' => $body,
+                'urgency' => 1,
+            ]);
+        } else if ($from->amount == 0) {
+            $title = $master_item->name . ' stock habis. [GUDANG]';
+            $link = route('items.show', ['item' => $master_item->id]);
+            $body = 'Jumlah item untuk ' . $master_item->name . ' tersisa 0. Segera lakukan restock, klik tautan ini untuk lebih detail <a href="' . $link . '">detail.</a>';
+            StockWarnNotification::create([
+                'title' => $title,
+                'body' => $body,
+                'urgency' => 2,
+            ]);
+        }
 
         $no_urut_in = StorageRecord::where('amount_in', '!=', 'NULL')->get();
         $no_urut_out = StorageRecord::where('amount_out', '!=', 'NULL')->get();
@@ -425,5 +449,23 @@ class RecordItemController extends Controller
         }
 
         return $data;
+    }
+
+    public function delete_transaction ($id) {
+        $transaction = Transaction::find($id);
+        $transactions = Transaction::where('transaction_number', $transaction->transaction_number)->get();
+
+        foreach($transactions as $tr) {
+            $stock = Stock::where(['item_id' => $tr->item_id, 'dept' => $tr->dept])->first();
+            $stock->update(['amount' => $stock->amount + $tr->qty]);
+        }
+
+        Transaction::where('transaction_number', $transaction->transaction_number)->delete();
+
+        if ($transaction->dept === 'ecommerce') {
+            return redirect()->route('records.online_transaction_history');
+        } else {
+            return redirect()->route('records.offline_transaction_history');
+        }
     }
 }

@@ -89,7 +89,35 @@
                                     <td>Rp.{{ number_format($total[0]->total + $base->additional_fee + $base->tax) }}</td>
                                 </tr>
                                 <tr>
-                                    <td><a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a></td>
+                                    <td>
+                                        <a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a>
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4 mt-4" data-toggle="modal" data-target="#delete-transaction">Delete</button>
+
+                                        <!-- Delete transaction -->
+                                        <div class="modal fade" id="delete-transaction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Hapus Transaksi</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ route('records.delete_transaction', ['id' => $base->id]) }}" method="POST">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            Klik "Yes" untuk menghapus data transaksi.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="submit" class="btn btn-sm btn-outline-primary rounded-pill pl-4 pr-4" value="Yes">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Delete transaction -->
+                                    </td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -181,7 +209,7 @@
                                         <td>
                                             <!-- <button class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#edit-item{{ $key }}">Edit</button> -->
                                             @can('delete')
-                                            <button class="btn btn-outline-danger btn-sm rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#delete-item{{ $key }}">Delete</button>
+                                            <button class="btn btn-outline-warning btn-sm rounded-pill pr-4 pl-4" data-toggle="modal" data-target="#delete-item{{ $key }}">Delete</button>
                                             @endcan
                                         </td>
                                     </tr>

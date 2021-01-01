@@ -195,7 +195,7 @@ class CashierController extends Controller
             $data_item = [
                 "name" => $item[2],
                 "satuan" => $item[4],
-                "price" => $item[6] > 0 && $item[1] >= $item[6] ? $item[3] : number_format(($item[3] * 100) / (100 - $item[5])),
+                "price" => $item[6] > 0 && $item[1] >= $item[6] ? number_format($item[3]) : number_format(($item[3] * 100) / (100 - $item[5])),
                 "qty" => $item[1],
                 "total" => number_format($item[3] * $item[1]),
                 "discount" => $item[5],
@@ -205,7 +205,7 @@ class CashierController extends Controller
 
             // warning if stock less than minimum stock or even zero left
             if ($stock->amount < $master_item->min_stock && $stock->amount > 0) {
-                $title = $master_item->name . ' kurang dari stock minimum.';
+                $title = $master_item->name . ' kurang dari stock minimum. [UTAMA]';
                 $link = route('items.show', ['item' => $master_item->id]);
                 $body = 'Jumlah item untuk ' . $master_item->name . ' kurang dari stock minimum. Segera lakukan restock sebelum kehabisan, untuk lebih detail klik tautan ini <a href="' . $link . '">detail.</a>';
                 StockWarnNotification::create([
@@ -214,7 +214,7 @@ class CashierController extends Controller
                     'urgency' => 1,
                 ]);
             } else if ($stock->amount == 0) {
-                $title = $master_item->name . ' stock habis.';
+                $title = $master_item->name . ' stock habis. [UTAMA]';
                 $link = route('items.show', ['item' => $master_item->id]);
                 $body = 'Jumlah item untuk ' . $master_item->name . ' tersisa 0. Segera lakukan restock, klik tautan ini untuk lebih detail <a href="' . $link . '">detail.</a>';
                 StockWarnNotification::create([

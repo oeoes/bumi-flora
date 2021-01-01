@@ -66,4 +66,9 @@ class UserManagementController extends Controller
         $role->update(['name' => $request->role_name]);
         return back();
     }
+
+    public function destroy (User $id) {
+        $id->delete();
+        return back();
+    }
 }
