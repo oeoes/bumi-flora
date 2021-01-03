@@ -91,8 +91,9 @@
                                 <tr>
                                     <td>
                                         <a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a>
+                                        @can('delete')
                                         <button class="btn btn-sm btn-outline-danger rounded-pill pr-4 pl-4 mt-4" data-toggle="modal" data-target="#delete-transaction">Delete</button>
-
+                                        @endcan
                                         <!-- Delete transaction -->
                                         <div class="modal fade" id="delete-transaction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">

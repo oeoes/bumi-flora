@@ -423,4 +423,19 @@ class ItemController extends Controller
         DB::table('items')->update(['deleted_at' => Carbon::now(), 'barcode' => NULL]);
         return back();
     }
+
+    public function availability($code)
+    {
+        $item = Item::where('item_code', $code)->orWhere('barcode', $code)->select('name', 'item_code', 'barcode')->first();
+
+        if ($item) {
+            $data = [
+                'name' => $item->name,
+                'code' => $code == $item->item_code ? $item->item_code : $item->barcode
+            ];
+            return response()->json(['status' => false, 'data' => $data]);
+        } else {
+            return response()->json(['status' => true, 'data' => []]);
+        }
+    }
 }

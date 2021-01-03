@@ -3,158 +3,18 @@
 @section('page-title', 'Transaksi Offline')
 @section('page-description', 'Histori transaksi offline.')
 
+@section('custom-css')
+<link href="{{ asset('css/dataTables.css') }}" rel="stylesheet">
+@endsection
 
 @section('custom-js')
 <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
 <script>
     $(document).ready(function() {
-        let dept = 'utama'
-        $('#view-transaction').prop('disabled', true)
-
-        // view data transaction
-        axios.get(`/app/records/item/transaction/history/${dept}`)
-            .then(function(response) {
-                if (!response.data.status) {
-                    $('#online-data').append(`
-                    <tr class=" " data-index="0" data-id="17">
-                        <td colspan="8" align="center">Data transaksi tidak ditemukan</td></tr
-                    </tr>
-                `)
-                } else {
-                    response.data.data.forEach(data => {
-                        $('#online-data').append(`
-                    <tr class=" " data-index="0" data-id="17">
-                        <td>
-                            <div class="text-muted text-sm">
-                                <a
-                                    href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.quantity}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.method_name}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.type_name}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.customer == null ? "Umum" : data.customer}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.created_at}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.transaction_time}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="item-amount d-none d-sm-block text-sm ">
-                                ${data.cashier}
-                            </span>
-                        </td>
-                    </tr>
-                    `)
-                    })
-                }
-
-            })
-
-        $(document).on('change', '#from', function() {
-            if (!$('#to').val()) {
-                $('#view-transaction').prop('disabled', true)
-            } else {
-                $('#view-transaction').prop('disabled', false)
-            }
-        })
-
-        $(document).on('change', '#to', function() {
-            if (!$('#from').val()) {
-                $('#view-transaction').prop('disabled', true)
-            } else {
-                $('#view-transaction').prop('disabled', false)
-            }
-        })
-
-
-        $(document).on('click', '#view-transaction', function() {
-            $('#online-data').children().remove()
-
-            axios.get(
-                    `/app/records/item/transaction/filter/${dept}/${$('#from').val()}/${$('#to').val()}`
-                )
-                .then(function(response) {
-
-                    if (!response.data.status) {
-                        $('#online-data').append(`
-                            <tr class=" " data-index="0" data-id="17">
-                                <td colspan="8" align="center">Data transaksi tidak ditemukan</td>
-                            </tr </tr> 
-                        `)
-                    } else {
-                        response.data.data.forEach(data => {
-                            $('#online-data').append(`
-                                <tr class=" " data-index="0" data-id="17">
-                                    <td>
-                                        <div class="text-muted text-sm">
-                                            <a
-                                                href="/app/records/item/transaction/detail/${data.id}/${dept}">${data.transaction_number}</a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.quantity}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.method_name}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.type_name}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.customer == null ? "Umum" : data.customer}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.created_at}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.transaction_time}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="item-amount d-none d-sm-block text-sm ">
-                                            ${data.cashier}
-                                        </span>
-                                    </td>
-                                </tr>
-                            `)
-                        })
-                    }
-                })
-        })
+        // data table
+        $('#history-offline').DataTable();
     });
 </script>
 @endsection
@@ -177,26 +37,28 @@
 
         <div class="row">
             <div class="col-md-12 mb-5">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label>Dari</label>
-                        <input id="from" type="date" class="form-control">
+                <form action="{{ route('records.offline_transaction_history') }}" method="get">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Dari</label>
+                            <input name="from" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Hingga</label>
+                            <input name="to" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4 mt-4">View</button>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <label>Hingga</label>
-                        <input id="to" type="date" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <button id="view-transaction" class="btn btn-outline-primary btn-sm rounded-pill pr-4 pl-4 mt-4">View</button>
-                    </div>
-                </div>
+                </form>
             </div>
 
             <div class="col-sm-12 col-md-12">
                 <div class="bootstrap-table">
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
-                            <table class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
+                            <table id="history-offline" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
                                 <thead>
                                     <tr>
                                         <th data-field="type">
@@ -235,8 +97,51 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody id="online-data">
-
+                                <tbody id="offline-data">
+                                    @foreach($items as $key => $item)
+                                    <tr class=" " data-index="0" data-id="17">
+                                        <td>
+                                            <div class="text-muted text-sm">
+                                                <a href="{{ route('records.detail_transaction_history', ['transaction_id' => $item->id, 'dept' => 'utama']) }}">{{ $item->transaction_number }}</a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->quantity }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->method_name }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->type_name }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->customer == NULL ? 'Umum' : $item->customer}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->created_at }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->transaction_time }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                {{ $item->cashier }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

@@ -8,11 +8,12 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public static function asset_item ($dept) {
+    public static function asset_item($dept)
+    {
         return DB::table('items')
             ->join('stocks', 'items.id', '=', 'stocks.item_id')
             ->where(['stocks.dept' => $dept, 'items.deleted_at' => NULL])
-            ->select(DB::raw('sum(stocks.amount) as total_item'), DB::raw('sum(stocks.amount * items.price) as asset'))
+            ->select(DB::raw('sum(stocks.amount) as total_item'), DB::raw('sum(stocks.amount * items.main_cost) as asset'))
             ->get();
     }
     public function index()
@@ -45,7 +46,8 @@ class DashboardController extends Controller
             ->select('items.name', 'transactions.item_id')
             ->selectRaw('sum(transactions.qty) as quantity')
             ->groupBy('items.name', 'transactions.qty', 'transactions.item_id')
-            ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
+            ->orderBy('transactions.qty')
+            ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->limit(15)->get();
 
         return response()->json(['status' => true, 'message' => 'product demand', 'data' => $demand]);
     }
@@ -57,11 +59,14 @@ class DashboardController extends Controller
             ->select('transaction_time')
             ->where('transactions.user_id', request('cashier'))
             ->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
-        $omset = DB::table('transactions')
-            ->join('items', 'items.id', '=', 'transactions.item_id')
-            ->selectRaw('sum(items.price * transactions.qty) as outcome')
-            ->where('transactions.user_id', request('cashier'))
+
+        $omset = DB::table('items')
+            ->join('transactions', 'items.id', '=', 'transactions.item_id')
+            ->select('items.id', DB::raw('((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) as outcome'))
+            ->groupBy('transactions.item_id')
+            ->where(['transactions.user_id' => request('cashier'), 'transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
+            
         return response()->json(['status' => true, 'message' => 'cashier performance', 'data' => [$transactions, $omset]]);
     }
 

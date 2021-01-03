@@ -70,6 +70,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
         Route::post('/items/data/export', 'MasterData\ItemController@export_data_item')->name('items.export_data_item');
         Route::get('/items/data/export/{dept}', 'MasterData\ItemController@export_item')->name('items.export-item');
         Route::post('/items/data/reset', 'MasterData\ItemController@reset_data_item')->name('items.reset_data_item');
+        Route::get('/items/availability/{code}', 'MasterData\ItemController@availability')->name('items.availability');
 
 
         // data pendukung
@@ -129,6 +130,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
     // Warn Notification
     Route::resource('/notifications', 'Activity\StockWarnNotificationController');
     Route::get('/notifications/page/list', 'Activity\StockWarnNotificationController@notification_page')->name('notifications.page');
+    Route::get('/notifications/delete/all', 'Activity\StockWarnNotificationController@delete_all')->name('notifications.delete_all');
 
     // change user credentials
     Route::post('/user/update', 'Authentication\AuthenticationController@change_user_credentials');

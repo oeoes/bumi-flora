@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use App\Model\Activity\Transaction;
 use App\Model\MasterData\Item;
 use App\Model\Relation\StakeHolder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class RecordItemController extends Controller
 {
@@ -175,13 +177,50 @@ class RecordItemController extends Controller
 
     public function offline_transaction_history()
     {
-        return view('pages.persediaan.transaksi-offline-history');
+        $items = DB::table('transactions')
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('users', 'users.id', '=', 'transactions.user_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['transactions.dept' => 'utama', 'transactions.deleted_at' => NULL])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
+        
+        if(request('from') != null) {
+            $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
+        } else {
+            $items->get();
+        }
+        return view('pages.persediaan.transaksi-offline-history')->with(['items' => $items->get()]);
     }
 
     public function online_transaction_history()
     {
+        $items = DB::table('transactions')
+        ->join('items', 'items.id', '=', 'transactions.item_id')
+        ->join('users', 'users.id', '=', 'transactions.user_id')
+        ->join('units', 'units.id', '=', 'items.unit_id')
+        ->join('categories', 'categories.id', '=', 'items.category_id')
+        ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+        ->join('brands', 'brands.id', '=', 'items.brand_id')
+        ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+        ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+        ->where(['transactions.dept' => 'ecommerce', 'transactions.deleted_at' => NULL])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
 
-        return view('pages.persediaan.transaksi-online-history');
+        if (request('from') != null) {
+            $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
+        } else {
+            $items->get();
+        }
+        return view('pages.persediaan.transaksi-online-history')->with(['items' => $items->get()]);
     }
 
     public function get_transaction_data($dept)
@@ -203,23 +242,12 @@ class RecordItemController extends Controller
         return response()->json(['status' => count($items) ? true : false, 'data' => $items]);
     }
 
-    public function get_transaction_data_sorted($dept, $from, $to)
+    public function get_transaction_data_sorted()
     {
-        $items = DB::table('transactions')
-            ->join('items', 'items.id', '=', 'transactions.item_id')
-            ->join('units', 'units.id', '=', 'items.unit_id')
-            ->join('categories', 'categories.id', '=', 'items.category_id')
-            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-            ->join('brands', 'brands.id', '=', 'items.brand_id')
-            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-            ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
-            ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
-            ->latest()
-            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
-            ->get();
-        return response()->json(['status' => count($items) ? true : false, 'data' => $items]);
+        $items = self::items_query('utama', request('from'), request('to'))
+            ->paginate()
+            ->appends(request()->query());
+        return view('pages.persediaan.transaksi-offline-history')->with(['items' => $items]);
     }
 
     public function detail_transaction_history($transaction_id, $dept)
@@ -467,5 +495,27 @@ class RecordItemController extends Controller
         } else {
             return redirect()->route('records.offline_transaction_history');
         }
+    }
+
+    public static function items_query ($dept, $from, $to) {
+        return QueryBuilder::for(Transaction::class)
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['transactions.dept' => $dept, 'transactions.deleted_at' => NULL])
+            ->whereBetween(DB::raw('DATE(transactions.created_at)'), [$from, $to])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
+            ->orderBy('items.name');
+            // ->allowedFilters([
+            //     AllowedFilter::partial('items.name'),
+            //     AllowedFilter::partial('items.barcode'),
+            //     AllowedFilter::exact('categories.id'),
+            // ]);
     }
 }

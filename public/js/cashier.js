@@ -68,25 +68,26 @@ function print_items() {
     } else {
         for (let i = 0; i < items.length; i++) {
             // item grosir
+            let clr = items[i][8] > 0 ? '' : 'text-danger';
             if (items[i][9] > 0) {
                 if (typeof trx_id == 'undefined') { 
                     $('#data-item').append(
-                        `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
+                        `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td><span class="${clr}">${items[i][8]}</span></td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
                     ).fadeIn(3000, 'ease')
                 } else {
                     $('#data-item').append(
-                        `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
+                        `<tr><td>${items[i][1]} <span class="badge badge-success badge-sm rounded-pill pt-1 pb-1 pl-2 pr-2">Grosir</span</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td><span class="${clr}">${items[i][8]}</span></td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
                     ).fadeIn(3000, 'ease')
                 }
                 
             } else { // item non grosir
                 if(typeof trx_id == 'undefined') {
                     $('#data-item').append(
-                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td><span class="${clr}">${items[i][8]}</span></td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td><td><span onclick="remove_item(${i})" class="btn btn-sm btn-outline-danger" style="cursor: pointer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></span></td></tr>`
                 ).fadeIn(3000, 'ease')
                 } else {
                     $('#data-item').append(
-                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td>${items[i][8]}</td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
+                    `<tr><td>${items[i][1]}</td><td>${items[i][2]}</td><td>${items[i][3]}</td><td><span class="${clr}">${items[i][8]}</span></td><td> <input name="jumlah_item" min="1" style="width: 70px" id="${items[i][0]}" type="number" class="form-control form-control-sm" value="${items[i][4]}" ></td><td><div class="input-group"><input name="discount" id="${items[i][0]}" style="width: 50px" type="number" min="0" class="form-control" placeholder="disc." aria-describedby="inputGroupPrepend" value="${items[i][7]}"><div class="input-group-prepend"><span class="input-group-text" id="inputGroupPrepend">%</span> </div></div></td><td>Rp.<span id="grosir_${items[i][0]}">${parseInt(items[i][6]).toLocaleString()}</span></td><td>Rp. <span id="acc_${items[i][0]}" ></span></td></tr>`
                 ).fadeIn(3000, 'ease')
                 }
             }
@@ -123,7 +124,12 @@ function print_total_price() {
 function get_id(id, item, barcode, unit, price, original_price, discount, stock, minimum_item, grosir_price) {
     if (id != null) {
         let amount = stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
-        push_data(id, item, barcode, unit, amount, price, original_price, discount, stock, minimum_item, grosir_price, original_price)
+        if (minimum_item > 0 && amount >= minimum_item) { // min item > 0 dan qty > min item
+            // originalprice diganti jadi grosir price
+            push_data(id, item, barcode, unit, amount, price, grosir_price, discount, stock, minimum_item, grosir_price, original_price)
+        } else {
+            push_data(id, item, barcode, unit, amount, price, original_price, discount, stock, minimum_item, grosir_price, original_price)
+        }
     }
 
     // tutup modal sama clear input search
@@ -223,15 +229,30 @@ $(document).ready(function () {
 
     // tekan tombol / untuk melakukan pembayaran
     $(document).on('keypress', 'html', (function (e) {
+        let items = JSON.parse(localStorage.getItem('items'))
+
         if (e.which == 44) {
-            $('#cancle_payment').modal('toggle');
-            return false
-        }else if (e.which == 46) {
-            $('#payment').modal('toggle');
-            return false
+            if (items.length > 0){
+                $('#cancle_payment').modal('toggle');
+                return false
+            } else {
+                alert('Tidak ada item.')
+            }
+                
+        } else if (e.which == 46) {
+            if (items.length > 0){
+                $('#payment').modal('toggle');
+                return false
+            } else {
+                alert('Tidak ada item.')
+            }
         } else if (e.which == 47) {
-            $('#pending_payment').modal('toggle');
-            return false
+            if (items.length > 0){
+                $('#pending_payment').modal('toggle');
+                return false
+            } else {
+                alert('Tidak ada item.')
+            }
         }
         else if (e.which == 43) {
             $('#item_code').select().focus();
@@ -247,7 +268,8 @@ $(document).ready(function () {
             $('#kasir-data-item_filter input').focus().val($('#item_code').val())
         }
 
-        if (typeof parseInt($('#item_code').val()) === 'number' && ($('#item_code').val().length == 4 || $('#item_code').val().length == 11)) {
+        let item_code_length = $('#item_code').val().length
+        if (typeof parseInt($('#item_code').val()) === 'number' && (item_code_length >= 4)) {
             axios.get('/cashier/check', {
                     params: {
                         code: $('#item_code').val(),
@@ -259,7 +281,11 @@ $(document).ready(function () {
                         let item = response.data.data
                         let amount = item.stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
                         if (item.stock > 0) {
-                            push_data(item.id, item.name, item.barcode, item.unit, amount, item.price, item.original_price, item.discount, item.stock, item.minimum_item, item.grosir_price, item.original_price)
+                            if (item.minimum_item > 0 && amount >= item.minimum_item) { 
+                                push_data(item.id, item.name, item.barcode, item.unit, amount, item.price, item.grosir_price, item.discount, item.stock, item.minimum_item, item.grosir_price, item.original_price)
+                            } else {
+                                push_data(item.id, item.name, item.barcode, item.unit, amount, item.price, item.original_price, item.discount, item.stock, item.minimum_item, item.grosir_price, item.original_price)
+                            }
                         } else {
                             alert('Maaf, stock item sedang kosong.')
                             $('#item_code').select().focus();

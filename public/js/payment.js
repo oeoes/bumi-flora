@@ -1,5 +1,7 @@
 function store_transaction(e) {
     $(e).text('Simpan & Bayar...')
+    $('#payment').modal('toggle');
+    $('#printing_receipt').modal('toggle');
 
     let items = JSON.parse(localStorage.getItem('items'))
     let item_data = [];
@@ -54,6 +56,7 @@ function store_transaction(e) {
     }).catch(function (error) {
         console.log(error.response)      
     }).finally(function (e) {
+        $('#printing_receipt').modal('toggle');
         location.reload()
 
         $(e).text('Simpan & Bayar')

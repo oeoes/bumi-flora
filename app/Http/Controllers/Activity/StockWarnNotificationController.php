@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Activity;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Activity\StockWarnNotification;
+use Illuminate\Support\Facades\DB;
 
 class StockWarnNotificationController extends Controller
 {
@@ -20,12 +21,17 @@ class StockWarnNotificationController extends Controller
     }
 
     public function notification_page () {
-        $notifications = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->get();
+        $notifications = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->paginate(15);
         return view('pages.activity.notification-page')->with(['notifications' => $notifications]);
     }
 
     public function destroy (StockWarnNotification $notification) {
         $notification->update(['is_read' => 1]);
+        return back();
+    }
+
+    public function delete_all () {
+        DB::table('stock_warn_notifications')->update(['is_read' => 1]);
         return back();
     }
 }

@@ -130,46 +130,46 @@
                     <div class="fixed-table-container" style="padding-bottom: 0px;">
                         <div class="fixed-table-body">
                             <table id="data-item" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
-                                <thead style="">
+                                <thead>
                                     <tr>
-                                        <th style="" data-field="type">
+                                        <th data-field="type">
                                             <div class="th-inner">No. Transaksi</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="type">
+                                        <th data-field="type">
                                             <div class="th-inner">Nama</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Satuan</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Harga Jual</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Jenis</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Quantity</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Payment Method</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Payment Type</div>
                                             <div class="fht-cell"></div>
                                         </th>
 
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Date</div>
                                             <div class="fht-cell"></div>
                                         </th>
-                                        <th style="" data-field="itemtype">
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Time</div>
                                             <div class="fht-cell"></div>
                                         </th>
@@ -178,52 +178,52 @@
                                 <tbody>
                                     @foreach($items as $key => $item)
                                     <tr class=" " data-index="0" data-id="17">
-                                        <td style="">
+                                        <td>
                                             <div class="text-muted text-sm">
                                                 {{ $item->transaction_number }}
                                             </div>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
                                             </div>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ strtoupper($item->unit) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price, 2) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ strtoupper($item->category) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->qty }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->method_name }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->type_name }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->transaction_time }}
                                             </span>

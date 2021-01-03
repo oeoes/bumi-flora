@@ -18,7 +18,34 @@
             }
 
             $('#barcode').val(result);
+            axios.get(`/app/items/availability/${result}`).then(function(response) {
+                let data = response.data
+                if (data.status === true) {
+                    $('#availability').text('Kode barcode bisa digunakan')
+                    $('#availability').removeClass('text-danger')
+                    $('#availability').addClass('text-success')
+                } else {
+                    $('#availability').html(`Kode barcode sudah digunakan <br> code: ${data.data.code} <br> name: ${data.data.name} `)
+                    $('#availability').removeClass('text-success')
+                    $('#availability').addClass('text-danger')
+                }
+            })
         });
+
+        $('#barcode').keyup(function() {
+            axios.get(`/app/items/availability/${$('#barcode').val()}`).then(function(response) {
+                let data = response.data
+                if (data.status === true) {
+                    $('#availability').text('Kode barcode bisa digunakan')
+                    $('#availability').removeClass('text-danger')
+                    $('#availability').addClass('text-success')
+                } else {
+                    $('#availability').html(`Kode barcode sudah digunakan <br> code: ${data.data.code} <br> name: ${data.data.name} `)
+                    $('#availability').removeClass('text-success')
+                    $('#availability').addClass('text-danger')
+                }
+            })
+        })
 
         // price diisi
         $(document).on('keyup', '#price', function() {
@@ -117,6 +144,7 @@
                                         <span style="cursor: pointer" id="generate_barcode" class="btn btn-outline-primary btn-block"><i data-feather='rotate-cw'></i></span>
                                     </div>
                                 </div>
+                                <small id="availability"></small>
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="unit">Satuan *</label>

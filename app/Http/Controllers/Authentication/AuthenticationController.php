@@ -16,8 +16,7 @@ class AuthenticationController extends Controller
 
     public function process_login () {
          $credentials = request(['email', 'password']);
-        
-        if(!auth()->attempt($credentials))
+        if(!Auth::attempt($credentials, request('rememberMe')))
         {
             return response()->json(['status' => false, 'message' => 'Invalid Credentials'], 401);
         }

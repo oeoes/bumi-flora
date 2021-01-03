@@ -46,7 +46,6 @@
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
-<script src="{{ asset('js/libs/on-scan.min.js') }}"></script>
 <script src="{{ asset('js/cashier.js') }}"></script>
 <script src="{{ asset('js/payment.js') }}"></script>
 <script src="{{ asset('js/pending.js') }}"></script>
@@ -251,6 +250,23 @@
     </div>
 </div>
 
+<!-- modal printing receipt -->
+<div class="modal fade" id="printing_receipt" tabindex="-1" role="dialog" aria-labelledby="printingReceipt" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentLabel">Mohon tunggu, sedang mencetak struk...</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="{{ asset('images/printing.gif') }}" alt="kampret">
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- modal pending payment -->
 <div class="modal fade" id="pending_payment" tabindex="-1" role="dialog" aria-labelledby="paymentLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -322,11 +338,12 @@
                 <div class="modal-title text-md">Search Item</div>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
-            <div class="modal-body">
-                <table id="kasir-data-item" class="table my-responsive table-theme v-middle table-hover">
+            <div class="modal-body table-responsive">
+                <table id="kasir-data-item" class="table table-sm my-responsive table-theme v-middle table-hover">
                     <thead>
                         <tr>
                             <th><span class="text-muted">Item</span></th>
+                            <th><span class="text-muted">Kode Item</span></th>
                             <th><span class="text-muted">Barcode</span></th>
                             <th><span class="text-muted">Satuan</span></th>
                             <th><span class="text-muted">Stock</span></th>
@@ -341,32 +358,38 @@
                     <tbody>
                         @foreach($items as $key => $item)
                         <tr>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->name }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
+                                <div class="text-sm">
+                                    {{ $item->item_code }}
+                                </div>
+                            </td>
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->barcode }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     {{ $item->unit }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
-                                    {{ $item->stock }}
+                                    @php $clr = $item->stock > 0 ? '' : 'text-danger'; @endphp
+                                    <span class="{{ $clr }}">{{ $item->stock }}</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->original_price) }}
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 @if($item->discount_item > 0 && in_array(strtolower(\Carbon\Carbon::now()->format('l')), unserialize($item->item_occurences) ? unserialize($item->item_occurences) : []))
                                 @if($item->discount_item > 0)
                                 <div class="text-sm text-danger">
@@ -394,19 +417,19 @@
                                 @endif
                             </td>
                             @if($item->discount_item > 0)
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->price_item) }}
                                 </div>
                             </td>
                             @if($item->minimum_item > 0)
                             <!-- kalo discount item ada dan grosir ada -->
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-success">Yes</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
@@ -419,12 +442,12 @@
                             </td>
                             @else
                             <!-- kalo discount item ada tapi grosir gada -->
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-secondary">No</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     -
                                 </div>
@@ -438,19 +461,19 @@
                             @endif
 
                             @elseif($item->discount_category > 0)
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->price_category) }}
                                 </div>
                             </td>
                             @if($item->minimum_item > 0)
                             <!-- kalo discount category ada dan grosir ada -->
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-success">Yes</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
@@ -463,12 +486,12 @@
                             </td>
                             @else
                             <!-- kalo discount category ada tapi grosir gada -->
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-secondary">No</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     -
                                 </div>
@@ -481,19 +504,19 @@
                             </td>
                             @endif
                             @else
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     Rp.{{ number_format($item->original_price) }}
                                 </div>
                             </td>
                             @if($item->minimum_item > 0)
                             <!-- kalo gada discount tapi grosir ada -->
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-success">Yes</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
@@ -505,19 +528,18 @@
                                 @endif
                             </td>
                             @else
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     <span class="text-secondary">No</span>
                                 </div>
                             </td>
-                            <td style="">
+                            <td>
                                 <div class="text-sm">
                                     -
                                 </div>
                             </td>
                             <td>
                                 @if($item->stock > 0)
-                                <!-- hilangin button add kalo stock 0 -->
                                 <button onclick="get_id('{{ $item->id }}', '{{ $item->name }}', '{{ $item->barcode }}',
                                             '{{ $item->unit }}', '{{ $item->original_price }}', '{{ $item->original_price }}', 0, '{{ $item->stock }}', 0, 0)" style="cursor: pointer" class="btn btn-sm rounded-pill pl-1 btn-outline-primary btn-block"><i data-feather='plus'></i></button>
                                 @endif

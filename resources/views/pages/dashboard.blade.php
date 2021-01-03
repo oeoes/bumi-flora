@@ -133,7 +133,7 @@
                         let omset = omset_arr.reduce(function(prevVal, currVal) {
                             return parseInt(prevVal) + parseInt(currVal);
                         });
-                        $('#total_omset').text(omset).toLocaleString()
+                        $('#total_omset').text(omset.toLocaleString())
                     }
                 })
         }, 5000);
@@ -181,8 +181,7 @@
                     if (response.data.data[1][0].outcome == null) {
                         $('#cashier_omset').text('0')
                     } else {
-                        $('#cashier_omset').text(parseInt(response.data.data[1][0].outcome)
-                            .toLocaleString())
+                        $('#cashier_omset').text(parseInt(response.data.data[1][0].outcome).toLocaleString())
                     }
                 })
                 .catch(function(error) {
@@ -315,7 +314,7 @@
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted mb-2">Asset</small>
-                                <div class="h6">Rp.{{ number_format((float) $gudang[0]->asset, 2) }}</div>
+                                <div class="h6">Rp.{{ number_format((float) $gudang[0]->asset) }}</div>
                             </div>
                         </div>
                     </div>
@@ -334,7 +333,7 @@
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted mb-2">Asset</small>
-                                <div class="h6">Rp.{{ number_format((float) $utama[0]->asset, 2) }}</div>
+                                <div class="h6">Rp.{{ number_format((float) $utama[0]->asset) }}</div>
                             </div>
                         </div>
                     </div>
@@ -353,7 +352,7 @@
                             </div>
                             <div class="col-md-6">
                                 <small class="text-muted mb-2">Asset</small>
-                                <div class="h6">Rp.{{ number_format((float) $ecommerce[0]->asset, 2) }}</div>
+                                <div class="h6">Rp.{{ number_format((float) $ecommerce[0]->asset) }}</div>
                             </div>
                         </div>
                     </div>
