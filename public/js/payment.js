@@ -54,7 +54,7 @@ function store_transaction(e) {
             print_total_price()
         }
     }).catch(function (error) {
-        console.log(error.response)      
+        console.log(error.response)
     }).finally(function (e) {
         $('#printing_receipt').modal('toggle');
         location.reload()
@@ -90,9 +90,9 @@ function store_transaction(e) {
     })
 }
 
-$(document).ready(function () {  
+$(document).ready(function () {
 
-/** Enable payment method cash on startup */
+    /** Enable payment method cash on startup */
     $("#payment").on('shown.bs.modal', function () {
         $(this).find('#nominal').select().focus();
     });
@@ -106,11 +106,27 @@ $(document).ready(function () {
     // tekan enter untuk simpan dan bayar
     $(document).on('keypress', '#payment', (function (e) {
         if (e.which == 13) {
-            if (localStorage.getItem('total_price') > 0) {
-                store_transaction()
-                $('#save_n_pay').text('Simpan & Bayar...')
+            if ($('#payment_option').val() == 1) {
+                if (localStorage.getItem('total_price') > 0 && parseInt($('#nominal').val()) < localStorage.getItem('total_price')) {
+                    alert('Total bayar kurang dari total tagihan.')
+                } else if (parseInt($('#nominal').val()) >= localStorage.getItem('total_price')) {
+                    store_transaction()
+                    $('#save_n_pay').text('Simpan & Bayar...')
+                } else {
+                    alert('Masukan nominal pembayaran')
+                }
             } else {
-                alert('No Transaction.')
+                if (localStorage.getItem('payment_type') == null || localStorage.getItem('payment_type') == 1) {
+                    alert('Pilih metode pembayaran.')
+                } else {
+                    if (localStorage.getItem('total_price') < 1) {
+                        alert('No Transaction.')
+                    } else {
+                        store_transaction()
+                        $('#save_n_pay').text('Simpan & Bayar...')
+                    }
+                    
+                }
             }
         }
     }))
@@ -159,7 +175,7 @@ $(document).ready(function () {
         // payment type in localstorage
         localStorage.setItem('payment_type', payment_types[0][0])
     })
-/** sampe sini */
+    /** sampe sini */
 
     $(document).on('change', '#payment_option', (function () {
         let method = '';
@@ -206,8 +222,7 @@ $(document).ready(function () {
                         // payment type in localstorage
                         localStorage.setItem('payment_type', types[0][0])
                     })
-                }
-                else {
+                } else {
                     $('#payment_types').children().remove()
                     $('#save_n_pay').prop('disabled', true)
                     $('#cashback').text('-')

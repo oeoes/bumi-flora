@@ -15,12 +15,13 @@ function push_data(id, item, barcode, unit, qty, price, original_price, discount
                     alert('Stock tidak boleh kurang dari 0')
                     location.reload();
                 } else {
-                    items[i][4] = parseInt(items[i][4]) + 1
+                    let jumlah = parseInt($('#jumlah').val())
+                    items[i][4] = parseInt(items[i][4]) + jumlah
                     $(`#${id}`).val(items[i][4])
                     // pastikan stock tidak sampe 0 setelah pembelian
                     if (items[i][8] - $(`#${id}`).val() < 0) {
                         alert('Stock tidak boleh kurang dari 0')
-                        items[i][4] = parseInt(items[i][4]) - 1
+                        items[i][4] = parseInt(items[i][8])
                         location.reload();
                     }
                     
@@ -123,7 +124,11 @@ function print_total_price() {
 
 function get_id(id, item, barcode, unit, price, original_price, discount, stock, minimum_item, grosir_price) {
     if (id != null) {
-        let amount = stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
+        let jumlah = $('#jumlah').val();
+        let amount = stock - jumlah < 0 ? 1 : jumlah
+
+        if (amount < jumlah) alert('jumlah item melebihi stock');
+
         if (minimum_item > 0 && amount >= minimum_item) { // min item > 0 dan qty > min item
             // originalprice diganti jadi grosir price
             push_data(id, item, barcode, unit, amount, price, grosir_price, discount, stock, minimum_item, grosir_price, original_price)
@@ -212,9 +217,6 @@ $(document).ready(function () {
     print_items()
     print_total_price()
     print_accumulate()
-
-    
-
 
     // autofocus ke field jumlah dan kode item
     $(document).on('keypress', 'input', (function (e) {

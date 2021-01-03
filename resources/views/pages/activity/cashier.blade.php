@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-4">
                             <label for="item_code">Kode item</label>
-                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item">
+                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item (tekan Shift + plus untuk focus)">
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -346,6 +346,7 @@
                             <th><span class="text-muted">Kode Item</span></th>
                             <th><span class="text-muted">Barcode</span></th>
                             <th><span class="text-muted">Satuan</span></th>
+                            <th><span class="text-muted">Jenis</span></th>
                             <th><span class="text-muted">Stock</span></th>
                             <th><span class="text-muted">Harga Asli</span></th>
                             <th><span class="text-muted">Disc.</span></th>
@@ -376,6 +377,11 @@
                             <td>
                                 <div class="text-sm">
                                     {{ $item->unit }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-sm">
+                                    {{ $item->category }}
                                 </div>
                             </td>
                             <td>
