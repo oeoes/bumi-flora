@@ -47,7 +47,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(transactions.qty) as quantity')
             ->groupBy('items.name', 'transactions.qty', 'transactions.item_id')
             ->orderBy('transactions.qty')
-            ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->limit(15)->get();
+            ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
 
         return response()->json(['status' => true, 'message' => 'product demand', 'data' => $demand]);
     }

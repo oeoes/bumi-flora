@@ -20,6 +20,7 @@
         .error {
             border-color: #dc3545
         }
+
         .flex-container {
             display: flex;
             flex-direction: column;
@@ -31,6 +32,7 @@
         .on {
             display: inline;
         }
+
         .off {
             display: none;
         }
@@ -45,6 +47,7 @@
             top: -28px;
             cursor: pointer
         }
+
         .show_password_btn:hover {
             color: blue;
         }
@@ -54,8 +57,10 @@
 
 
 <body id="page-top">
-    <div class="flex-container">
-                <div class="card p-4 border-0 shadow-sm animate__animated animate__flipInX" style="width: 25vw">
+    <div class="container h-100">
+        <div class="row align-items-center justify-content-center" style="height: 100vh">
+            <div class="col-md-4 align-self-center">
+                <div class="card p-4 border-0 shadow-sm animate__animated animate__flipInX">
                     <img src="{{ asset('images/default.svg') }}" class="mx-auto d-block" alt="" style="width: 50%;">
                     <!-- <hr> -->
                     <form id="form-login" action="{{ route('process.login') }}" method="post">
@@ -99,6 +104,8 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
 
     <!-- Bootstrap core JavaScript-->
     <!-- jQuery -->
@@ -124,17 +131,17 @@
     <script src="{{ asset('js/axios.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.show_password_btn').click(function () {
+            $('.show_password_btn').click(function() {
                 if ($('#password').attr('type') == 'text') {
                     $('#password').attr('type', 'password')
                     $('.on').css('display', 'inline');
                     $('.off').css('display', 'none');
-                } else{
+                } else {
                     $('#password').attr('type', 'text')
                     $('.on').css('display', 'none');
                     $('.off').css('display', 'inline');
                 }
-                
+
             })
 
             $(document).on('submit', '#form-login', function(e) {

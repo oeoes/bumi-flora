@@ -279,6 +279,7 @@ $(document).ready(function () {
                     }
                 })
                 .then(function (response) {
+                    console.log(response.data);
                     if (response.data.status == true) {
                         let item = response.data.data
                         let amount = item.stock - $('#jumlah').val() < 0 ? 1 : $('#jumlah').val()
