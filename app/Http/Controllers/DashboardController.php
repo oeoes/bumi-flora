@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $employee = DB::table('model_has_roles')
             ->join('users', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            // ->where(['roles.name' => 'cashier', 'users.role' => 'user'])
+            ->where(['roles.name' => 'cashier', 'users.role' => 'user'])
             ->select('users.name', 'users.id')->get();
 
         $transactions = DB::table('transactions')
