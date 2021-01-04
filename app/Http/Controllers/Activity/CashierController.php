@@ -347,11 +347,9 @@ class CashierController extends Controller
 
     public static function daily_report_data()
     {
-        $quantity = 0;
         $discount = 0;
         $tax = 0;
         $fee = 0;
-        $total = 0;
         $cash = 0;
         $ewallet = 0;
         $debit = 0;
@@ -363,7 +361,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'transactions.user_id' => auth()->user()->id,'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty) * items.price) as total'), DB::raw('sum(transactions.qty) as quantity'), DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'), 'transactions.tax', 'transactions.additional_fee')
+            ->select(DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'), 'transactions.tax', 'transactions.additional_fee')
             ->get();
 
         $cashes = DB::table('transactions')
@@ -374,7 +372,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'cash'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('payment_methods.id', 'items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price','transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->get();
 
         $ewallets = DB::table('transactions')
@@ -385,7 +383,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'e-wallet'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('payment_methods.id', 'items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price','transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->get();
 
         $debits = DB::table('transactions')
@@ -396,7 +394,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'debit'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('payment_methods.id', 'items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price','transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->get();
 
         $transfers = DB::table('transactions')
@@ -407,7 +405,7 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'transfer'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('payment_methods.id', 'items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price','transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->get();
 
         $credits = DB::table('transactions')
@@ -418,49 +416,45 @@ class CashierController extends Controller
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'kartu kredit'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
             ->groupBy('payment_methods.id', 'items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price')
-            ->get();
-
-        $prices = DB::table('transactions')
-            ->join('items', 'items.id', '=', 'transactions.item_id')
-            ->join('users', 'users.id', '=', 'transactions.user_id')
-            ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id])
-            ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('items.id')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price', 'items.id')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'items.price','transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->get();
 
         foreach ($items as $item) {
-            $quantity += $item->quantity;
             $discount += $item->discount;
             $tax += $item->tax;
             $fee += $item->additional_fee;
         }
 
-        foreach ($prices as $price) {
-            $total += (float)($price->price * $price->quantity);
-        }
-
         foreach ($cashes as $c) {
-            $cash += (float)($c->price * $c->quantity);
+            $cash += ((float)($c->price * $c->quantity)) + ($c->additional_fee / count($cashes)) + ($c->tax / count($cashes)) - $c->discount;
         }
 
         foreach ($ewallets as $e) {
-            $ewallet += (float)($e->price * $e->quantity);
+            $ewallet += ((float)($e->price * $e->quantity)) + ($e->additional_fee / count($ewallets)) + ($e->tax / count($ewallets)) - $e->discount;
         }
 
         foreach ($debits as $d) {
-            $debit += (float)($d->price * $d->quantity);
+            $debit += ((float)($d->price * $d->quantity)) + ($d->additional_fee / count($debits)) + ($d->tax / count($debits)) - $d->discount;
         }
 
         foreach ($transfers as $t) {
-            $transfer += (float)($t->price * $t->quantity);
+            $transfer += ((float)($t->price * $t->quantity)) + ($t->additional_fee / count($transfers)) + ($t->tax / count($transfers)) - $t->discount;
         }
 
         foreach ($credits as $c) {
-            $credit += (float)($c->price * $c->quantity);
+            $credit += ((float)($c->price * $c->quantity)) + ($c->additional_fee / count($credits)) + ($c->tax / count($credits)) - $c->discount;
         }
 
-        return [$quantity, $discount, $tax, $fee, $total, $cash, $debit, $transfer, $ewallet, $credit];
+        return [
+            'jumlah_transaksi' => count($items), 
+            'total_discount' => $discount, 
+            'total_pajak' => $tax, 
+            'total_biaya' => $fee, 
+            'total_tunai' => $cash,
+            'total_debit' => $debit,
+            'total_transfer' => $transfer,
+            'total_ewallet' => $ewallet,
+            'total_credit' => $credit,
+        ];
     }
 }

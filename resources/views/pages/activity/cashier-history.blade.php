@@ -72,17 +72,17 @@
                         <div>{{ auth()->user()->name }}</div>
                         <div>UTAMA</div>
                         <hr style="width: 100%; border-style: dashed; border-color: black">
-                        <!-- [trans, pot, pajak, biaya, total, tunai, debit, transfer, ewallet, kredit] -->
-                        <div>{{ $data[0] }}</div>
-                        <div>Rp. {{ number_format($data[1]) }}</div>
-                        <div>Rp. {{ number_format($data[2]) }}</div>
-                        <div>Rp. {{ number_format($data[3]) }}</div>
-                        <div>Rp. {{ number_format(($data[4] + $data[2] + $data[3]) - $data[1]) }}</div>
-                        <div>Rp. {{ number_format(($data[5] + $data[2] + $data[3]) - $data[1]) }}</div>
-                        <div>Rp. {{ number_format($data[6]) }}</div>
-                        <div>Rp. {{ number_format($data[7]) }}</div>
-                        <div>Rp. {{ number_format($data[8]) }}</div>
-                        <div>Rp. {{ number_format($data[9]) }}</div>
+                        <!-- [trans, pot, pajak, biaya, tunai, debit, transfer, ewallet, kredit] -->
+                        <div>{{ $data['jumlah_transaksi'] }}</div>
+                        <div>Rp. {{ number_format($data['total_discount']) }}</div>
+                        <div>Rp. {{ number_format($data['total_pajak']) }}</div>
+                        <div>Rp. {{ number_format($data['total_biaya']) }}</div>
+                        <div>Rp. {{ number_format($data['total_tunai'] + $data['total_debit'] + $data['total_ewallet'] + $data['total_transfer'] + $data['total_credit']) }}</div>
+                        <div>Rp. {{ number_format($data['total_tunai']) }}</div>
+                        <div>Rp. {{ number_format($data['total_debit']) }}</div>
+                        <div>Rp. {{ number_format($data['total_transfer']) }}</div>
+                        <div>Rp. {{ number_format($data['total_ewallet']) }}</div>
+                        <div>Rp. {{ number_format($data['total_credit']) }}</div>
                         <hr style="width: 100%; border-style: dashed; border-color: black">
                         <div>{{ \Carbon\Carbon::now()->format('Y-m-d H:s:i') }}</div>
                     </div>

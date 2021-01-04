@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $employee = DB::table('model_has_roles')
             ->join('users', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where(['roles.name' => 'cashier', 'users.role' => 'user'])
+            // ->where(['roles.name' => 'cashier', 'users.role' => 'user'])
             ->select('users.name', 'users.id')->get();
 
         $transactions = DB::table('transactions')
@@ -55,19 +55,24 @@ class DashboardController extends Controller
     public function cashier_performance()
     {
         $transactions = DB::table('transactions')
-            ->groupBy('transaction_time')
-            ->select('transaction_time')
+            ->groupBy('transaction_number')
+            ->select('transaction_number')
             ->where('transactions.user_id', request('cashier'))
-            ->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
+            ->where(['transactions.deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
 
-        $omset = DB::table('items')
-            ->join('transactions', 'items.id', '=', 'transactions.item_id')
-            ->select('items.id', DB::raw('((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) as outcome'))
-            ->groupBy('transactions.item_id')
+        $omset = DB::table('transactions')
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->groupBy('transactions.transaction_number', 'items.id')
+            ->select(DB::raw('sum(transactions.qty) * items.price as price'), 'transactions.transaction_number', 'transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->where(['transactions.user_id' => request('cashier'), 'transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
-            
-        return response()->json(['status' => true, 'message' => 'cashier performance', 'data' => [$transactions, $omset]]);
+
+        $omset_trx = [];
+        foreach ($omset as $om) {
+            !in_array($om->transaction_number, $omset_trx) ? array_push($omset_trx, $om->transaction_number) : '';
+        }
+
+        return response()->json(['status' => true, 'message' => 'cashier performance', 'data' => [$transactions, $omset, $omset_trx]]);
     }
 
     public function accumulation()
@@ -77,15 +82,27 @@ class DashboardController extends Controller
             ->select('transaction_number')
             ->where(['transactions.deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
 
-        $omset = DB::table('items')
-            ->join('transactions', 'items.id', '=', 'transactions.item_id')
-            ->join('units', 'units.id', '=', 'items.unit_id')
-            ->join('categories', 'categories.id', '=', 'items.category_id')
-            ->select('items.id', DB::raw('((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) as outcome'))
-            ->groupBy('transactions.item_id')
+        // $omset = DB::table('items')
+        //     ->join('transactions', 'items.id', '=', 'transactions.item_id')
+        //     ->join('units', 'units.id', '=', 'items.unit_id')
+        //     ->join('categories', 'categories.id', '=', 'items.category_id')
+        //     ->select('items.id', DB::raw('((sum(transactions.qty) * items.price) - (sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer))) as outcome'))
+        //     ->groupBy('transactions.item_id')
+        //     ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
+        //     ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
+
+        $omset = DB::table('transactions')
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->groupBy('transactions.transaction_number', 'items.id')
+            ->select(DB::raw('sum(transactions.qty) * items.price as price'), 'transactions.transaction_number', 'transactions.tax', 'transactions.additional_fee', DB::raw('(sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer)) as discount'))
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
 
-        return response()->json(['status' => true, 'message' => 'Over all', 'data' => [$transactions, $omset]]);
+        $omset_trx = [];
+        foreach ($omset as $om) {
+            !in_array($om->transaction_number, $omset_trx) ? array_push($omset_trx, $om->transaction_number) : '';
+        }
+
+        return response()->json(['status' => true, 'message' => 'Over all', 'data' => [$transactions, $omset, $omset_trx]]);
     }
 }

@@ -124,16 +124,22 @@
             axios.get('/app/dashboard/accumulate')
                 .then(function(response) {
                     $('#total_transaction').text(response.data.data[0].length)
-                    if (response.data.data[1][0].outcome == null) {
+                    if (response.data.data[1].length < 1) {
                         $('#total_omset').text('0')
                     } else {
+                        let transaction_number = [];
+                        let total_bill = 0;
                         let omset_arr = response.data.data[1].map(function(oms) {
-                            return oms.outcome;
+                            if (!transaction_number.includes(oms.transaction_number)) {
+                                transaction_number.push(oms.transaction_number)
+                                total_bill = total_bill + (oms.tax + oms.additional_fee);
+                            }
+                            return parseInt(oms.price) - oms.discount;
                         });
                         let omset = omset_arr.reduce(function(prevVal, currVal) {
-                            return parseInt(prevVal) + parseInt(currVal);
+                            return prevVal + currVal;
                         });
-                        $('#total_omset').text(omset.toLocaleString())
+                        $('#total_omset').text((omset + total_bill).toLocaleString())
                     }
                 })
         }, 5000);
@@ -146,25 +152,45 @@
             })
             .then(function(response) {
                 $('#cashier_transaction').text(response.data.data[0].length)
-                if (response.data.data[1][0].outcome == null) {
+                if (response.data.data[1].length < 1) {
                     $('#cashier_omset').text('0')
                 } else {
-                    $('#cashier_omset').text(parseInt(response.data.data[1][0].outcome).toLocaleString())
-                }
-            })
-        axios.get('/app/dashboard/accumulate')
-            .then(function(response) {
-                $('#total_transaction').text(response.data.data[0].length)
-                if (response.data.data[1][0].outcome == null) {
-                    $('#total_omset').text('0')
-                } else {
+                    let transaction_number = [];
+                    let total_bill = 0;
                     let omset_arr = response.data.data[1].map(function(oms) {
-                        return oms.outcome;
+                        if (!transaction_number.includes(oms.transaction_number)) {
+                            transaction_number.push(oms.transaction_number)
+                            total_bill = total_bill + (oms.tax + oms.additional_fee);
+                        }
+                        return parseInt(oms.price) - oms.discount;
                     });
                     let omset = omset_arr.reduce(function(prevVal, currVal) {
-                        return parseInt(prevVal) + parseInt(currVal);
+                        return prevVal + currVal;
                     });
-                    $('#total_omset').text(omset.toLocaleString())
+                    $('#cashier_omset').text((omset + total_bill).toLocaleString())
+                }
+            })
+
+        axios.get('/app/dashboard/accumulate')
+            .then(function(response) {
+                console.log(response);
+                $('#total_transaction').text(response.data.data[0].length)
+                if (response.data.data.length < 1) {
+                    $('#total_omset').text('0')
+                } else {
+                    let transaction_number = [];
+                    let total_bill = 0;
+                    let omset_arr = response.data.data[1].map(function(oms) {
+                        if (!transaction_number.includes(oms.transaction_number)) {
+                            transaction_number.push(oms.transaction_number)
+                            total_bill = total_bill + (oms.tax + oms.additional_fee);
+                        }
+                        return parseInt(oms.price) - oms.discount;
+                    });
+                    let omset = omset_arr.reduce(function(prevVal, currVal) {
+                        return prevVal + currVal;
+                    });
+                    $('#total_omset').text((omset + total_bill).toLocaleString())
                 }
             })
         /** end first time load */
@@ -178,10 +204,22 @@
                 })
                 .then(function(response) {
                     $('#cashier_transaction').text(response.data.data[0].length)
-                    if (response.data.data[1][0].outcome == null) {
+                    if (response.data.data[1].length < 1) {
                         $('#cashier_omset').text('0')
                     } else {
-                        $('#cashier_omset').text(parseInt(response.data.data[1][0].outcome).toLocaleString())
+                        let transaction_number = [];
+                        let total_bill = 0;
+                        let omset_arr = response.data.data[1].map(function(oms) {
+                            if (!transaction_number.includes(oms.transaction_number)) {
+                                transaction_number.push(oms.transaction_number)
+                                total_bill = total_bill + (oms.tax + oms.additional_fee);
+                            }
+                            return parseInt(oms.price) - oms.discount;
+                        });
+                        let omset = omset_arr.reduce(function(prevVal, currVal) {
+                            return prevVal + currVal;
+                        });
+                        $('#cashier_omset').text((omset + total_bill).toLocaleString())
                     }
                 })
                 .catch(function(error) {
