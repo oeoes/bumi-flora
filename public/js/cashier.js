@@ -228,11 +228,8 @@ $(document).ready(function () {
             }
         }
     }))
-
     // tekan tombol / untuk melakukan pembayaran
     $(document).on('keypress', 'html', (function (e) {
-        let items = JSON.parse(localStorage.getItem('items'))
-
         if (e.which == 44) {
             if (items.length > 0){
                 $('#cancle_payment').modal('toggle');

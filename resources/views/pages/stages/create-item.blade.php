@@ -5,38 +5,90 @@
 
 @section('custom-js')
 <script>
-    $('#generate_barcode').click(function() {
-        var result = '';
-        var characters = '0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < 10; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
+    $(document).ready(function() {
+        $('#price-range').prop('disabled', true);
 
-        $('#barcode').val(result);
-    });
 
-    // price diisi
-    $(document).on('keyup', '#price', function() {
-        let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
-        $('#price-percentage').val(percentage);
-    });
+        $('#generate_barcode').click(function() {
+            var result = '';
+            var characters = '0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 10; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
 
-    // percentage price diisi
-    $(document).on('keyup', '#price-percentage', function() {
-        let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
-        $('#price').val(price);
-    });
+            $('#barcode').val(result);
+            axios.get(`/app/items/availability/${result}`).then(function(response) {
+                let data = response.data
+                if (data.status === true) {
+                    $('#availability').text('Kode barcode bisa digunakan')
+                    $('#availability').removeClass('text-danger')
+                    $('#availability').addClass('text-success')
+                } else {
+                    $('#availability').html(`Kode barcode sudah digunakan <br> code: ${data.data.code} <br> name: ${data.data.name} `)
+                    $('#availability').removeClass('text-success')
+                    $('#availability').addClass('text-danger')
+                }
+            })
+        });
 
-    // make sure main cost harus ada isinya
-    $(document).on('keyup', '#main_cost', function() {
-        if ($('#main_cost').val() == '') {
-            $('#price').prop('readonly', true);
-            $('#price-percentage').prop('readonly', true);
-        } else {
-            $('#price').prop('readonly', false);
-            $('#price-perecentage').prop('readonly', false);
-        }
+        $('#barcode').keyup(function() {
+            axios.get(`/app/items/availability/${$('#barcode').val()}`).then(function(response) {
+                let data = response.data
+                if (data.status === true) {
+                    $('#availability').text('Kode barcode bisa digunakan')
+                    $('#availability').removeClass('text-danger')
+                    $('#availability').addClass('text-success')
+                } else {
+                    $('#availability').html(`Kode barcode sudah digunakan <br> code: ${data.data.code} <br> name: ${data.data.name} `)
+                    $('#availability').removeClass('text-success')
+                    $('#availability').addClass('text-danger')
+                }
+            })
+        })
+
+        // price diisi
+        $(document).on('keyup', '#price', function() {
+            let percentage = ((parseInt($('#price').val()) - parseInt($('#main_cost').val())) / $('#main_cost').val()) * 100;
+            $('#price-percentage').val(percentage);
+        });
+
+        // percentage price diisi
+        $(document).on('keyup', '#price-percentage', function() {
+            let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-percentage').val()) / 100);
+            $('#price').val(price);
+        });
+
+        // make sure main cost harus ada isinya
+        $(document).on('keyup', '#main_cost', function() {
+            if ($('#main_cost').val() == '') {
+                $('#price').prop('readonly', true);
+                $('#price-percentage').prop('readonly', true);
+            } else {
+                $('#price').prop('readonly', false);
+                $('#price-perecentage').prop('readonly', false);
+            }
+        })
+
+
+        $(document).on('input', '#price-range', function() {
+            let price = parseInt($('#main_cost').val()) + (parseInt($('#main_cost').val()) * parseInt($('#price-range').val()) / 100);
+            console.log(price);
+            $('#price').val(price);
+            $('#percentage-value').text($('#price-range').val())
+
+            if ($('#price-range').val() > 5) {
+                $('.percentage_range').addClass('text-success');
+            } else {
+                $('.percentage_range').removeClass('text-success');
+            }
+            if ($('#price-range').val() < 90) {
+                $('#percentage-value').css('paddingLeft', $('#price-range').val() + '%')
+            } else {
+                $('#percentage-value').css('paddingLeft', ($('#price-range').val() - 10) + '%')
+            }
+
+        })
     })
 </script>
 @endsection
@@ -77,6 +129,7 @@
                                         <span style="cursor: pointer" id="generate_barcode" class="btn btn-outline-primary btn-block"><i data-feather='rotate-cw'></i></span>
                                     </div>
                                 </div>
+                                <small id="availability"></small>
                             </div>
                             <div class="form-group">
                                 <label class="text-muted" for="unit">Satuan *</label>
@@ -136,5 +189,5 @@
         </div>
         <div class="clearfix"></div>
     </div>
-</div>
-@endsection
+    </div>
+    @endsection
