@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\DB;
 class StagingItemController extends Controller
 {
     public function index () {
-        $brands = Brand::all();
-        $units = Unit::all();
-        $categories = Category::all();
-
         $items = DB::table('items')
             ->join('units', 'units.id', '=', 'items.unit_id')
             ->join('categories', 'categories.id', '=', 'items.category_id')
@@ -28,7 +24,7 @@ class StagingItemController extends Controller
             ->select('items.id', 'items.name', 'items.barcode', 'items.min_stock', 'items.description', 'items.cabinet', 'items.main_cost', 'items.price', 'items.base_unit', 'items.base_unit_conversion', 'units.unit', 'units.id as unit_id', 'brands.brand', 'brands.id as brand_id', 'categories.category', 'categories.id as category_id', 'stocks.dept', 'stocks.amount as stock')
             ->get();
 
-        return view('pages.stages.index')->with(['items' => $items,'brands' => $brands, 'units' => $units, 'categories' => $categories]);
+        return view('pages.stages.index')->with(['items' => $items]);
     }
 
     public function create () {
@@ -79,7 +75,15 @@ class StagingItemController extends Controller
             'price' => $request->price,
             'min_stock' => $request->min_stock,
         ]);
-        return back();
+        return redirect()->route('stages.index');
+    }
+
+    public function edit(Item $stage) {
+        $brands = Brand::all();
+        $units = Unit::all();
+        $categories = Category::all();
+
+        return view('pages.stages.edit-item')->with(['item' =>$stage, 'brands' => $brands, 'units' => $units, 'categories' => $categories]);
     }
 
     public function complete_item(Request $request, Item $stage) {
