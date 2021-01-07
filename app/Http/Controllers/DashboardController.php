@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Activity\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -29,8 +30,9 @@ class DashboardController extends Controller
             ->select('users.name', 'users.id')->get();
 
         $transactions = DB::table('transactions')
-            ->groupBy('transaction_time')
-            ->select('transaction_time')->where('deleted_at', NULL)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
+            ->join('users', 'users.id', 'transactions.user_id')
+            ->groupBy('transactions.transaction_time')
+            ->select('transactions.transaction_time')->where('transactions.deleted_at', NULL)->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
         $omset = DB::table('transactions')
             ->join('items', 'items.id', '=', 'transactions.item_id')
             ->selectRaw('sum(items.price * transactions.qty) as outcome')
@@ -57,8 +59,8 @@ class DashboardController extends Controller
         $transactions = DB::table('transactions')
             ->groupBy('transaction_number')
             ->select('transaction_number')
-            ->where('transactions.user_id', request('cashier'))
-            ->where(['transactions.deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
+            ->where('user_id', request('cashier'))
+            ->where(['dept' => 'utama', 'deleted_at' => NULL])->whereDate('created_at', Carbon::now()->format('Y-m-d'))->get();
 
         $omset = DB::table('transactions')
             ->join('items', 'items.id', '=', 'transactions.item_id')

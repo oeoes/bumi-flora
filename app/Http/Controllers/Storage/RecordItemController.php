@@ -188,13 +188,17 @@ class RecordItemController extends Controller
             ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
             ->where(['transactions.dept' => 'utama', 'transactions.deleted_at' => NULL])
             ->latest()
-            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
+            ->groupBy('transactions.transaction_number')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), DB::raw('sum((transactions.qty * items.price) - (transactions.discount + transactions.discount_item + transactions.discount_customer)) as total'), 'transactions.tax', 'transactions.additional_fee', 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
         
+        if (auth()->user()->role != 'admin') {
+            $items->where('transactions.user_id', auth()->user()->id);
+        }
+
         if(request('from') != null) {
             $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
         } else {
-            $items->get();
+            $items->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
         }
         return view('pages.persediaan.transaksi-offline-history')->with(['items' => $items->get()]);
     }
@@ -211,14 +215,18 @@ class RecordItemController extends Controller
         ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
         ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
         ->where(['transactions.dept' => 'ecommerce', 'transactions.deleted_at' => NULL])
-            ->latest()
-            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
+        ->latest()
+        ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+        ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
 
+        if (auth()->user()->role != 'admin') {
+            $items->where('transactions.user_id', auth()->user()->id);
+        }
+        
         if (request('from') != null) {
             $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
         } else {
-            $items->get();
+            $items->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
         }
         return view('pages.persediaan.transaksi-online-history')->with(['items' => $items->get()]);
     }

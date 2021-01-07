@@ -70,6 +70,10 @@
                                             <div class="fht-cell"></div>
                                         </th>
                                         <th data-field="itemtype">
+                                            <div class="th-inner">Total</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th data-field="itemtype">
                                             <div class="th-inner">Payment Method</div>
                                             <div class="fht-cell"></div>
                                         </th>
@@ -108,6 +112,11 @@
                                         <td>
                                             <span class="item-amount d-none d-sm-block text-sm ">
                                                 {{ $item->quantity }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="item-amount d-none d-sm-block text-sm ">
+                                                Rp.{{ number_format((float) ($item->total + $item->tax + $item->additional_fee)) }}
                                             </span>
                                         </td>
                                         <td>

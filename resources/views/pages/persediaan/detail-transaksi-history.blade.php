@@ -84,11 +84,6 @@
                                     <td>Rp.{{ number_format($base->additional_fee) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Total keseluruhan</td>
-                                    <td> : </td>
-                                    <td>Rp.{{ number_format($total[0]->total + $base->additional_fee + $base->tax) }}</td>
-                                </tr>
-                                <tr>
                                     <td>
                                         <a href="{{ route('records.live_edit_transaction', ['transaction' => $base->id]) }}" class="btn btn-sm btn-outline-success rounded-pill pr-4 pl-4 mt-4">Live Edit</a>
                                         @can('delete')

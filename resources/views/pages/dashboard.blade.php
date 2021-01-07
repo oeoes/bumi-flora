@@ -207,6 +207,7 @@
                     if (response.data.data[1].length < 1) {
                         $('#cashier_omset').text('0')
                     } else {
+                        console.log(response.data);
                         let transaction_number = [];
                         let total_bill = 0;
                         let omset_arr = response.data.data[1].map(function(oms) {

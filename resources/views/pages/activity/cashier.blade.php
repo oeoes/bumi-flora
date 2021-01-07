@@ -46,7 +46,11 @@
 @section('custom-js')
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
+<!-- cashier start -->
+<script src="{{ asset('js/cashier/functions.js') }}"></script>
 <script src="{{ asset('js/cashier.js') }}"></script>
+<script src="{{ asset('js/cashier/item-code.js') }}"></script>
+<!-- cashier end -->
 <script src="{{ asset('js/payment.js') }}"></script>
 <script src="{{ asset('js/pending.js') }}"></script>
 <script>
@@ -96,7 +100,7 @@
                         </div>
                         <div class="col-4">
                             <label for="item_code">Kode item</label>
-                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item (tekan Shift + plus untuk focus)">
+                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item (tekan F2)">
                         </div>
                     </div>
                     <div class="table-responsive">
