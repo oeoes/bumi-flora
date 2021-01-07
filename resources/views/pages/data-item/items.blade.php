@@ -3,6 +3,27 @@
 @section('page-title', 'Data Item')
 @section('page-description', 'Berisi daftar item dan akses untuk melakukan penambahan item.')
 
+@section('custom-js')
+<script>
+    window.onload = () => {
+        const form = document.querySelector('#form-reset');
+        const btnConfirm = document.querySelector('#confirm');
+        const verificationText = document.querySelector('#verification');
+
+        // disable btn confirm
+        btnConfirm.disabled = true;
+
+        verificationText.addEventListener('keyup', () => {
+            if (verificationText.value === 'bumiflora80.site') {
+                btnConfirm.disabled = false;
+            } else {
+                btnConfirm.disabled = true;
+            }
+        })
+    }
+</script>
+@endsection
+
 @section('btn-custom')
 <div>
     <a href="{{ route('items.create') }}" class="btn btn-sm text-muted">
@@ -196,14 +217,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="p-2">
-                        Reset data will erase all of your existing data items. Click "<b>Yes</b>" to proceed.
+                        Reset data akan menghapus seluruh item, masukan <b>"bumiflora80.site"</b> pada kolom di bawah, lalu klik "<b>Yes</b>" untuk melanjutkan.
+
+                        <div class="form-group mt-3">
+                            <input type="text" id="verification" class="form-control" placeholder="Masukan di sini" required>
+                        </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-outline-secondary rounded-pill pl-3 pr-3" data-dismiss="modal">Cancle</button>
-                    <form action="{{ route('items.reset_data_item') }}" method="post">
+                    <form action="{{ route('items.reset_data_item') }}" method="post" id="form-reset">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill pl-3 pr-3">Yes</button>
+                        <button id="confirm" type="submit" class="btn btn-sm btn-outline-primary rounded-pill pl-3 pr-3">Yes</button>
                     </form>
                 </div>
             </div>

@@ -116,7 +116,7 @@ $(document).ready(function () {
                     alert('Masukan nominal pembayaran')
                 }
             } else {
-                if (localStorage.getItem('payment_type') == null || localStorage.getItem('payment_type') == 1) {
+                if (localStorage.getItem('payment_type') == 'null' || localStorage.getItem('payment_type') == 1) {
                     alert('Pilih metode pembayaran.')
                 } else {
                     if (localStorage.getItem('total_price') < 1) {
@@ -178,6 +178,7 @@ $(document).ready(function () {
     /** sampe sini */
 
     $(document).on('change', '#payment_option', (function () {
+        localStorage.setItem('payment_type', null); // set payment type to null
         let method = '';
         let types = [];
 

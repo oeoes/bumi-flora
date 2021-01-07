@@ -15,13 +15,13 @@ class StockWarnNotificationController extends Controller
     public function index () {
         $data = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->get();
         $messages = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->limit(6)->get();
-        if ($data) $data->makeHidden(['created_at', 'updated_at']);
+        if ($data) $data->makeHidden(['updated_at']);
 
         return response()->json(['status' => count($data) ? true : false, 'message' => 'list of notification', 'data' => $messages, 'count' => count($data)]);
     }
 
     public function notification_page () {
-        $notifications = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->paginate(15);
+        $notifications = StockWarnNotification::where('is_read', 0)->orderBy('urgency', 'DESC')->latest()->paginate(15);
         return view('pages.activity.notification-page')->with(['notifications' => $notifications]);
     }
 

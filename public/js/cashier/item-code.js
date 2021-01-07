@@ -5,8 +5,7 @@ $(document).ready(function () {
         if (e.key === 'Shift') {
             if ($('#jumlah').is(':focus')) {
                 $('#item_code').focus().select()
-            }
-            else if ($('#item_code').is(':focus')) {
+            } else if ($('#item_code').is(':focus')) {
                 $('#jumlah').focus().select()
             }
         }
@@ -41,14 +40,14 @@ $(document).ready(function () {
                         } else {
                             let dt = $('#kasir-data-item').DataTable();
                             $('#search-item').modal('show')
-
+                            $('#kasir-data-item_filter input').val($('#item_code').val()).focus()
                             dt.search($('#item_code').val()).draw();
-                            
+
                         }
                     })
             } else {
-                $('#search-item').modal('toggle')
-                $('#kasir-data-item_filter input').focus().val($('#item_code').val())
+                $('#search-item').modal('show')
+                $('div.dataTables_filter input').focus()
             }
         }
     });
@@ -60,6 +59,7 @@ $(document).ready(function () {
 
     // useful key strokes
     $(document).on('keydown', 'html', function (e) {
+        let items = JSON.parse(localStorage.getItem('items'));
         switch (e.key) {
             case 'Escape': // tutup modal cari item
                 if (($('#search-item').data('bs.modal') || {})._isShown) {
@@ -67,10 +67,41 @@ $(document).ready(function () {
                     $('#item_code').focus().select();
                 }
                 break;
+
             case 'F2':
                 $('#item_code').focus().select();
                 break;
-        
+
+            case ',':
+                if (items.length > 0) {
+                    $('#cancle_payment').modal('toggle');
+                    return false;
+                } else {
+                    alert('Tidak ada item.');
+                    return false;
+                }
+                break;
+
+            case '.':
+                if (items.length > 0) {
+                    $('#payment').modal('toggle');
+                    return false;
+                } else {
+                    alert('Tidak ada item.');
+                    return false;
+                }
+                break;
+
+            case '/':
+                if (items.length > 0) {
+                    $('#pending_payment').modal('toggle');
+                    return false;
+                } else {
+                    alert('Tidak ada item.');
+                    return false;
+                }
+                break;
+
             default:
                 break;
         }

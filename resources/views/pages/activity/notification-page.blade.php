@@ -30,6 +30,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="h4">{{ $notification->title }}</div>
+                        <small class="badge bagde-sm badge-light" style="font-style: italic">{{ $notification->created_at->diffForHumans() }}</small>
                     </div>
                     <div class="card-body">
                         {!! $notification->body !!}

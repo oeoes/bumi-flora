@@ -59,6 +59,7 @@ Route::prefix('app')->middleware('admin')->group(function () {
 
     // item staging area
     Route::resource('/stages', 'Activity\StagingItemController');
+    Route::put('/stages/complete/{stage}', 'Activity\StagingItemController@complete_item')->name('stages.complete_item');
 
 
     Route::middleware('role:super_admin|root')->group(function () {
