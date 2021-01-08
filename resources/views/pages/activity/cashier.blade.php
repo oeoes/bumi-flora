@@ -441,7 +441,7 @@
                             </td>
                             <td>
                                 <div class="text-sm">
-                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                    >= {{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
                             </td>
                             <td>
@@ -485,7 +485,7 @@
                             </td>
                             <td>
                                 <div class="text-sm">
-                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                    >= {{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
                             </td>
                             <td>
@@ -528,7 +528,7 @@
                             </td>
                             <td>
                                 <div class="text-sm">
-                                    >{{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
+                                    >= {{ $item->minimum_item }} item : {{ number_format($item->grosir_price ) }} / item
                                 </div>
                             </td>
                             <td>

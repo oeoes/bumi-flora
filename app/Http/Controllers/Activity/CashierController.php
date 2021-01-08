@@ -350,11 +350,26 @@ class CashierController extends Controller
         $discount = 0;
         $tax = 0;
         $fee = 0;
+
         $cash = 0;
+        $cash_tax = 0;
+        $cash_fee = 0;
+
         $ewallet = 0;
+        $ewallet_tax = 0;
+        $ewallet_fee = 0;
+
         $debit = 0;
+        $debit_tax = 0;
+        $debit_fee = 0;
+
         $transfer = 0;
+        $transfer_tax = 0;
+        $transfer_fee = 0;
+
         $credit = 0;
+        $credit_tax = 0;
+        $credit_fee = 0;
 
         $items = DB::table('transactions')
             ->join('items', 'items.id', '=', 'transactions.item_id')
@@ -371,8 +386,8 @@ class CashierController extends Controller
             ->join('users', 'users.id', '=', 'transactions.user_id')
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'cash'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty * items.price) + transactions.tax + transactions.additional_fee) - sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer) as total'), 'transactions.transaction_number')
+            ->groupBy('transactions.transaction_number', 'transactions.item_id')
+            ->select(DB::raw('sum(transactions.qty * items.price) as price'), DB::raw('sum(transactions.discount + transactions.discount_item + transactions.discount_customer) as discount'), 'transactions.transaction_number', 'transactions.additional_fee', 'transactions.tax')
             ->get();
 
         $ewallets = DB::table('transactions')
@@ -382,8 +397,8 @@ class CashierController extends Controller
             ->join('users', 'users.id', '=', 'transactions.user_id')
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'e-wallet'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty * items.price) + transactions.tax + transactions.additional_fee) - sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer) as total'))
+            ->groupBy('transactions.transaction_number', 'transactions.item_id')
+            ->select(DB::raw('sum(transactions.qty * items.price) as price'), DB::raw('sum(transactions.discount + transactions.discount_item + transactions.discount_customer) as discount'), 'transactions.transaction_number', 'transactions.additional_fee', 'transactions.tax')
             ->get();
 
         $debits = DB::table('transactions')
@@ -393,8 +408,8 @@ class CashierController extends Controller
             ->join('users', 'users.id', '=', 'transactions.user_id')
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'debit'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty * items.price) + transactions.tax + transactions.additional_fee) - sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer) as total'))
+            ->groupBy('transactions.transaction_number', 'transactions.item_id')
+            ->select(DB::raw('sum(transactions.qty * items.price) as price'), DB::raw('sum(transactions.discount + transactions.discount_item + transactions.discount_customer) as discount'), 'transactions.transaction_number', 'transactions.additional_fee', 'transactions.tax')
             ->get();
 
         $transfers = DB::table('transactions')
@@ -404,8 +419,8 @@ class CashierController extends Controller
             ->join('users', 'users.id', '=', 'transactions.user_id')
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'transfer'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty * items.price) + transactions.tax + transactions.additional_fee) - sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer) as total'))
+            ->groupBy('transactions.transaction_number', 'transactions.item_id')
+            ->select(DB::raw('sum(transactions.qty * items.price) as price'), DB::raw('sum(transactions.discount + transactions.discount_item + transactions.discount_customer) as discount'), 'transactions.transaction_number', 'transactions.additional_fee', 'transactions.tax')
             ->get();
 
         $credits = DB::table('transactions')
@@ -415,8 +430,8 @@ class CashierController extends Controller
             ->join('users', 'users.id', '=', 'transactions.user_id')
             ->where(['transactions.dept' => 'utama', 'items.deleted_at' => NULL, 'transactions.deleted_at' => NULL, 'transactions.user_id' => auth()->user()->id, 'payment_methods.method_name' => 'kartu kredit'])
             ->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))
-            ->groupBy('transactions.transaction_number')
-            ->select(DB::raw('(sum(transactions.qty * items.price) + transactions.tax + transactions.additional_fee) - sum(transactions.discount) + sum(transactions.discount_item) + sum(transactions.discount_customer) as total'))
+            ->groupBy('transactions.transaction_number', 'transactions.item_id')
+            ->select(DB::raw('sum(transactions.qty * items.price) as price'), DB::raw('sum(transactions.discount + transactions.discount_item + transactions.discount_customer) as discount'), 'transactions.transaction_number', 'transactions.additional_fee', 'transactions.tax')
             ->get();
 
         foreach ($items as $item) {
@@ -426,37 +441,45 @@ class CashierController extends Controller
         }
 
         foreach ($cashes as $c) {
-            $cash += (integer) $c->total;
+            $cash += (integer) $c->price - $c->discount;
+            $cash_tax = (int) $c->tax;
+            $cash_fee = (integer) $c->additional_fee;
         }
 
         foreach ($ewallets as $e) {
-            $ewallet += (integer) $e->total;
+            $ewallet += (int) $e->price - $e->discount;
+            $ewallet_tax = (int) $e->tax;
+            $ewallet_fee = (int) $e->additional_fee;
         }
 
         foreach ($debits as $d) {
-            $debit += (integer) $d->total;
+            $debit += (int) $d->price - $d->discount;
+            $debit_tax = (int) $d->tax;
+            $debit_fee = (int) $d->additional_fee;
         }
 
         foreach ($transfers as $t) {
-            $transfer += (integer) $t->total;
+            $transfer += (int) $t->price - $t->discount;
+            $transfer_tax = (int) $t->tax;
+            $transfer_fee = (int) $t->additional_fee;
         }
 
         foreach ($credits as $c) {
-            $credit += (integer) $c->total;
+            $credit += (int) $c->price - $c->discount;
+            $credit_tax = (int) $c->tax;
+            $credit_fee = (int) $c->additional_fee;
         }
-
-        // return $cash;
 
         return [
             'jumlah_transaksi' => count($items), 
             'total_discount' => $discount, 
             'total_pajak' => $tax, 
             'total_biaya' => $fee, 
-            'total_tunai' => $cash,
-            'total_debit' => $debit,
-            'total_transfer' => $transfer,
-            'total_ewallet' => $ewallet,
-            'total_credit' => $credit,
+            'total_tunai' => $cash + $cash_fee + $cash_tax,
+            'total_debit' => $debit + $debit_fee + $debit_tax,
+            'total_transfer' => $transfer + $transfer_fee + $transfer_tax,
+            'total_ewallet' => $ewallet + $ewallet_fee + $ewallet_tax,
+            'total_credit' => $credit + $credit_fee + $credit_tax,
         ];
     }
 }
