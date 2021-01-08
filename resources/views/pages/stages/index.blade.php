@@ -158,7 +158,7 @@
                                                     <form action="{{ route('stages.destroy', ['stage' => $item->id]) }}" method="post">
                                                         @method('DELETE')
                                                         @csrf
-                                                        Hapus Item pada pada staging area?
+                                                        Hapus Item pada staging area?
 
                                                 </div>
                                                 <div class="modal-footer">

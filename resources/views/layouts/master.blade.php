@@ -35,16 +35,39 @@
         }
 
         @media (min-width: 992px) {
+
             .modal-lg,
             .modal-xl {
                 max-width: 80vw !important;
             }
+        }
+
+        .preload {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            padding: 10px;
+            text-align: center;
+            z-index: 100000;
+        }
+
+        .preload div {
+            padding: 10px 15px;
+            color: #9da2a7;
+            background-color: #f5f5f6;
+            font-weight: bold;
         }
     </style>
     @yield('custom-js-2')
 </head>
 
 <body class="layout-row">
+    <div class="preload">
+        <div>Loading...</div>
+    </div>
     @if(session()->has('message'))
     <div id="myalert" class="my-alert animate__animated animate__bounce">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -149,6 +172,8 @@
         }, 5000);
 
         $(document).ready(function() {
+            $('.preload').css('display', 'none');
+
             axios.get('/app/notifications')
                 .then(function(response) {
                     if (response.data.status) {
