@@ -14,6 +14,7 @@ use App\Model\Storage\Balance;
 use App\Model\Storage\Stock;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\MasterDataExport;
+use App\Model\Storage\StorageRecord;
 use Carbon\Carbon;
 use DataTables;
 use Excel;
@@ -114,6 +115,12 @@ class ItemController extends Controller
             'item_id' => $item_id,
             'amount' => $amount,
             'dept' => $dept,
+        ]);
+
+        StorageRecord::create([
+            'item_id' => $item_id,
+            'dept' => $dept,
+            'transaction_no' => 'init',
         ]);
     }
 

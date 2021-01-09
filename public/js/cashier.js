@@ -137,8 +137,9 @@ $(document).ready(function () {
         }
 
         // convert to nomiinal and write to discount value nominal field
-        let nominal_val = $('#discount_value_nominal').val()
-        $('#discount_value_percentage').val(nominal_val < 1 ? 0 : 100 * nominal_val / total)
+        let nominal_val = $('#discount_value_nominal').val();
+        let percentage_val = nominal_val < 1 ? 0 : 100 * nominal_val / total;
+        $('#discount_value_percentage').val(percentage_val.toFixed(2))
         
         // store to local storage
         localStorage.setItem('discount', Math.trunc(nominal_val))

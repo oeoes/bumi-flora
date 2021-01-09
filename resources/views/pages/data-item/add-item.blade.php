@@ -6,7 +6,9 @@
 @section('custom-js')
 <script>
     $(document).ready(function() {
-        $('#price-range').prop('disabled', true);
+        // $('#price-range').prop('disabled', true);
+        $('#price').prop('readonly', true);
+        $('#price-percentage').prop('readonly', true);
 
 
         $('#generate_barcode').click(function() {
@@ -66,7 +68,7 @@
                 $('#price-percentage').prop('readonly', true);
             } else {
                 $('#price').prop('readonly', false);
-                $('#price-perecentage').prop('readonly', false);
+                $('#price-percentage').prop('readonly', false);
             }
         })
 
@@ -194,7 +196,7 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
+                                            <input type="number" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">%</span>
                                             </div>

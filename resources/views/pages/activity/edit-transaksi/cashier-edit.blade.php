@@ -16,7 +16,11 @@
 
 <script src="{{ asset('js/dataTables.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
+<!-- cashier start -->
+<script src="{{ asset('js/cashier/functions.js') }}"></script>
 <script src="{{ asset('js/cashier.js') }}"></script>
+<script src="{{ asset('js/cashier/item-code.js') }}"></script>
+<!-- cashier end -->
 <script src="{{ asset('js/payment.js') }}"></script>
 <script>
     $(document).ready(function() {

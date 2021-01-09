@@ -56,9 +56,9 @@
 
         .preload div {
             padding: 10px 15px;
-            color: #9da2a7;
+            color: #7b7b7b;
             background-color: #f5f5f6;
-            font-weight: bold;
+            font-weight: 450;
         }
     </style>
     @yield('custom-js-2')

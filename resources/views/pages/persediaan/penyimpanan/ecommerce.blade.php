@@ -4,10 +4,12 @@
 @section('page-description', 'Daftar item pada penyimpanan ecommerce.')
 
 @section('btn-custom')
-<a href="{{ route('items.export-item', ['dept' => 'ecommerce']) }}" class="btn btn-sm text-muted">
-    <span class="d-none d-sm-inline mx-1">Export</span>
-    <i data-feather="upload-cloud"></i>
-</a>
+<div>
+    <a href="{{ route('items.export-item', ['dept' => 'ecommerce']) }}" class="btn btn-sm text-muted">
+        <span class="d-none d-sm-inline mx-1">Export</span>
+        <i data-feather="upload-cloud"></i>
+    </a>
+</div>
 @endsection
 
 @section('custom-js')
@@ -44,7 +46,7 @@
                         </div>
                         <div class="fixed-table-body">
                             <table id="item-gudang" class="table my-responsive table-theme v-middle table-hover" style="margin-top: 0px;">
-                                <thead style="">
+                                <thead>
                                     <tr>
                                         <th><span class="text-muted">Nama</span></th>
                                         <th><span class="text-muted">Jenis</span></th>
@@ -63,54 +65,54 @@
                                 <tbody>
                                     @foreach($items as $key => $item)
                                     <tr class=" " data-index="0" data-id="17">
-                                        <td style="">
+                                        <td>
                                             <div class="text-muted text-sm">
                                                 {{ $item->name }}
                                             </div>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ $item->category }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ $item->unit }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ $item->min_stock }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ $item->stock }}
                                             </span>
                                         </td>
                                         @if(auth()->user()->hasAnyRole(['root', 'super_admin']))
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->main_cost, 2) }}
                                             </span>
                                         </td>
                                         @endif
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 Rp.{{ number_format($item->price, 2) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm">
                                                 {{ $item->amount }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <span class="item-amount d-sm-block text-sm ">
                                                 Rp.{{ number_format($item->price * $item->stock, 2) }}
                                             </span>
                                         </td>
-                                        <td style="">
+                                        <td>
                                             <div class="item-action dropdown">
                                                 <span style="cursor: pointer" class="nav-icon" data-toggle="modal" data-target="#options{{$key}}" data-toggle-class="modal-open-aside" data-toggle-class-target=".animate"><i data-feather='more-vertical'></i></span>
                                             </div>

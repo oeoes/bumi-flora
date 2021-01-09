@@ -189,11 +189,12 @@ function cashier_retrieve_data() {
     }
 
     let discount = JSON.parse(localStorage.getItem('discount'));
+    let discount_percentage = 100 * parseInt(discount) / total;
     localStorage.setItem('discount', discount);
 
     // convert to nomiinal and write to discount value nominal field
     $('#discount_value_nominal').val(discount)
-    $('#discount_value_percentage').val(discount < 1 ? 0 : (100 * parseInt(discount) / total).toFixed(2))
+    $('#discount_value_percentage').val(discount_percentage.toFixed(2))
 
     // print value to screen by id desired_discount_value
     $('#desired_discount_value').text(parseInt(discount).toLocaleString())

@@ -3,26 +3,6 @@
 @section('page-title', 'Data Item')
 @section('page-description', 'Berisi daftar item dan akses untuk melakukan penambahan item.')
 
-@section('custom-js')
-<script>
-    window.onload = () => {
-        const form = document.querySelector('#form-reset');
-        const btnConfirm = document.querySelector('#confirm');
-        const verificationText = document.querySelector('#verification');
-
-        // disable btn confirm
-        btnConfirm.disabled = true;
-
-        verificationText.addEventListener('keyup', () => {
-            if (verificationText.value === 'bumiflora80.site') {
-                btnConfirm.disabled = false;
-            } else {
-                btnConfirm.disabled = true;
-            }
-        })
-    }
-</script>
-@endsection
 
 @section('btn-custom')
 <div>
@@ -244,44 +224,22 @@
 <script src="{{ asset('js/data-item-functions.js') }}"></script>
 <script src="{{ asset('js/axios.js') }}"></script>
 <script>
-    // $(document).ready(function() {
-    //     $('#data-item').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         ajax: "{{ route('items.ajax', ['published' => 1]) }}",
-    //         columns: [{
-    //                 data: 'name',
-    //                 name: 'name'
-    //             },
-    //             {
-    //                 data: 'barcode',
-    //                 name: 'barcode'
-    //             },
-    //             {
-    //                 data: 'main_cost',
-    //                 name: 'main_cost'
-    //             },
-    //             {
-    //                 data: 'price',
-    //                 name: 'price'
-    //             },
-    //             {
-    //                 data: 'base_unit',
-    //                 name: 'base_unit'
-    //             },
-    //             {
-    //                 data: 'base_unit_conversion',
-    //                 name: 'base_unit_conversion'
-    //             },
-    //             {
-    //                 data: 'action',
-    //                 name: 'action',
-    //                 orderable: false,
-    //                 searchable: false
-    //             },
-    //         ]
-    //     });
-    // });
+    window.onload = () => {
+        const form = document.querySelector('#form-reset');
+        const btnConfirm = document.querySelector('#confirm');
+        const verificationText = document.querySelector('#verification');
+
+        // disable btn confirm
+        btnConfirm.disabled = true;
+
+        verificationText.addEventListener('keyup', () => {
+            if (verificationText.value === 'bumiflora80.site') {
+                btnConfirm.disabled = false;
+            } else {
+                btnConfirm.disabled = true;
+            }
+        })
+    }
 </script>
 @endsection
 

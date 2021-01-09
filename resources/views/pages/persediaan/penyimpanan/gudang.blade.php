@@ -4,54 +4,56 @@
 @section('page-description', 'Daftar item pada penyimpanan gudang.')
 
 @section('btn-custom')
-<a href="{{ route('items.export-item', ['dept' => 'gudang']) }}" class="btn btn-sm text-muted">
-    <span class="d-none d-sm-inline mx-1">Export</span>
-    <i data-feather="upload-cloud"></i>
-</a>
+<div>
+    <a href="{{ route('items.export-item', ['dept' => 'gudang']) }}" class="btn btn-sm text-muted">
+        <span class="d-none d-sm-inline mx-1">Export</span>
+        <i data-feather="upload-cloud"></i>
+    </a>
 
-<button class="btn btn-sm text-muted" data-toggle="modal" data-target="#filter" data-toggle-class="modal-open-aside">
-    <span class="d-none d-sm-inline mx-1">Filter</span>
-    <i data-feather="sliders"></i>
-</button>
+    <button class="btn btn-sm text-muted" data-toggle="modal" data-target="#filter" data-toggle-class="modal-open-aside">
+        <span class="d-none d-sm-inline mx-1">Filter</span>
+        <i data-feather="sliders"></i>
+    </button>
 
-<!-- modal aside filter -->
-<div id="filter" class="modal fade modal-open-aside" data-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-right w-xl">
-        <div class="modal-content h-100 no-radius">
-            <div class="modal-header ">
-                <div class="modal-title text-sm">Filter Item</div>
-                <button class="close" data-dismiss="modal">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="p-2">
-                    <form action="{{ route('storages.gudang') }}" method="get">
-                        <div class="form-group">
-                            <label for="name">Item name</label>
-                            <input class="form-control" type="text" class="form-contro" name="filter[items.name]">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Barcode</label>
-                            <input class="form-control" type="text" class="form-contro" name="filter[items.barcode]">
-                        </div>
-                        <div class="form-group">
-                            <label for="categories">Category</label>
-                            <select name="filter[categories.id]" id="" class="form-control">
-                                <option value="">Pilih jenis item</option>
-                                @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+    <!-- modal aside filter -->
+    <div id="filter" class="modal fade modal-open-aside" data-backdrop="true" data-class="modal-open-aside" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-right w-xl">
+            <div class="modal-content h-100 no-radius">
+                <div class="modal-header ">
+                    <div class="modal-title text-sm">Filter Item</div>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-2">
+                        <form action="{{ route('storages.gudang') }}" method="get">
+                            <div class="form-group">
+                                <label for="name">Item name</label>
+                                <input class="form-control" type="text" class="form-contro" name="filter[items.name]">
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Barcode</label>
+                                <input class="form-control" type="text" class="form-contro" name="filter[items.barcode]">
+                            </div>
+                            <div class="form-group">
+                                <label for="categories">Category</label>
+                                <select name="filter[categories.id]" id="" class="form-control">
+                                    <option value="">Pilih jenis item</option>
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ strtoupper($category->category) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-sm btn-primary">
+                    </div>
+                    </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <div class="form-group">
-                    <input type="submit" class="btn btn-sm btn-primary">
-                </div>
-                </form>
-            </div>
+            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-content -->
     </div>
 </div>
 @endsection

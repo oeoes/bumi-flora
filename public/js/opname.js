@@ -53,6 +53,7 @@ const filter_opname = () => {
             dept: deptField.value,
         }
     }).then(function (response) {
+        console.log(response);
         if (response.data.data.length < 1) {
             dataOpnameContainer.innerHTML = '';
             let attributes = [{ 'colspan': '11', 'align': 'center', 'message': 'Data kosong.' }];
