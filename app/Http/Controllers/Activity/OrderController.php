@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Activity;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\MasterData\Item;
 use App\Model\Relation\StakeHolder;
 use App\Model\Activity\Order;
+use App\Model\Storage\Stock;
+use App\Model\Storage\StorageRecord;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -122,6 +124,20 @@ class OrderController extends Controller
 
     public function accept_item (Request $request, Order $order) {
         if (($order->accepted + $request->amount) >= $order->amount) {
+            $stock = Stock::where(['item_id' => $order->item_id, 'dept' => 'gudang'])->first();
+            $stock->update(['amount' => $order->amount]);
+            
+            if ($order->status !== 1) {
+                $no_urut = StorageRecord::where('amount_in', '!=', 'NULL')->get();
+                StorageRecord::create([
+                    'item_id' => $order->item_id,
+                    'dept' => 'gudang',
+                    'description' => 'Pesanan pembelian',
+                    'amount_in' => $order->amount,
+                    'transaction_no' => (count($no_urut) + 1) . '/MASUK/ORDER/' . strtoupper($request->from) . '/' . Carbon::now()->format('Y-m-d'),
+                ]);
+            }
+
             $order->update([
                 'accepted' => $order->accepted + $request->amount,
                 'status' => 1
@@ -142,6 +158,9 @@ class OrderController extends Controller
                 'accepted' => $order->accepted - $request->amount,
                 'status' => 0
             ]);
+
+            $stock = Stock::where(['item_id' => $order->item_id, 'dept' => 'gudang'])->first();
+            $stock->update(['amount' => $stock->amount - $request->amount]);
             return back();
         }
         else {
