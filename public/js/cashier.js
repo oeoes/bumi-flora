@@ -1,10 +1,8 @@
 $(document).ready(function () {
     // insert value  
     localStorage.getItem('additional_fee') == null ? localStorage.setItem('additional_fee', 0) : $('#additional_fee').val(JSON.parse(localStorage.getItem('additional_fee')))
-    localStorage.getItem('tax') == null ? localStorage.setItem('tax', 0) : $('#tax').val(JSON.parse(localStorage.getItem('tax')))
-    localStorage.getItem('discount') == null ? localStorage.setItem('discount', 0) : $('#discount_value_nominal').val(JSON.parse(localStorage.getItem('discount')))
-    
-    localStorage.setItem('customer_discount', 0)
+    localStorage.getItem('tax') == null ? localStorage.setItem('tax', 0) : $('#tax').val(JSON.parse(localStorage.getItem('tax')));
+    localStorage.getItem('discount') == null ? localStorage.setItem('discount', 0) : $('#discount_value_nominal').val(JSON.parse(localStorage.getItem('discount')));
 
     // print item yg ada di localstorage
     print_items()
@@ -89,7 +87,7 @@ $(document).ready(function () {
     // perhitungan discount percentage
     $(document).on('keyup', '#discount_value_percentage', (function () {
         // show/hide text for discount
-        if ($('#discount_value_percentage').val() > 0) {
+        if ($('#discount_value_percentage').val() > 0 || JSON.parse(localStorage.getItem('customer_discount')) > 0) {
             $('#cont_discount').css('display', 'block')
         } else {
             $('#cont_discount').css('display', 'none')
@@ -120,7 +118,7 @@ $(document).ready(function () {
     // perhitungan discount nominal
     $(document).on('keyup', '#discount_value_nominal', (function () {
         // show/hide text for discount
-        if ($('#discount_value_nominal').val() > 0) {
+        if ($('#discount_value_nominal').val() > 0 || JSON.parse(localStorage.getItem('customer_discount')) > 0) {
             $('#cont_discount').css('display', 'block')
         } else {
             $('#cont_discount').css('display', 'none')

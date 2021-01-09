@@ -190,12 +190,12 @@ class RecordItemController extends Controller
             ->latest()
             ->groupBy('transactions.transaction_number')
             ->select(DB::raw('sum(transactions.qty) as quantity'), DB::raw('sum((transactions.qty * items.price) - (transactions.discount + transactions.discount_item + transactions.discount_customer)) as total'), 'transactions.tax', 'transactions.additional_fee', 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
-        
+
         if (auth()->user()->role != 'admin') {
             $items->where('transactions.user_id', auth()->user()->id);
         }
 
-        if(request('from') != null) {
+        if (request('from') != null) {
             $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
         } else {
             $items->whereDate('transactions.created_at', Carbon::now()->format('Y-m-d'))->get();
@@ -206,23 +206,23 @@ class RecordItemController extends Controller
     public function online_transaction_history()
     {
         $items = DB::table('transactions')
-        ->join('items', 'items.id', '=', 'transactions.item_id')
-        ->join('users', 'users.id', '=', 'transactions.user_id')
-        ->join('units', 'units.id', '=', 'items.unit_id')
-        ->join('categories', 'categories.id', '=', 'items.category_id')
-        ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
-        ->join('brands', 'brands.id', '=', 'items.brand_id')
-        ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
-        ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
-        ->where(['transactions.dept' => 'ecommerce', 'transactions.deleted_at' => NULL])
-        ->latest()
-        ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
-        ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
+            ->join('items', 'items.id', '=', 'transactions.item_id')
+            ->join('users', 'users.id', '=', 'transactions.user_id')
+            ->join('units', 'units.id', '=', 'items.unit_id')
+            ->join('categories', 'categories.id', '=', 'items.category_id')
+            ->leftJoin('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('brands', 'brands.id', '=', 'items.brand_id')
+            ->leftJoin('payment_types', 'payment_types.id', '=', 'transactions.payment_type_id')
+            ->leftJoin('payment_methods', 'payment_methods.id', '=', 'transactions.payment_method_id')
+            ->where(['transactions.dept' => 'ecommerce', 'transactions.deleted_at' => NULL])
+            ->latest()
+            ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
+            ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'users.name as cashier', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at');
 
         if (auth()->user()->role != 'admin') {
             $items->where('transactions.user_id', auth()->user()->id);
         }
-        
+
         if (request('from') != null) {
             $items->whereBetween(DB::raw('DATE(transactions.created_at)'), [request('from'), request('to')])->get();
         } else {
@@ -374,11 +374,17 @@ class RecordItemController extends Controller
 
     public function live_edit_transaction(Transaction $transaction)
     {
+        $discount = DB::table('transactions')
+            ->join('stake_holders', 'stake_holders.id', '=', 'transactions.stake_holder_id')
+            ->join('discounts', 'stake_holders.id', '=', 'discounts.stake_holder_id')
+            ->where('transactions.id', $transaction->id)->select('discounts.value')->first();
+
         $list_of_items = [];
         // data seluruh transaksi
-        $transactions = DB::table('transactions')->join('items', 'items.id', '=', 'transactions.item_id')
+        $transactions = DB::table('transactions')
+            ->join('items', 'items.id', '=', 'transactions.item_id')
             ->where('transactions.transaction_number', $transaction->transaction_number)
-            ->select('items.barcode', 'transactions.dept', 'transactions.qty', 'transactions.discount_item', 'items.price', 'transactions.qty')
+            ->select('items.barcode', 'transactions.dept', 'transactions.qty', 'transactions.discount_item', 'transactions.discount_customer', 'items.price', 'transactions.qty', 'transactions.stake_holder_id')
             ->get();
 
         // item untuk di modal search item
@@ -408,7 +414,10 @@ class RecordItemController extends Controller
             'additional_fee' => $transaction->additional_fee,
             'payment_type' => $transaction->payment_type_id,
             'discount' => $transaction->discount * count($transactions),
+            'discount_customer' => $transaction->discount_customer,
             'cashier_items' => $list_of_items,
+            'stake_holder_id' => $transaction->stake_holder_id,
+            'value' => !$discount ? NULL : $discount->value,
         ]]);
     }
 
@@ -487,11 +496,12 @@ class RecordItemController extends Controller
         return $data;
     }
 
-    public function delete_transaction ($id) {
+    public function delete_transaction($id)
+    {
         $transaction = Transaction::find($id);
         $transactions = Transaction::where('transaction_number', $transaction->transaction_number)->get();
 
-        foreach($transactions as $tr) {
+        foreach ($transactions as $tr) {
             $stock = Stock::where(['item_id' => $tr->item_id, 'dept' => $tr->dept])->first();
             $stock->update(['amount' => $stock->amount + $tr->qty]);
         }
@@ -505,7 +515,8 @@ class RecordItemController extends Controller
         }
     }
 
-    public static function items_query ($dept, $from, $to) {
+    public static function items_query($dept, $from, $to)
+    {
         return QueryBuilder::for(Transaction::class)
             ->join('items', 'items.id', '=', 'transactions.item_id')
             ->join('units', 'units.id', '=', 'items.unit_id')
@@ -520,10 +531,10 @@ class RecordItemController extends Controller
             ->groupBy('transactions.transaction_number', 'transactions.transaction_time')
             ->select(DB::raw('sum(transactions.qty) as quantity'), 'transactions.id', 'transactions.dept', 'stake_holders.name as customer', 'transactions.transaction_number', 'payment_methods.method_name', 'payment_types.type_name', 'transactions.transaction_time', 'transactions.created_at')
             ->orderBy('items.name');
-            // ->allowedFilters([
-            //     AllowedFilter::partial('items.name'),
-            //     AllowedFilter::partial('items.barcode'),
-            //     AllowedFilter::exact('categories.id'),
-            // ]);
+        // ->allowedFilters([
+        //     AllowedFilter::partial('items.name'),
+        //     AllowedFilter::partial('items.barcode'),
+        //     AllowedFilter::exact('categories.id'),
+        // ]);
     }
 }

@@ -54,6 +54,7 @@
     localStorage.setItem('additional_fee', JSON.stringify(parseInt('{{ $cashier["additional_fee"] }}')));
     localStorage.setItem('payment_type', JSON.stringify(parseInt('{{ $cashier["payment_type"] }}')));
     localStorage.setItem('discount', JSON.stringify(parseInt('{{ $cashier["discount"] }}')));
+    localStorage.setItem('customer_discount', JSON.stringify(parseInt('{{ $cashier["discount_customer"] }}')));
 
     cashier_retrieve_data();
 
@@ -135,10 +136,17 @@
                                             <select id="customer" class="form-control form-control-sm">
                                                 <option value="umum">Umum</option>
                                                 @foreach($customers as $customer)
+                                                @if($customer->id == $cashier['stake_holder_id'])
+                                                <option value="{{ $customer->id }}" selected>{{ $customer->name }}</option>
+                                                @else
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                                @endif
                                                 @endforeach
                                             </select>
-                                            <small id="discount-info" class="text-success"></small>
+                                            @php
+                                            $value = !$cashier['value'] ? '' : "Discount available: -" . $cashier['value'] . "%";
+                                            @endphp
+                                            <small id="discount-info" class="text-success">{{ $value }}</small>
                                         </div>
                                     </div>
                                     <div class="col-3">

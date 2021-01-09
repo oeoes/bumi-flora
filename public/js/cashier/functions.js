@@ -64,7 +64,7 @@ function print_items() {
 
     if (items == null) {
         $('#data-item').append(
-            '<tr id="none"><td class="text-muted" colspan="7" align="center">Belum ada item ditambahkan</td></tr>'
+            '<tr id="none"><td class="text-muted" colspan="9" align="center">Belum ada item ditambahkan</td></tr>'
         )
     } else {
         for (let i = 0; i < items.length; i++) {

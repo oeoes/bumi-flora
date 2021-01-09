@@ -58,6 +58,10 @@
         $('#kasir-data-item').DataTable();
     });
 
+    // empty items
+    localStorage.removeItem('items');
+    localStorage.setItem('customer_discount', 0);
+
     // set pajak, discount, additional_fee ke 0
     localStorage.setItem('discount', 0);
     localStorage.setItem('tax', 0);

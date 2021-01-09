@@ -225,6 +225,9 @@
 <script src="{{ asset('js/axios.js') }}"></script>
 <script>
     window.onload = () => {
+        // empty items
+        localStorage.removeItem('items');
+        
         const form = document.querySelector('#form-reset');
         const btnConfirm = document.querySelector('#confirm');
         const verificationText = document.querySelector('#verification');
