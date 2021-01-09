@@ -99,7 +99,6 @@ class StorageController extends Controller
             ->join('stocks', 'items.id', '=', 'stocks.item_id')
             ->leftJoin('storage_records', 'items.id', '=', 'storage_records.item_id')
             ->select('items.*', DB::raw('sum(storage_records.amount_in) as amount_in'), DB::raw('sum(storage_records.amount_out) as amount_out'), 'units.unit', 'categories.category', 'balances.amount as balance', 'balances.dept', 'stocks.amount as stock')
-            // ->where(['items.cabinet' => request('cabinet'), 'categories.id' => request('category'), 'storage_records.dept' => request('dept'), 'stocks.dept' => request('dept'), 'balances.dept' => request('dept'), 'items.deleted_at' => NULL])
             ->where(['items.cabinet' => !request('cabinet') ? NULL : request('cabinet'), 'storage_records.dept' => request('dept'), 'categories.id' => request('category'), 'stocks.dept' => request('dept'), 'balances.dept' => request('dept'), 'items.deleted_at' => NULL])
             ->whereBetween('items.created_at', [request('from'), request('to')])
             ->groupBy('items.id')
