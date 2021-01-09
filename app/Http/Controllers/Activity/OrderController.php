@@ -125,7 +125,7 @@ class OrderController extends Controller
     public function accept_item (Request $request, Order $order) {
         if (($order->accepted + $request->amount) >= $order->amount) {
             $stock = Stock::where(['item_id' => $order->item_id, 'dept' => 'gudang'])->first();
-            $stock->update(['amount' => $order->amount]);
+            $stock->update(['amount' => $stock->amount + $order->amount]);
             
             if ($order->status !== 1) {
                 $no_urut = StorageRecord::where('amount_in', '!=', 'NULL')->get();

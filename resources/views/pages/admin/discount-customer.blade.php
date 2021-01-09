@@ -118,13 +118,13 @@
                                                    @csrf
                                                <div class="form-group">
                                                    <label>Promo name</label>
-                                                   <input id="promo_name" name="promo_name" type="text"
+                                                   <input name="promo_name" type="text"
                                                        class="form-control" value="{{ $discount->promo_name }}">
                                                </div>
 
                                                <div class="form-group">
                                                    <label>Customer</label>
-                                                   <select id="" name="stake_holder_id" class="form-control">
+                                                   <select name="stake_holder_id" class="form-control">
                                                     @foreach($customers as $key => $customer) 
                                                         @if($customer->id == $discount->id)  
                                                         <option selected value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -138,7 +138,7 @@
 
                                                <div class="form-group">
                                                    <label>Value</label>
-                                                   <input id="value" name="value" type="number" min="0" class="form-control"
+                                                   <input name="value" type="number" min="0" class="form-control"
                                                        value="{{ $discount->value }}">
                                                </div>
 
@@ -228,6 +228,7 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach($customers as $key => $customer)
+                                                    @if(!$customer->value)
                                                     <tr>
                                                         <td>
                                                             <div class="text-muted text-sm">
@@ -250,6 +251,7 @@
                                                                 class="btn btn-sm btn-primary rounded-pill">Select</button>
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>
