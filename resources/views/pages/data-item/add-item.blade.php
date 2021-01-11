@@ -196,7 +196,7 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
+                                            <input type="text" class="form-control" id="price-percentage" placeholder="Persentase" value="0">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">%</span>
                                             </div>
