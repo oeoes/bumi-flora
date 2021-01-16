@@ -91,44 +91,46 @@
     <div class="padding">
         <div class="row">
             <div class="col-md-12">
-                <div class="card p-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="h4 pt-4">Keranjang</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label for="jumlah">Jumlah</label>
-                                <input id="jumlah" type="number" min="1" class="form-control form-control-sm" placeholder="jumah item" value="1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="h4 pt-4">Keranjang</div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="jumlah">Jumlah</label>
+                                    <input id="jumlah" type="number" min="1" class="form-control form-control-sm" placeholder="jumah item" value="1">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="item_code">Kode item</label>
+                                <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item (tekan F2)">
                             </div>
                         </div>
-                        <div class="col-4">
-                            <label for="item_code">Kode item</label>
-                            <input id="item_code" type="text" class="form-control form-control-sm" autofocus placeholder="kode item (tekan F2)">
+                        <div class="table-responsive">
+                            <table id="kasir" class="table my-responsive table-theme v-middle table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><span class="text-muted">Item</span></th>
+                                        <th><span class="text-muted">Barcode</span></th>
+                                        <th><span class="text-muted">Satuan</span></th>
+                                        <th><span class="text-muted">Stock</span></th>
+                                        <th><span class="text-muted">Jumlah</span></th>
+                                        <th><span class="text-muted">Pot.</span></th>
+                                        <th><span class="text-muted">Harga</span></th>
+                                        <th><span class="text-muted">Total</span></th>
+                                        <th><span class="text-muted">Action</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data-item">
+                                    <!-- generated data item -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table id="kasir" class="table my-responsive table-theme v-middle table-hover">
-                            <thead>
-                                <tr>
-                                    <th><span class="text-muted">Item</span></th>
-                                    <th><span class="text-muted">Barcode</span></th>
-                                    <th><span class="text-muted">Satuan</span></th>
-                                    <th><span class="text-muted">Stock</span></th>
-                                    <th><span class="text-muted">Jumlah</span></th>
-                                    <th><span class="text-muted">Pot.</span></th>
-                                    <th><span class="text-muted">Harga</span></th>
-                                    <th><span class="text-muted">Total</span></th>
-                                    <th><span class="text-muted">Action</span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-item">
-                                <!-- generated data item -->
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <div class="card-footer" style="background: #f5f5f5">
+                    <div class="card-footer" style="background: #fbfbfb">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">

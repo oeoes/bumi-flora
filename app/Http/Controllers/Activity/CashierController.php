@@ -338,8 +338,6 @@ class CashierController extends Controller
         try {
             PrintDailyReportReceiptController::print_daily_report_receipt(self::daily_report_data());
 
-            DB::table('transactions')->where('user_id', auth()->user()->id)->update(['daily_complete' => 1]);
-
             return back();
         } catch (\Throwable $th) {
             echo $th->getMessage();

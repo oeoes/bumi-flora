@@ -14,7 +14,7 @@
                     </a>
                 </li>
             </ul>
-            
+
             <li class="nav-header hidden-folded">
                 <span class="text-muted">Staging</span>
             </li>
@@ -266,6 +266,13 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+
+            <li>
+                <a href="{{ route('synchronize.index') }}">
+                    <span class="nav-icon"><i data-feather='refresh-cw'></i></span>
+                    <span class="nav-text">Synchronize</span>
+                </a>
             </li>
             @endif
 

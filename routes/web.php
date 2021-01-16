@@ -44,6 +44,12 @@ Route::prefix('app')->middleware('admin')->group(function () {
     Route::get('/cashier', 'Activity\CashierController@index')->name('cashier.index');
     Route::get('/cashier/ecommerce', 'Activity\CashierController@cashier_ecommerce')->name('cashier.cashier_ecommerce');
 
+    /** Sinkronisasi kasir */
+    Route::get('/cashier/sync', 'Activity\SynchronizeController@index')->name('synchronize.index');
+    Route::get('/cashier/sync/local', 'Activity\SynchronizeController@local')->name('synchronize.local');
+    Route::post('/cashier/sync/live', 'Activity\SynchronizeController@live')->name('synchronize.live');
+
+
     // Access Management
     Route::get('/access', 'Admin\UserManagementController@index')->name('access.index');
     Route::delete('/access/{id}', 'Admin\UserManagementController@destroy')->name('access.destroy');
