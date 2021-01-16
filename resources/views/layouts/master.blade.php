@@ -229,64 +229,64 @@
                     }
                 })
 
-            setInterval(() => {
-                axios.get('/app/notifications')
-                    .then(function(response) {
-                        if (response.data.status) {
-                            $('#bell-badge').text(response.data.count)
-                            $('#notif-count').text(response.data.count)
-                            $('#bell').addClass('bell-notification')
+            // setInterval(() => {
+            //     axios.get('/app/notifications')
+            //         .then(function(response) {
+            //             if (response.data.status) {
+            //                 $('#bell-badge').text(response.data.count)
+            //                 $('#notif-count').text(response.data.count)
+            //                 $('#bell').addClass('bell-notification')
 
-                            $('#notif-list').children().remove()
+            //                 $('#notif-list').children().remove()
 
-                            response.data.data.forEach(data => {
-                                switch (data.urgency) {
-                                    case 1:
-                                        $('#notif-list').append(`
-                            <div class="list-item " data-id="11">
-                                <div>
-                                    <a href="">
-                                        <span class="w-32 avatar gd-warning">
-                                            W
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        ${data.title}
-                                    </div>
-                                </div>
-                            </div>
-                            `)
-                                        break;
+            //                 response.data.data.forEach(data => {
+            //                     switch (data.urgency) {
+            //                         case 1:
+            //                             $('#notif-list').append(`
+            //                 <div class="list-item " data-id="11">
+            //                     <div>
+            //                         <a href="">
+            //                             <span class="w-32 avatar gd-warning">
+            //                                 W
+            //                             </span>
+            //                         </a>
+            //                     </div>
+            //                     <div class="flex">
+            //                         <div class="item-feed h-2x">
+            //                             ${data.title}
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //                 `)
+            //                             break;
 
-                                    case 2:
-                                        $('#notif-list').append(`
-                            <div class="list-item " data-id="11">
-                                <div>
-                                    <a href="">
-                                        <span class="w-32 avatar gd-danger">
-                                            D
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="flex">
-                                    <div class="item-feed h-2x">
-                                        ${data.title}
-                                    </div>
-                                </div>
-                            </div>
-                            `)
-                                        break;
-                                }
-                            })
-                        } else {
-                            $('#notif-count').text('No')
-                            $('#bell-badge').text('')
-                            $('#bell').removeClass('bell-notification')
-                        }
-                    })
-            }, 5000);
+            //                         case 2:
+            //                             $('#notif-list').append(`
+            //                 <div class="list-item " data-id="11">
+            //                     <div>
+            //                         <a href="">
+            //                             <span class="w-32 avatar gd-danger">
+            //                                 D
+            //                             </span>
+            //                         </a>
+            //                     </div>
+            //                     <div class="flex">
+            //                         <div class="item-feed h-2x">
+            //                             ${data.title}
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //                 `)
+            //                             break;
+            //                     }
+            //                 })
+            //             } else {
+            //                 $('#notif-count').text('No')
+            //                 $('#bell-badge').text('')
+            //                 $('#bell').removeClass('bell-notification')
+            //             }
+            //         })
+            // }, 5000);
 
             $(document).on('click', '#update-account', function(e) {
                 $('#update-account').text('Validating...')
