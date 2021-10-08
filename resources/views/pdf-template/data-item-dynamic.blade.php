@@ -57,10 +57,10 @@
                 <td>{{ $item->unit }}</td>
                 <td>{{ $item->brand }}</td>
                 @if($reportType === 'main_cost' || $reportType === 'complete')
-                <td>Rp.{{ number_format($item->main_cost) }}</td>
+                <td>Rp.{{ number_format((float)$item->main_cost) }}</td>
                 @endif
                 @if($reportType === 'price' || $reportType === 'complete')
-                <td>Rp.{{ number_format($item->price) }}</td>
+                <td>Rp.{{ number_format((float)$item->price) }}</td>
                 @endif
                 <td>{{ $item->base_unit }}</td>
                 <td>{{ $item->base_unit_conversion }}</td>

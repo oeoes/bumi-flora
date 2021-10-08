@@ -229,6 +229,7 @@
                     }
                 })
 
+
             setInterval(() => {
                 axios.get('/app/notifications')
                     .then(function(response) {
@@ -286,7 +287,7 @@
                             $('#bell').removeClass('bell-notification')
                         }
                     })
-            }, 5000);
+            }, 10000);
 
             $(document).on('click', '#update-account', function(e) {
                 $('#update-account').text('Validating...')
