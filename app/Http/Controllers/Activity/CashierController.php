@@ -17,6 +17,8 @@ use App\Model\Relation\StakeHolder;
 // print receipt
 use App\Http\Controllers\Activity\PrintReceiptController;
 use App\Http\Controllers\Activity\PrintDailyReportReceiptController;
+use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class CashierController extends Controller
 {
@@ -242,13 +244,24 @@ class CashierController extends Controller
                     "transaction_number" => $trx_number . '/' . Carbon::now()->format('Y-m-d')
                 ];
                 // print receipt
-                PrintReceiptController::print_receipt($print_items, $calc);
+                // PrintReceiptController::print_receipt($print_items, $calc);
+
+                // print pdf
+                $receipt = PDF::loadView('pdf-template.receipt', [
+                    'items' => $print_items,
+                    'calc' => $calc,
+                ])->setPaper([0,0, 218.2677165354, 1417.3228346457]);
+                $content = $receipt->download()->getOriginalContent();
+                $name = 'Transaksi_' . time() . '.pdf';
+                Storage::disk('local')->put($name, $content);
+
+                return response()->download(storage_path() . '/app/' . $name, $name, ['Content-Type' => 'application/pdf']);
             }
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()], 400);
         }
 
-        return response()->json(['status' => true, 'message' => 'Transaction recorded', 'is_update' => $data_update ? true : false]);
+        // return response()->json(['status' => true, 'message' => 'Transaction recorded', 'is_update' => $data_update ? true : false]);
     }
 
     public static function update_transaction_history($item, $trans, $request, $payment_type)

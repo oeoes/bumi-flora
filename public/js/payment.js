@@ -25,34 +25,64 @@ function store_transaction(e) {
         }
     }
 
-    axios.post('/cashier/store', {
-        items: item_data,
-        payment_type: localStorage.getItem('payment_type'),
-        discount: parseInt(localStorage.getItem('discount')),
-        customer_discount: parseInt(localStorage.getItem('customer_discount')),
-        customer: $('#customer').val(),
-        additional_fee: parseInt($('#additional_fee').val()),
-        tax: parseInt(localStorage.getItem('tax')),
-        dept: $('#dept').val(),
-        nominal: parseInt($('#nominal').val()),
-        transaction_id: $('#id-edit-transaction').val() ? $('#id-edit-transaction').val() : ''
-    }).then(function (response) {
-        if (response.data.status == true) {
-            localStorage.removeItem('items')
-            localStorage.removeItem('total_price')
-            localStorage.removeItem('payment_type')
-            localStorage.setItem('discount', 0)
-            localStorage.setItem('additional_fee', 0)
-            localStorage.setItem('tax', 0)
-
-            $('#data-item tr').remove()
-            $('#discount_value').val(0)
-            $('#additional_fee').val(0)
-            $('#tax').val(0)
-            print_items()
-            print_accumulate()
-            print_total_price()
+    axios({
+        method: 'post',
+        url: '/cashier/store',
+        responseType: 'arraybuffer',
+        data: {
+            items: item_data,
+            payment_type: localStorage.getItem('payment_type'),
+            discount: parseInt(localStorage.getItem('discount')),
+            customer_discount: parseInt(localStorage.getItem('customer_discount')),
+            customer: $('#customer').val(),
+            additional_fee: parseInt($('#additional_fee').val()),
+            tax: parseInt(localStorage.getItem('tax')),
+            dept: $('#dept').val(),
+            nominal: parseInt($('#nominal').val()),
+            transaction_id: $('#id-edit-transaction').val() ? $('#id-edit-transaction').val() : ''
         }
+    }).then(function (response) {
+        // download file
+        let blob = new Blob([response.data], {
+            type: "application/pdf"
+        });
+        let link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `Transaksi.pdf`;
+        document.body.appendChild(link);
+        link.click();
+
+        localStorage.removeItem('items')
+        localStorage.removeItem('total_price')
+        localStorage.removeItem('payment_type')
+        localStorage.setItem('discount', 0)
+        localStorage.setItem('additional_fee', 0)
+        localStorage.setItem('tax', 0)
+
+        $('#data-item tr').remove()
+        $('#discount_value').val(0)
+        $('#additional_fee').val(0)
+        $('#tax').val(0)
+        print_items()
+        print_accumulate()
+        print_total_price();
+
+        // if (response.data.status == true) {
+        //     localStorage.removeItem('items')
+        //     localStorage.removeItem('total_price')
+        //     localStorage.removeItem('payment_type')
+        //     localStorage.setItem('discount', 0)
+        //     localStorage.setItem('additional_fee', 0)
+        //     localStorage.setItem('tax', 0)
+
+        //     $('#data-item tr').remove()
+        //     $('#discount_value').val(0)
+        //     $('#additional_fee').val(0)
+        //     $('#tax').val(0)
+        //     print_items()
+        //     print_accumulate()
+        //     print_total_price();
+        // }
     }).catch(function (error) {
         console.log(error.response)
     }).finally(function (e) {
@@ -125,7 +155,7 @@ $(document).ready(function () {
                         store_transaction()
                         $('#save_n_pay').text('Simpan & Bayar...')
                     }
-                    
+
                 }
             }
         }
