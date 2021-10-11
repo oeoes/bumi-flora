@@ -144,7 +144,3 @@ Route::get('/logout', 'Authentication\AuthenticationController@logout')->name('l
 Route::get('/cashier/check', 'Activity\CashierController@check_item');
 Route::post('/cashier/store', 'Activity\CashierController@store_transaction');
 // Route::get('/barcodes/print', 'Admin\BarcodeGenerator@print_barcode')->name('barcodes.print_barcode');
-
-Route::get('/receipt', function() {
-    return view('pdf-template.receipt');
-});
