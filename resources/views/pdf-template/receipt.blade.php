@@ -8,15 +8,14 @@
     <title>Document</title>
     <style>
         @page {
-            margin-left: 5px;
-            margin-right: 5px;
+            margin-left: 1rem;
+            margin-right: 1rem;
             margin-top: 25px;
-            margin-left: 5px;
         }
 
         table {
             width: 100%;
-            font-size: 9px;
+            font-size: 10px;
         }
 
         th,
@@ -33,9 +32,9 @@
 </head>
 
 <body>
-    <div style="text-align: center; font-size: 11px;">BUMI FLORA</div>
+    <div style="text-align: center; font-size: 11px; font-weight: bold">BUMI FLORA 80</div>
     <div style="text-align: center; font-size: 9px;">JL. KH. MAULANA HASANUDIN NO. 80 CIPONDOH</div>
-    <div style="text-align: center; font-size: 9px;" \>TANGERANG - BANTEN</div>
+    <div style="text-align: center; font-size: 9px;">TANGERANG - BANTEN</div>
     <div style="text-align: center; font-size: 9px;">Telp: 085772386441 Fax:</div>
 
     <table style="width: 100%; margin-top: 1rem">
@@ -131,6 +130,12 @@
             </tr>
         </tbody>
     </table>
+
+
+    <div style="text-align: center; font-size: 9px; margin-top: 1rem">[PERHATIAN]</div>
+    <div style="text-align: center; font-size: 9px;">
+        Barang yang telah dibeli tidak dapat dikembalikan kecuali dengan perjanjian
+    </div>
 
 </body>
 
