@@ -250,12 +250,12 @@ class CashierController extends Controller
                 $receipt = PDF::loadView('pdf-template.receipt', [
                     'items' => $print_items,
                     'calc' => $calc,
-                ])->setPaper([0,0, 218.2677165354, 1417.3228346457]);
+                ])->setPaper([0,0, 218.2677165354, 400]);
                 $content = $receipt->download()->getOriginalContent();
                 $name = 'Transaksi_' . time() . '.pdf';
                 Storage::disk('local')->put($name, $content);
 
-                return response()->download(storage_path() . '/app/' . $name, $name, ['Content-Type' => 'application/pdf']);
+                return response()->download(storage_path() . '/app/' . $name, $name, ['Content-Type' => 'application/pdf'])->deleteFileAfterSend();
             }
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()], 400);
@@ -349,11 +349,21 @@ class CashierController extends Controller
     public function print_cashier_history()
     {
         try {
-            PrintDailyReportReceiptController::print_daily_report_receipt(self::daily_report_data());
+            // PrintDailyReportReceiptController::print_daily_report_receipt(self::daily_report_data());
 
+            // print pdf
+            $receipt = PDF::loadView('pdf-template.daily_report', [
+                'data' => self::daily_report_data(),
+            ])->setPaper([0, 0, 218.2677165354, 400]);
+            $content = $receipt->download()->getOriginalContent();
+            $name = 'Daily_Report_' . time() . '.pdf';
+            Storage::disk('local')->put($name, $content);
+
+            
             DB::table('transactions')->where('user_id', auth()->user()->id)->update(['daily_complete' => 1]);
-
-            return back();
+            
+            return response()->download(storage_path() . '/app/' . $name, $name, ['Content-Type' => 'application/pdf'])->deleteFileAfterSend();
+            // return back();
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }
